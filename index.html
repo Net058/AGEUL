@@ -3,120 +3,113 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SmartCity Astana — Ораза қабыл болсын!</title>
+    <title>SmartCity Astana — Ramadan Edition</title>
     <style>
         :root {
-            --gold: #d4af37;
-            --dark-blue: #002147;
-            --white: rgba(255, 255, 255, 0.95);
+            --gold: #c5a059;
+            --dark-blue: #001a33;
+            --white: #ffffff;
         }
 
-        html, body, #map { width: 100%; height: 100%; margin: 0; padding: 0; font-family: 'Segoe UI', sans-serif; }
+        html, body, #map { width: 100%; height: 100%; margin: 0; padding: 0; font-family: 'Segoe UI', sans-serif; overflow: hidden; }
 
-        /* Праздничная шапка */
+        /* Праздничный заголовок */
         .ramadan-header {
             position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
+            top: 0; left: 0; right: 0;
             height: 80px;
-            background: linear-gradient(90deg, #002147 0%, #004080 50%, #002147 100%);
+            background: var(--dark-blue);
             color: white;
             z-index: 2000;
             display: flex;
             align-items: center;
-            justify-content: center;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.5);
-            border-bottom: 3px solid var(--gold);
+            justify-content: space-between;
+            padding: 0 20px;
+            border-bottom: 2px solid var(--gold);
+            text-align: center;
         }
 
-        .ramadan-header h1 {
-            margin: 0;
-            font-size: 24px;
-            letter-spacing: 2px;
-            text-shadow: 0 0 10px var(--gold);
-        }
+        .ramadan-header h1 { font-size: 18px; line-height: 1.2; margin: 0; flex-grow: 1; font-weight: bold; }
+        .crescent { font-size: 30px; color: var(--gold); }
 
-        /* Декоративные полумесяцы */
-        .crescent {
-            font-size: 30px;
-            color: var(--gold);
-            margin: 0 20px;
-            animation: glow 2s infinite alternate;
-        }
-
-        @keyframes glow {
-            from { text-shadow: 0 0 5px var(--gold); }
-            to { text-shadow: 0 0 20px var(--gold), 0 0 30px #fff; }
-        }
-
-        /* Боковая панель */
-        #sidebar {
+        /* Центральная карточка */
+        .main-card {
             position: absolute;
-            top: 100px; /* Отступ под шапку */
-            left: 20px;
-            bottom: 20px;
-            width: 340px;
+            top: 100px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 90%;
+            max-width: 360px;
             background: var(--white);
             z-index: 1000;
-            padding: 20px;
-            border-radius: 15px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
-            border: 1px solid var(--gold);
-            display: flex;
-            flex-direction: column;
-            backdrop-filter: blur(10px);
+            padding: 25px 20px;
+            border-radius: 20px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.3);
+            text-align: center;
+            border: 1px solid rgba(197, 160, 89, 0.3);
         }
 
-        .info-card {
-            background: #fdfaf0; /* Кремовый фон */
-            border-left: 5px solid var(--gold);
+        /* Фото профиля (Исправлено!) */
+        .profile-pic {
+            width: 110px;
+            height: 110px;
+            border-radius: 50%;
+            border: 3px solid var(--gold);
+            margin: 0 auto 20px;
+            background-image: url('https://i.ibb.co/Y7X8X8z/food-bowl.jpg');
+            background-size: cover;
+            background-position: center;
+            display: block;
+        }
+
+        .info-box {
+            background: #fffef9;
+            border-left: 4px solid var(--gold);
             padding: 15px;
-            margin-bottom: 15px;
-            border-radius: 5px;
+            text-align: left;
+            margin-bottom: 25px;
+            border-radius: 4px;
         }
 
+        .info-box h2 { margin: 0 0 5px; font-size: 19px; color: var(--dark-blue); }
+        .info-box p { margin: 0; font-size: 14px; color: #555; line-height: 1.4; }
+
+        /* Кнопка ТАКСИ */
         .taxi-btn {
+            width: 100%;
             background: var(--gold);
             color: white;
             border: none;
-            padding: 12px;
-            border-radius: 8px;
+            padding: 16px;
+            border-radius: 12px;
             font-weight: bold;
+            font-size: 16px;
             cursor: pointer;
-            text-align: center;
             text-decoration: none;
-            display: block;
-            margin-top: auto;
-            transition: 0.3s;
+            display: inline-block;
+            transition: background 0.3s ease;
         }
 
-        .taxi-btn:hover { background: #b8860b; transform: scale(1.02); }
+        .taxi-btn:hover { background: #b08d4a; }
 
-        #route-panel { flex-grow: 1; overflow-y: auto; margin-top: 10px; }
+        #map { position: absolute; top: 0; left: 0; z-index: 1; }
     </style>
 </head>
 <body>
 
     <div class="ramadan-header">
         <span class="crescent">🌙</span>
-        <h1>ОРАЗА ҚАБЫЛ БОЛСЫН!</h1>
+        <h1>ОРАЗА ҚАБЫЛ<br>БОЛСЫН!</h1>
         <span class="crescent">🌙</span>
     </div>
 
-    <div id="sidebar">
-        <div style="text-align: center; margin-bottom: 10px;">
-            <img src="https://openart-s3.s3.amazonaws.com/relativepath/2gJmNM85I3WcmDAKn.png" 
-                 style="width: 80px; border-radius: 50%; border: 2px solid var(--gold);">
-        </div>
+    <div class="main-card">
+        <div class="profile-pic"></div>
         
-        <div class="info-card">
-            <h3 style="margin:0; color: var(--dark-blue);">SmartCity Astana</h3>
-            <p style="font-size: 13px; margin: 5px 0;">Система Presight AI работает в режиме праздничного мониторинга.</p>
+        <div class="info-box">
+            <h2>SmartCity Astana</h2>
+            <p>Система Presight AI работает в режиме праздничного мониторинга.</p>
         </div>
-
-        <div id="route-panel">
-            </div>
 
         <a href="https://taxi.yandex.kz/" target="_blank" class="taxi-btn">ЗАКАЗАТЬ ТАКСИ 🚖</a>
     </div>
@@ -126,24 +119,14 @@
     <script src="https://api-maps.yandex.ru/2.1/?lang=ru_RU" type="text/javascript"></script>
     <script type="text/javascript">
         ymaps.ready(init);
-
         function init() {
             var myMap = new ymaps.Map("map", {
-                center: [51.128201, 71.430411],
+                center: [51.1282, 71.4304],
                 zoom: 14,
-                controls: ['zoomControl', 'trafficControl']
+                controls: [] // Очистили карту для красоты
             });
-
-            // Включаем пробки и автобусы
-            myMap.controls.get('trafficControl').showTraffic();
+            // Включаем слой транспорта (автобусы)
             myMap.setFilter('masstransit', true);
-
-            // Панель маршрутов
-            var routePanelControl = new ymaps.control.RoutePanel({
-                options: { showHeader: true, title: 'Маршрут' }
-            });
-            routePanelControl.routePanel.state.set({ type: 'masstransit' });
-            myMap.controls.add(routePanelControl);
         }
     </script>
 </body>
