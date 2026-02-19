@@ -2,97 +2,124 @@
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>SmartCity Astana — Ramadan Edition</title>
     <style>
         :root {
-            --gold: #c5a059;
+            --gold: #D4AF37;
+            --gold-dark: #aa8a2e;
             --dark-blue: #001a33;
-            --white: #ffffff;
+            --glass: rgba(255, 255, 255, 0.85);
         }
 
-        html, body, #map { width: 100%; height: 100%; margin: 0; padding: 0; font-family: 'Segoe UI', sans-serif; overflow: hidden; }
+        * { box-sizing: border-box; }
 
-        /* Праздничный заголовок */
+        html, body { 
+            width: 100%; 
+            height: 100%; 
+            margin: 0; 
+            padding: 0; 
+            font-family: 'SF Pro Display', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; 
+            background: #f0f0f0;
+            overflow: hidden;
+        }
+
+        /* Праздничный заголовок с градиентом */
         .ramadan-header {
             position: absolute;
             top: 0; left: 0; right: 0;
-            height: 80px;
-            background: var(--dark-blue);
+            height: 90px;
+            background: linear-gradient(180deg, var(--dark-blue) 0%, rgba(0, 26, 51, 0.9) 100%);
             color: white;
             z-index: 2000;
             display: flex;
             align-items: center;
             justify-content: space-between;
-            padding: 0 20px;
-            border-bottom: 2px solid var(--gold);
-            text-align: center;
+            padding: 10px 25px;
+            border-bottom: 3px solid var(--gold);
+            box-shadow: 0 4px 15px rgba(0,0,0,0.3);
         }
 
-        .ramadan-header h1 { font-size: 18px; line-height: 1.2; margin: 0; flex-grow: 1; font-weight: bold; }
-        .crescent { font-size: 30px; color: var(--gold); }
+        .ramadan-header h1 { 
+            font-size: 16px; 
+            letter-spacing: 1px;
+            line-height: 1.3; 
+            margin: 0; 
+            font-weight: 800;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.5);
+        }
 
-        /* Центральная карточка */
+        .crescent { font-size: 24px; filter: drop-shadow(0 0 5px var(--gold)); }
+
+        /* Центральная карточка (Glassmorphism) */
         .main-card {
             position: absolute;
-            top: 100px;
+            bottom: 40px; /* Перенесли вниз, как в современных картах */
             left: 50%;
             transform: translateX(-50%);
-            width: 90%;
-            max-width: 360px;
-            background: var(--white);
+            width: 92%;
+            max-width: 400px;
+            background: var(--glass);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
             z-index: 1000;
-            padding: 25px 20px;
-            border-radius: 20px;
-            box-shadow: 0 10px 40px rgba(0,0,0,0.3);
-            text-align: center;
-            border: 1px solid rgba(197, 160, 89, 0.3);
+            padding: 20px;
+            border-radius: 24px;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.2);
+            border: 1px solid rgba(255, 255, 255, 0.4);
         }
 
-        /* Фото профиля (Исправлено!) */
+        /* Фото профиля */
+        .profile-container {
+            position: relative;
+            margin-top: -60px; /* Вынос фото вверх */
+            margin-bottom: 15px;
+            display: flex;
+            justify-content: center;
+        }
+
         .profile-pic {
-            width: 110px;
-            height: 110px;
+            width: 90px;
+            height: 90px;
             border-radius: 50%;
-            border: 3px solid var(--gold);
-            margin: 0 auto 20px;
+            border: 4px solid var(--white);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
             background-image: url('https://i.ibb.co/Y7X8X8z/food-bowl.jpg');
             background-size: cover;
             background-position: center;
-            display: block;
+            background-color: #eee;
         }
 
-        .info-box {
-            background: #fffef9;
-            border-left: 4px solid var(--gold);
-            padding: 15px;
-            text-align: left;
-            margin-bottom: 25px;
-            border-radius: 4px;
-        }
+        .info-content { text-align: center; margin-bottom: 20px; }
+        .info-content h2 { margin: 0 0 5px; font-size: 22px; color: var(--dark-blue); font-weight: 700; }
+        .info-content p { margin: 0; font-size: 14px; color: #444; opacity: 0.8; }
 
-        .info-box h2 { margin: 0 0 5px; font-size: 19px; color: var(--dark-blue); }
-        .info-box p { margin: 0; font-size: 14px; color: #555; line-height: 1.4; }
-
-        /* Кнопка ТАКСИ */
+        /* Кнопка ТАКСИ с анимацией */
         .taxi-btn {
             width: 100%;
-            background: var(--gold);
+            background: linear-gradient(135deg, var(--gold) 0%, var(--gold-dark) 100%);
             color: white;
             border: none;
-            padding: 16px;
-            border-radius: 12px;
-            font-weight: bold;
+            padding: 18px;
+            border-radius: 16px;
+            font-weight: 700;
             font-size: 16px;
             cursor: pointer;
             text-decoration: none;
-            display: inline-block;
-            transition: background 0.3s ease;
+            display: block;
+            text-align: center;
+            box-shadow: 0 6px 20px rgba(197, 160, 89, 0.4);
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 1px;
         }
 
-        .taxi-btn:hover { background: #b08d4a; }
+        .taxi-btn:active { transform: scale(0.97); }
 
-        #map { position: absolute; top: 0; left: 0; z-index: 1; }
+        #map { position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 1; }
+        
+        /* Убираем лишние элементы Яндекса для чистоты */
+        .ymaps-2-1-79-copyrights-promo { display: none !important; }
     </style>
 </head>
 <body>
@@ -104,14 +131,16 @@
     </div>
 
     <div class="main-card">
-        <div class="profile-pic"></div>
+        <div class="profile-container">
+            <div class="profile-pic"></div>
+        </div>
         
-        <div class="info-box">
+        <div class="info-content">
             <h2>SmartCity Astana</h2>
             <p>Система Presight AI работает в режиме праздничного мониторинга.</p>
         </div>
 
-        <a href="https://taxi.yandex.kz/" target="_blank" class="taxi-btn">ЗАКАЗАТЬ ТАКСИ 🚖</a>
+        <a href="https://taxi.yandex.kz/" target="_blank" class="taxi-btn">Заказать такси 🚕</a>
     </div>
 
     <div id="map"></div>
@@ -122,11 +151,15 @@
         function init() {
             var myMap = new ymaps.Map("map", {
                 center: [51.1282, 71.4304],
-                zoom: 14,
-                controls: [] // Очистили карту для красоты
+                zoom: 15,
+                controls: [] 
+            }, {
+                yandexMapDisablePoiInteractivity: true,
+                suppressMapOpenBlock: true
             });
-            // Включаем слой транспорта (автобусы)
-            myMap.setFilter('masstransit', true);
+
+            // Добавляем стильный слой карты (опционально можно настроить через кабинет разработчика)
+            myMap.behaviors.disable('scrollZoom'); 
         }
     </script>
 </body>
