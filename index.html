@@ -3,147 +3,112 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>SmartCity Astana — AGEUL Edition</title>
+    <title>SmartCity Astana — Compact Edition</title>
     <style>
         :root {
             --gold: #D4AF37;
-            --gold-dark: #aa8a2e;
             --dark-blue: #001a33;
-            --glass: rgba(255, 255, 255, 0.9);
+            --glass: rgba(255, 255, 255, 0.95);
         }
 
         * { box-sizing: border-box; }
+        html, body { width: 100%; height: 100%; margin: 0; padding: 0; font-family: sans-serif; overflow: hidden; }
 
-        html, body { 
-            width: 100%; 
-            height: 100%; 
-            margin: 0; 
-            padding: 0; 
-            font-family: 'SF Pro Display', sans-serif; 
-            background: #f0f0f0;
-            overflow: hidden;
-        }
-
-        /* Шапка с исламским узором */
+        /* Компактная шапка */
         .ramadan-header {
             position: absolute;
             top: 0; left: 0; right: 0;
-            height: 100px;
-            background-color: var(--dark-blue);
-            /* Добавляем паттерн узора поверх градиента */
-            background-image: 
-                linear-gradient(rgba(0, 26, 51, 0.8), rgba(0, 26, 51, 0.8)),
-                url('https://www.transparenttextures.com/patterns/arabesque.png'); 
+            height: 70px;
+            background: var(--dark-blue);
+            background-image: url('https://www.transparenttextures.com/patterns/arabesque.png');
             color: white;
             z-index: 2000;
             display: flex;
             align-items: center;
-            justify-content: space-between;
-            padding: 0 20px;
-            border-bottom: 3px solid var(--gold);
-            box-shadow: 0 4px 20px rgba(0,0,0,0.4);
+            justify-content: center;
+            border-bottom: 2px solid var(--gold);
+            box-shadow: 0 2px 10px rgba(0,0,0,0.3);
         }
 
-        .ramadan-header h1 { 
-            font-size: 18px; 
-            letter-spacing: 1.5px;
-            line-height: 1.2; 
-            margin: 0; 
-            font-weight: 800;
-            text-align: center;
-            flex-grow: 1;
-            text-transform: uppercase;
+        /* Декорации вокруг текста */
+        .decor-left, .decor-right {
+            width: 40px;
+            height: 40px;
+            background-image: url('https://img.icons8.com/ios-filled/50/D4AF37/islamic-art.png');
+            background-size: contain;
+            background-repeat: no-repeat;
+            margin: 0 10px;
         }
 
-        .crescent { 
-            font-size: 28px; 
-            color: var(--gold);
-            filter: drop-shadow(0 0 8px rgba(212, 175, 55, 0.6));
-        }
+        .ramadan-header h1 { font-size: 14px; margin: 0; text-align: center; letter-spacing: 0.5px; line-height: 1.2; }
 
-        /* Карточка AGEUL */
+        /* Маленькая карточка, сдвинутая в бок */
         .main-card {
             position: absolute;
-            top: 130px; /* Для маленьких экранов лучше чуть выше середины */
-            left: 50%;
-            transform: translateX(-50%);
-            width: 90%;
-            max-width: 350px;
+            top: 85px;
+            left: 15px; /* Сдвинуто влево */
+            width: 75%; /* Еще меньше по ширине */
+            max-width: 280px;
             background: var(--glass);
-            backdrop-filter: blur(15px);
-            -webkit-backdrop-filter: blur(15px);
             z-index: 1000;
-            padding: 30px 20px 20px;
-            border-radius: 28px;
-            box-shadow: 0 20px 40px rgba(0,0,0,0.25);
-            border: 1px solid rgba(212, 175, 55, 0.3);
-            text-align: center;
+            padding: 15px;
+            border-radius: 15px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+            border: 1px solid var(--gold);
         }
 
-        /* Область логотипа AGEUL */
+        /* Угловые декорации внутри карточки */
+        .main-card::before {
+            content: "✨";
+            position: absolute;
+            top: 5px; right: 5px;
+            font-size: 12px;
+            color: var(--gold);
+        }
+
+        /* Логотип AGEUL (еще меньше) */
         .logo-container {
-            width: 100px;
-            height: 100px;
+            width: 60px;
+            height: 60px;
             background: var(--dark-blue);
-            border: 3px solid var(--gold);
+            border: 2px solid var(--gold);
             border-radius: 50%;
-            margin: -70px auto 15px; /* Вынос логотипа вверх */
+            margin: -35px auto 10px;
             display: flex;
             align-items: center;
             justify-content: center;
-            box-shadow: 0 8px 20px rgba(0,0,0,0.2);
-            overflow: hidden;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.2);
         }
 
-        .logo-text {
-            color: var(--gold);
-            font-weight: 900;
-            font-size: 18px;
-            letter-spacing: 1px;
-        }
+        .logo-text { color: var(--gold); font-weight: bold; font-size: 12px; }
 
-        .info-content h2 { 
-            margin: 0 0 8px; 
-            font-size: 20px; 
-            color: var(--dark-blue); 
-            font-weight: 700; 
-        }
-
-        .info-content p { 
-            margin: 0 0 25px; 
-            font-size: 13px; 
-            color: #555; 
-            line-height: 1.5;
-            padding: 0 10px;
-        }
+        .info-content h2 { margin: 0 0 4px; font-size: 16px; color: var(--dark-blue); }
+        .info-content p { margin: 0 0 15px; font-size: 11px; color: #666; line-height: 1.3; }
 
         /* Кнопка ТАКСИ */
         .taxi-btn {
             width: 100%;
-            background: linear-gradient(135deg, var(--gold) 0%, var(--gold-dark) 100%);
+            background: var(--gold);
             color: white;
             border: none;
-            padding: 16px;
-            border-radius: 14px;
-            font-weight: 700;
-            font-size: 16px;
+            padding: 12px;
+            border-radius: 10px;
+            font-weight: bold;
+            font-size: 13px;
             text-decoration: none;
             display: block;
-            box-shadow: 0 5px 15px rgba(170, 138, 46, 0.4);
-            transition: 0.3s;
+            text-align: center;
         }
 
-        .taxi-btn:active { transform: scale(0.96); }
-
-        #map { position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 1; opacity: 0.9; }
+        #map { position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 1; }
     </style>
 </head>
 <body>
 
     <div class="ramadan-header">
-        <span class="crescent">🌙</span>
+        <div class="decor-left"></div>
         <h1>ОРАЗА ҚАБЫЛ<br>БОЛСЫН!</h1>
-        <span class="crescent">🌙</span>
+        <div class="decor-right" style="transform: scaleX(-1);"></div>
     </div>
 
     <div class="main-card">
@@ -153,10 +118,10 @@
         
         <div class="info-content">
             <h2>SmartCity Astana</h2>
-            <p>Система Presight AI работает в режиме праздничного мониторинга для вашего комфорта.</p>
+            <p>Система Presight AI в режиме мониторинга.</p>
         </div>
 
-        <a href="https://taxi.yandex.kz/" target="_blank" class="taxi-btn">ЗАКАЗАТЬ ТАКСИ 🚖</a>
+        <a href="https://taxi.yandex.kz/" target="_blank" class="taxi-btn">ТАКСИ 🚖</a>
     </div>
 
     <div id="map"></div>
@@ -167,7 +132,7 @@
         function init() {
             var myMap = new ymaps.Map("map", {
                 center: [51.1282, 71.4304],
-                zoom: 14,
+                zoom: 15,
                 controls: [] 
             });
         }
