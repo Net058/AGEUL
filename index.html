@@ -3,101 +3,107 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>SmartCity Astana — Compact Edition</title>
+    <title>SmartCity Astana — Ramadan Edition</title>
     <style>
         :root {
             --gold: #D4AF37;
             --dark-blue: #001a33;
-            --glass: rgba(255, 255, 255, 0.95);
+            --glass: rgba(255, 255, 255, 0.98);
         }
 
         * { box-sizing: border-box; }
-        html, body { width: 100%; height: 100%; margin: 0; padding: 0; font-family: sans-serif; overflow: hidden; }
+        html, body { width: 100%; height: 100%; margin: 0; padding: 0; font-family: 'Segoe UI', sans-serif; overflow: hidden; }
 
-        /* Компактная шапка */
+        /* Шапка с узорами */
         .ramadan-header {
             position: absolute;
             top: 0; left: 0; right: 0;
-            height: 70px;
+            height: 85px;
             background: var(--dark-blue);
-            background-image: url('https://www.transparenttextures.com/patterns/arabesque.png');
             color: white;
             z-index: 2000;
             display: flex;
             align-items: center;
-            justify-content: center;
+            justify-content: space-between;
+            padding: 0 15px;
             border-bottom: 2px solid var(--gold);
-            box-shadow: 0 2px 10px rgba(0,0,0,0.3);
+            box-shadow: 0 4px 10px rgba(0,0,0,0.3);
         }
 
-        /* Декорации вокруг текста */
-        .decor-left, .decor-right {
-            width: 40px;
-            height: 40px;
-            background-image: url('https://img.icons8.com/ios-filled/50/D4AF37/islamic-art.png');
+        /* Декоративные иконки в шапке */
+        .header-decor {
+            width: 50px;
+            height: 50px;
+            background: url('https://img.icons8.com/ios/100/D4AF37/mosque.png') no-repeat center;
             background-size: contain;
-            background-repeat: no-repeat;
-            margin: 0 10px;
+            filter: drop-shadow(0 0 5px var(--gold));
         }
 
-        .ramadan-header h1 { font-size: 14px; margin: 0; text-align: center; letter-spacing: 0.5px; line-height: 1.2; }
+        .ramadan-header h1 { font-size: 16px; margin: 0; text-align: center; font-weight: bold; letter-spacing: 1px; }
 
-        /* Маленькая карточка, сдвинутая в бок */
+        /* Маленькая карточка, сдвинутая вбок */
         .main-card {
             position: absolute;
-            top: 85px;
-            left: 15px; /* Сдвинуто влево */
-            width: 75%; /* Еще меньше по ширине */
-            max-width: 280px;
+            top: 100px;
+            left: 15px;
+            width: 70%;
+            max-width: 270px;
             background: var(--glass);
             z-index: 1000;
-            padding: 15px;
-            border-radius: 15px;
-            box-shadow: 0 10px 25px rgba(0,0,0,0.2);
-            border: 1px solid var(--gold);
+            padding: 30px 15px 15px;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.25);
+            text-align: center;
+            border: 1px solid rgba(212, 175, 55, 0.4);
         }
 
-        /* Угловые декорации внутри карточки */
-        .main-card::before {
-            content: "✨";
+        /* Угловые декорации (Ою-өрнек) */
+        .corner-decor {
             position: absolute;
-            top: 5px; right: 5px;
-            font-size: 12px;
-            color: var(--gold);
+            width: 40px;
+            height: 40px;
+            background: url('https://img.icons8.com/ios-filled/100/D4AF37/ornament.png') no-repeat;
+            background-size: contain;
+            opacity: 0.8;
         }
+        .top-left { top: 5px; left: 5px; }
+        .top-right { top: 5px; right: 5px; transform: rotate(90deg); }
+        .bottom-left { bottom: 5px; left: 5px; transform: rotate(-90deg); }
+        .bottom-right { bottom: 5px; right: 5px; transform: rotate(180deg); }
 
-        /* Логотип AGEUL (еще меньше) */
+        /* Логотип AGEUL */
         .logo-container {
-            width: 60px;
-            height: 60px;
+            width: 70px;
+            height: 70px;
             background: var(--dark-blue);
             border: 2px solid var(--gold);
             border-radius: 50%;
-            margin: -35px auto 10px;
+            margin: -60px auto 10px;
             display: flex;
             align-items: center;
             justify-content: center;
+            position: relative;
+            z-index: 5;
             box-shadow: 0 4px 10px rgba(0,0,0,0.2);
         }
+        .logo-text { color: var(--gold); font-weight: 900; font-size: 13px; letter-spacing: 1px; }
 
-        .logo-text { color: var(--gold); font-weight: bold; font-size: 12px; }
+        .info-content h2 { margin: 5px 0; font-size: 18px; color: var(--dark-blue); }
+        .info-content p { margin: 0 0 15px; font-size: 11px; color: #555; line-height: 1.3; }
 
-        .info-content h2 { margin: 0 0 4px; font-size: 16px; color: var(--dark-blue); }
-        .info-content p { margin: 0 0 15px; font-size: 11px; color: #666; line-height: 1.3; }
-
-        /* Кнопка ТАКСИ */
+        /* Кнопка такси */
         .taxi-btn {
             width: 100%;
-            background: var(--gold);
+            background: linear-gradient(135deg, var(--gold), #b8860b);
             color: white;
             border: none;
             padding: 12px;
-            border-radius: 10px;
+            border-radius: 12px;
             font-weight: bold;
-            font-size: 13px;
+            font-size: 14px;
             text-decoration: none;
             display: block;
-            text-align: center;
+            box-shadow: 0 4px 10px rgba(184, 134, 11, 0.3);
         }
 
         #map { position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 1; }
@@ -106,22 +112,27 @@
 <body>
 
     <div class="ramadan-header">
-        <div class="decor-left"></div>
+        <div class="header-decor"></div>
         <h1>ОРАЗА ҚАБЫЛ<br>БОЛСЫН!</h1>
-        <div class="decor-right" style="transform: scaleX(-1);"></div>
+        <div class="header-decor" style="transform: scaleX(-1);"></div>
     </div>
 
     <div class="main-card">
+        <div class="corner-decor top-left"></div>
+        <div class="corner-decor top-right"></div>
+        <div class="corner-decor bottom-left"></div>
+        <div class="corner-decor bottom-right"></div>
+
         <div class="logo-container">
             <div class="logo-text">AGEUL</div>
         </div>
         
         <div class="info-content">
             <h2>SmartCity Astana</h2>
-            <p>Система Presight AI в режиме мониторинга.</p>
+            <p>Система Presight AI работает в режиме праздничного мониторинга.</p>
         </div>
 
-        <a href="https://taxi.yandex.kz/" target="_blank" class="taxi-btn">ТАКСИ 🚖</a>
+        <a href="https://taxi.yandex.kz/" target="_blank" class="taxi-btn">ЗАКАЗАТЬ ТАКСИ 🚖</a>
     </div>
 
     <div id="map"></div>
