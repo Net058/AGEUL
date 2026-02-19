@@ -3,13 +3,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>SmartCity Astana — Ramadan Edition</title>
+    <title>SmartCity Astana — AGEUL Edition</title>
     <style>
         :root {
             --gold: #D4AF37;
             --gold-dark: #aa8a2e;
             --dark-blue: #001a33;
-            --glass: rgba(255, 255, 255, 0.85);
+            --glass: rgba(255, 255, 255, 0.9);
         }
 
         * { box-sizing: border-box; }
@@ -19,107 +19,123 @@
             height: 100%; 
             margin: 0; 
             padding: 0; 
-            font-family: 'SF Pro Display', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; 
+            font-family: 'SF Pro Display', sans-serif; 
             background: #f0f0f0;
             overflow: hidden;
         }
 
-        /* Праздничный заголовок с градиентом */
+        /* Шапка с исламским узором */
         .ramadan-header {
             position: absolute;
             top: 0; left: 0; right: 0;
-            height: 90px;
-            background: linear-gradient(180deg, var(--dark-blue) 0%, rgba(0, 26, 51, 0.9) 100%);
+            height: 100px;
+            background-color: var(--dark-blue);
+            /* Добавляем паттерн узора поверх градиента */
+            background-image: 
+                linear-gradient(rgba(0, 26, 51, 0.8), rgba(0, 26, 51, 0.8)),
+                url('https://www.transparenttextures.com/patterns/arabesque.png'); 
             color: white;
             z-index: 2000;
             display: flex;
             align-items: center;
             justify-content: space-between;
-            padding: 10px 25px;
+            padding: 0 20px;
             border-bottom: 3px solid var(--gold);
-            box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+            box-shadow: 0 4px 20px rgba(0,0,0,0.4);
         }
 
         .ramadan-header h1 { 
-            font-size: 16px; 
-            letter-spacing: 1px;
-            line-height: 1.3; 
+            font-size: 18px; 
+            letter-spacing: 1.5px;
+            line-height: 1.2; 
             margin: 0; 
             font-weight: 800;
-            text-shadow: 0 2px 4px rgba(0,0,0,0.5);
+            text-align: center;
+            flex-grow: 1;
+            text-transform: uppercase;
         }
 
-        .crescent { font-size: 24px; filter: drop-shadow(0 0 5px var(--gold)); }
+        .crescent { 
+            font-size: 28px; 
+            color: var(--gold);
+            filter: drop-shadow(0 0 8px rgba(212, 175, 55, 0.6));
+        }
 
-        /* Центральная карточка (Glassmorphism) */
+        /* Карточка AGEUL */
         .main-card {
             position: absolute;
-            bottom: 40px; /* Перенесли вниз, как в современных картах */
+            top: 130px; /* Для маленьких экранов лучше чуть выше середины */
             left: 50%;
             transform: translateX(-50%);
-            width: 92%;
-            max-width: 400px;
+            width: 90%;
+            max-width: 350px;
             background: var(--glass);
-            backdrop-filter: blur(10px);
-            -webkit-backdrop-filter: blur(10px);
+            backdrop-filter: blur(15px);
+            -webkit-backdrop-filter: blur(15px);
             z-index: 1000;
-            padding: 20px;
-            border-radius: 24px;
-            box-shadow: 0 15px 35px rgba(0,0,0,0.2);
-            border: 1px solid rgba(255, 255, 255, 0.4);
+            padding: 30px 20px 20px;
+            border-radius: 28px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.25);
+            border: 1px solid rgba(212, 175, 55, 0.3);
+            text-align: center;
         }
 
-        /* Фото профиля */
-        .profile-container {
-            position: relative;
-            margin-top: -60px; /* Вынос фото вверх */
-            margin-bottom: 15px;
-            display: flex;
-            justify-content: center;
-        }
-
-        .profile-pic {
-            width: 90px;
-            height: 90px;
+        /* Область логотипа AGEUL */
+        .logo-container {
+            width: 100px;
+            height: 100px;
+            background: var(--dark-blue);
+            border: 3px solid var(--gold);
             border-radius: 50%;
-            border: 4px solid var(--white);
-            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
-            background-image: url('https://i.ibb.co/Y7X8X8z/food-bowl.jpg');
-            background-size: cover;
-            background-position: center;
-            background-color: #eee;
+            margin: -70px auto 15px; /* Вынос логотипа вверх */
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.2);
+            overflow: hidden;
         }
 
-        .info-content { text-align: center; margin-bottom: 20px; }
-        .info-content h2 { margin: 0 0 5px; font-size: 22px; color: var(--dark-blue); font-weight: 700; }
-        .info-content p { margin: 0; font-size: 14px; color: #444; opacity: 0.8; }
+        .logo-text {
+            color: var(--gold);
+            font-weight: 900;
+            font-size: 18px;
+            letter-spacing: 1px;
+        }
 
-        /* Кнопка ТАКСИ с анимацией */
+        .info-content h2 { 
+            margin: 0 0 8px; 
+            font-size: 20px; 
+            color: var(--dark-blue); 
+            font-weight: 700; 
+        }
+
+        .info-content p { 
+            margin: 0 0 25px; 
+            font-size: 13px; 
+            color: #555; 
+            line-height: 1.5;
+            padding: 0 10px;
+        }
+
+        /* Кнопка ТАКСИ */
         .taxi-btn {
             width: 100%;
             background: linear-gradient(135deg, var(--gold) 0%, var(--gold-dark) 100%);
             color: white;
             border: none;
-            padding: 18px;
-            border-radius: 16px;
+            padding: 16px;
+            border-radius: 14px;
             font-weight: 700;
             font-size: 16px;
-            cursor: pointer;
             text-decoration: none;
             display: block;
-            text-align: center;
-            box-shadow: 0 6px 20px rgba(197, 160, 89, 0.4);
-            transition: all 0.3s ease;
-            text-transform: uppercase;
-            letter-spacing: 1px;
+            box-shadow: 0 5px 15px rgba(170, 138, 46, 0.4);
+            transition: 0.3s;
         }
 
-        .taxi-btn:active { transform: scale(0.97); }
+        .taxi-btn:active { transform: scale(0.96); }
 
-        #map { position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 1; }
-        
-        /* Убираем лишние элементы Яндекса для чистоты */
-        .ymaps-2-1-79-copyrights-promo { display: none !important; }
+        #map { position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 1; opacity: 0.9; }
     </style>
 </head>
 <body>
@@ -131,16 +147,16 @@
     </div>
 
     <div class="main-card">
-        <div class="profile-container">
-            <div class="profile-pic"></div>
+        <div class="logo-container">
+            <div class="logo-text">AGEUL</div>
         </div>
         
         <div class="info-content">
             <h2>SmartCity Astana</h2>
-            <p>Система Presight AI работает в режиме праздничного мониторинга.</p>
+            <p>Система Presight AI работает в режиме праздничного мониторинга для вашего комфорта.</p>
         </div>
 
-        <a href="https://taxi.yandex.kz/" target="_blank" class="taxi-btn">Заказать такси 🚕</a>
+        <a href="https://taxi.yandex.kz/" target="_blank" class="taxi-btn">ЗАКАЗАТЬ ТАКСИ 🚖</a>
     </div>
 
     <div id="map"></div>
@@ -151,15 +167,9 @@
         function init() {
             var myMap = new ymaps.Map("map", {
                 center: [51.1282, 71.4304],
-                zoom: 15,
+                zoom: 14,
                 controls: [] 
-            }, {
-                yandexMapDisablePoiInteractivity: true,
-                suppressMapOpenBlock: true
             });
-
-            // Добавляем стильный слой карты (опционально можно настроить через кабинет разработчика)
-            myMap.behaviors.disable('scrollZoom'); 
         }
     </script>
 </body>
