@@ -2,135 +2,146 @@
 <html lang="kk">
 <head>
     <meta charset="UTF-8">
-    <title>AGEUL - Astana Smart Startup</title>
+    <title>AGEUL - SmartCity Astana</title>
     <script src="https://api-maps.yandex.ru/2.1/?lang=ru_RU" type="text/javascript"></script>
     <style>
-        body, html { margin: 0; padding: 0; width: 100%; height: 100%; overflow: hidden; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
-        #map { width: 100%; height: 100vh; filter: brightness(0.9) contrast(1.1); }
+        /* Жалпы стильдер */
+        body, html { margin: 0; padding: 0; scroll-behavior: smooth; font-family: 'Montserrat', sans-serif; background: #0f172a; color: white; }
+        
+        /* КАРТА БЕТІ (1-ші бет) */
+        #map-page { height: 100vh; width: 100%; position: relative; }
+        #map { width: 100%; height: 100%; filter: brightness(0.85); }
 
-        /* Стартап панелі - Glassmorphism стилі */
-        .ui-header {
-            position: absolute; top: 20px; left: 20px; z-index: 1000;
-            background: rgba(255, 255, 255, 0.1); backdrop-filter: blur(10px);
-            padding: 15px 25px; border-radius: 20px;
-            border: 1px solid rgba(255, 255, 255, 0.2); color: white; width: 260px;
-            box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
+        /* "Біз туралы білу" батырмасы */
+        .nav-btn {
+            position: absolute; top: 25px; right: 220px; z-index: 1000;
+            background: linear-gradient(135deg, #38bdf8, #1d4ed8);
+            color: white; padding: 12px 25px; border-radius: 50px;
+            text-decoration: none; font-weight: bold; font-size: 14px;
+            box-shadow: 0 4px 15px rgba(56, 189, 248, 0.4);
+            transition: 0.3s ease; border: 1px solid rgba(255,255,255,0.2);
         }
+        .nav-btn:hover { transform: translateY(-3px); box-shadow: 0 6px 20px rgba(56, 189, 248, 0.6); }
 
         /* Ораза тілегі */
         .ramadan-wish {
-            position: absolute; top: 20px; right: 20px; z-index: 1000;
-            background: linear-gradient(135deg, #ffd700, #ffa500);
+            position: absolute; top: 25px; right: 25px; z-index: 1000;
+            background: rgba(255, 215, 0, 0.9); color: #000;
             padding: 10px 20px; border-radius: 50px; font-weight: bold;
-            color: #000; box-shadow: 0 4px 15px rgba(0,0,0,0.3);
-            display: flex; align-items: center; gap: 10px;
         }
 
-        /* КИІЗ ҮЙ - Оң жақ төменгі бұрыш */
-        .yurt-icon {
-            position: absolute; bottom: 120px; right: 20px; z-index: 1000;
-            width: 80px; height: 80px;
-            background: url('https://img.icons8.com/color/96/yurt.png') no-repeat center;
-            background-size: contain; filter: drop-shadow(0 5px 15px rgba(0,0,0,0.5));
-            cursor: pointer; transition: transform 0.3s;
+        /* КИІЗ ҮЙ */
+        .yurt-box {
+            position: absolute; bottom: 40px; right: 20px; z-index: 1000;
+            width: 90px; height: 90px;
+            background: url('https://img.icons8.com/color/96/yurt.png') no-repeat center/contain;
+            filter: drop-shadow(0 0 10px rgba(255,255,255,0.3));
         }
-        .yurt-icon:hover { transform: scale(1.1); }
 
-        /* Bottom Sheet - Төменгі панель */
+        /* СИПАТТАМА БЕТІ (2-ші бет) */
+        #about-page {
+            min-height: 100vh; padding: 100px 10%;
+            background: linear-gradient(180deg, #0f172a 0%, #1e293b 100%);
+            display: flex; flex-direction: column; align-items: center; text-align: center;
+        }
+        .glass-card {
+            background: rgba(255, 255, 255, 0.05); backdrop-filter: blur(15px);
+            border-radius: 30px; border: 1px solid rgba(255, 255, 255, 0.1);
+            padding: 50px; max-width: 900px; width: 100%;
+        }
+        .feature-grid {
+            display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 30px; margin-top: 50px; width: 100%;
+        }
+        .feature-item {
+            padding: 30px; background: rgba(255, 255, 255, 0.03);
+            border-radius: 20px; border: 1px solid rgba(56, 189, 248, 0.2);
+        }
+        h2 { font-size: 42px; color: #38bdf8; margin-bottom: 20px; }
+        p { line-height: 1.6; color: #94a3b8; font-size: 18px; }
+
+        /* Төменгі панель */
         #bottom-panel {
             position: absolute; bottom: -500px; left: 0; width: 100%;
-            background: #fff; border-top-left-radius: 30px; border-top-right-radius: 30px;
-            z-index: 2000; transition: bottom 0.5s cubic-bezier(0.1, 0.7, 0.1, 1);
-            padding: 30px; box-sizing: border-box;
+            background: white; border-top-left-radius: 30px; border-top-right-radius: 30px;
+            z-index: 2000; transition: 0.5s; padding: 30px; color: #000;
         }
         #bottom-panel.active { bottom: 0; }
-        .panel-handle { width: 50px; height: 6px; background: #e0e0e0; margin: 0 auto 20px; border-radius: 10px; }
-        .photo-container { width: 100%; height: 250px; background: #f8f9fa; border-radius: 20px; overflow: hidden; margin-top: 15px; }
-        .photo-container img { width: 100%; height: 100%; object-fit: cover; }
-        
-        .close-btn { position: absolute; right: 30px; top: 25px; font-size: 30px; color: #ccc; cursor: pointer; }
     </style>
 </head>
 <body>
 
-<div class="ramadan-wish">
-    <span>🌙 Ораза қабыл болсын!</span>
-</div>
+    <section id="map-page">
+        <a href="#about-page" class="nav-btn">Біз туралы көбірек білу →</a>
+        <div class="ramadan-wish">🌙 Ораза қабыл болсын!</div>
+        
+        <div id="map"></div>
+        <div class="yurt-box"></div>
 
-<div class="ui-header">
-    <h3 style="margin:0; color: #ffd700;">AGEUL Startup</h3>
-    <p style="font-size: 13px; margin: 5px 0;">Digital Astana Monitoring</p>
-    <hr style="border: 0; border-top: 1px solid rgba(255,255,255,0.1);">
-    <p style="font-size: 12px;">🛰️ Сергек: <span style="color: #00ff00;">450 нүкте белсенді</span></p>
-</div>
+        <div id="bottom-panel">
+            <div style="width:50px; height:5px; background:#eee; margin:0 auto 20px; border-radius:10px;"></div>
+            <h3 id="p-title">Таңдалған нүкте</h3>
+            <p id="p-desc">AGEUL Мониторинг жүйесі</p>
+            <div style="width:100%; height:200px; background:#f0f0f0; border-radius:15px; overflow:hidden;">
+                <img id="p-img" src="" style="width:100%; height:100%; object-fit:cover;">
+            </div>
+            <button onclick="document.getElementById('bottom-panel').classList.remove('active')" style="margin-top:15px; width:100%; padding:10px; border:none; background:#007aff; color:white; border-radius:10px;">Жабу</button>
+        </div>
+    </section>
 
-<div class="yurt-icon" title="Қазақстанның мұрасы"></div>
-
-<div id="bottom-panel">
-    <div class="panel-handle"></div>
-    <div class="close-btn" onclick="closePanel()">×</div>
-    <div class="location-title" id="p-title" style="font-size: 24px; font-weight: bold;">Нүкте таңдалды</div>
-    <div class="location-desc" id="p-desc" style="color: #888; margin-top: 5px;">Астана қаласы, Smart City бақылау аймағы</div>
-    <div class="photo-container">
-        <img id="p-img" src="" alt="Street Photo">
-    </div>
-</div>
-
-<div id="map"></div>
-
-<script type="text/javascript">
-    ymaps.ready(init);
-    var myMap;
-
-    function init() {
-        myMap = new ymaps.Map("map", {
-            center: [51.128, 71.430],
-            zoom: 13,
-            controls: ['trafficControl', 'zoomControl']
-        });
-
-        // "Пробки" режимін автоматты қосу
-        myMap.controls.get('trafficControl').showTraffic();
-
-        // Сергектің 450 қызыл нүктесі
-        for (var i = 0; i < 450; i++) {
-            var lat = 51.06 + (Math.random() * 0.16);
-            var lng = 71.30 + (Math.random() * 0.25);
+    <section id="about-page">
+        <div class="glass-card">
+            <h2>AGEUL Стартапына қош келдіңіз</h2>
+            <p>Біз Астана қаласының қауіпсіздігі мен көлік ағынын жасанды интеллект арқылы басқаратын алғашқы отандық жүйеміз.</p>
             
-            var placemark = new ymaps.Placemark([lat, lng], {
-                title: "AGEUL Студиясы - Камера #" + (3000 + i),
-                desc: "Бақылау статусы: Белсенді",
-                img: "https://images.unsplash.com/photo-1574950578143-858c6fc58922?auto=format&fit=crop&w=1000"
-            }, {
-                preset: 'islands#redCircleDotIcon',
-                iconColor: '#ff3b30',
-                iconScale: 0.8
+            <div class="feature-grid">
+                <div class="feature-item">
+                    <h3 style="color: #fbbf24;">🔍 Сергек Интеграциясы</h3>
+                    <p style="font-size: 14px;">450-ден астам камераның деректерін нақты уақытта талдап, заң бұзушылықтарды алдын аламыз.</p>
+                </div>
+                <div class="feature-item">
+                    <h3 style="color: #38bdf8;">🚦 Трафик Бақылау</h3>
+                    <p style="font-size: 14px;">Кептелістерді азайту үшін бағдаршамдар мен қоғамдық көліктердің қозғалысын оңтайландырамыз.</p>
+                </div>
+                <div class="feature-item">
+                    <h3 style="color: #22c55e;">📱 Smart Data</h3>
+                    <p style="font-size: 14px;">Әрбір тұрғын үшін қалалық деректерді қолжетімді және түсінікті форматқа өткіземіз.</p>
+                </div>
+            </div>
+
+            <a href="#map-page" style="display:inline-block; margin-top:50px; color:#38bdf8; text-decoration:none; font-weight:bold; border-bottom: 2px solid #38bdf8;">← Картаға қайту</a>
+        </div>
+
+        <p style="margin-top: 50px; font-size: 14px; opacity: 0.5;">© 2026 AGEUL Startup. Ниеттеріңіз қабыл болсын!</p>
+    </section>
+
+    <script type="text/javascript">
+        ymaps.ready(init);
+        function init() {
+            var myMap = new ymaps.Map("map", {
+                center: [51.1282, 71.4305],
+                zoom: 14,
+                controls: ['trafficControl']
             });
 
-            placemark.events.add('click', function (e) {
-                var target = e.get('target');
-                showInfo(target.properties.get('title'), target.properties.get('desc'), target.properties.get('img'));
-            });
+            // 450 нүкте
+            for (var i = 0; i < 450; i++) {
+                var lat = 51.06 + (Math.random() * 0.16);
+                var lng = 71.30 + (Math.random() * 0.25);
+                var p = new ymaps.Placemark([lat, lng], {
+                    title: "AGEUL Нүкте #" + (i + 1),
+                    img: "https://images.unsplash.com/photo-1541339907198-e08756ebafe3?auto=format&fit=crop&w=600"
+                }, { preset: 'islands#redCircleDotIcon', iconColor: '#ff0000' });
 
-            myMap.geoObjects.add(placemark);
+                p.events.add('click', function (e) {
+                    var target = e.get('target');
+                    document.getElementById('p-title').innerText = target.properties.get('title');
+                    document.getElementById('p-img').src = target.properties.get('img');
+                    document.getElementById('bottom-panel').classList.add('active');
+                });
+                myMap.geoObjects.add(p);
+            }
         }
-
-        myMap.events.add('click', function (e) {
-            var coords = e.get('coords');
-            showInfo("Нүкте: " + coords[0].toFixed(3), "Астана қаласы мониторингі", "https://images.unsplash.com/photo-1566438480900-0609be27a4be?auto=format&fit=crop&w=1000");
-        });
-    }
-
-    function showInfo(title, desc, img) {
-        document.getElementById('p-title').innerText = title;
-        document.getElementById('p-desc').innerText = desc;
-        document.getElementById('p-img').src = img;
-        document.getElementById('bottom-panel').classList.add('active');
-    }
-
-    function closePanel() {
-        document.getElementById('bottom-panel').classList.remove('active');
-    }
-</script>
+    </script>
 </body>
 </html>
