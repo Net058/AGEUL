@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+[01:17, 2/20/2026] Daryn: <!DOCTYPE html>
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
@@ -121,6 +121,146 @@
 
     // Запускаем движение каждые 3 секунды
     setInterval(moveBus, 3000);
+
+</script>
+</body>
+</html>
+
+
+
+
+
+
+ОБНОВА ПОКА ЧТО НЕ СДЕЛАНО
+[11:42, 2/21/2026] Daryn: <!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SmartCity Astana - AGEUL Monitoring</title>
+    
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    
+    <style>
+        body { margin: 0; padding: 0; font-family: 'Arial', sans-serif; background: #0b0d11; color: #fff; overflow: hidden; }
+        #map { height: 100vh; width: 100%; background: #1a1a1a; }
+        
+        /* СТИЛЬ КАМЕР СЕРГЕК */
+        .sergek-icon {
+            background: #ff0000;
+            border: 2px solid white;
+            border-radius: 50%;
+            text-align: center;
+            line-height: 20px;
+            font-size: 12px;
+            …
+[11:45, 2/21/2026] Daryn: <!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AGEUL - Smart City Monitoring</title>
+    
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    
+    <style>
+        /* Делаем карту на весь экран */
+        body, html { margin: 0; padding: 0; height: 100%; width: 100%; overflow: hidden; font-family: 'Segoe UI', sans-serif; }
+        #map { height: 100vh; width: 100%; background: #0b0d11; }
+        
+        /* Стиль панели управления */
+        .ui-panel {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            z-index: 1000;
+            background: rgba(15, 23, 42, 0.9);
+            padding: 20px;
+            border-radius: 15px;
+            border: 1px solid #38bdf8;
+            width: 280px;
+            color: white;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.5);
+            backdrop-filter: blur(10px);
+        }
+
+        .ui-panel h2 { margin: 0 0 15px 0; font-size: 20px; color: #38bdf8; border-bottom: 1px solid #334155; padding-bottom: 10px; }
+        .status-item { margin-bottom: 12px; font-size: 14px; display: flex; justify-content: space-between; align-items: center; }
+        .online-dot { height: 10px; width: 10px; background: #22c55e; border-radius: 50%; display: inline-block; margin-left: 5px; box-shadow: 0 0 10px #22c55e; }
+
+        /* Иконки СЕРГЕК */
+        .sergek-icon {
+            background: #ef4444;
+            border: 2px solid #fff;
+            border-radius: 50%;
+            color: white;
+            font-weight: bold;
+            text-align: center;
+            line-height: 20px;
+            box-shadow: 0 0 15px rgba(239, 68, 68, 0.7);
+        }
+
+        /* Иконка автобуса */
+        .bus-icon { font-size: 28px; transition: all 1s linear; filter: drop-shadow(0 0 5px #38bdf8); }
+    </style>
+</head>
+<body>
+
+<div class="ui-panel">
+    <h2>SmartCity: Астана</h2>
+    <div class="status-item"><span>Система:</span> <span style="color: #22c55e;">ONLINE <span class="online-dot"></span></span></div>
+    <div class="status-item"><span>Камеры Sergek:</span> <span>124 активны</span></div>
+    <div class="status-item"><span>Проект:</span> <span style="color: #38bdf8; font-weight: bold;">AGEUL</span></div>
+    <hr style="border: 0.5px solid #334155; margin: 15px 0;">
+    <p style="font-size: 12px; color: #94a3b8; line-height: 1.4;">Интеграция данных в реальном времени. Навигация на базе ИИ.</p>
+</div>
+
+<div id="map"></div>
+
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script>
+    // 1. Создаем карту с центром в Астане
+    const map = L.map('map', { zoomControl: false }).setView([51.147, 71.430], 14);
+
+    // 2. Используем темную тему (Professional Dark Mode)
+    L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {
+        attribution: '© AGEUL Smart City Monitoring'
+    }).addTo(map);
+
+    // 3. Рисуем маршрут А -> С (синяя линия)
+    const routeCoords = [
+        [51.155, 71.410], // Точка А
+        [51.150, 71.425],
+        [51.145, 71.440],
+        [51.140, 71.460]  // Точка С
+    ];
+    L.polyline(routeCoords, { color: '#38bdf8', weight: 6, opacity: 0.6, dashArray: '10, 15' }).addTo(map);
+
+    // 4. Ставим камеры СЕРГЕК
+    const cameras = [
+        { lat: 51.152, lng: 71.420, id: "S-101" },
+        { lat: 51.146, lng: 71.435, id: "S-102" },
+        { lat: 51.142, lng: 71.450, id: "S-103" }
+    ];
+
+    cameras.forEach(cam => {
+        const icon = L.divIcon({ className: 'sergek-icon', html: 'S', iconSize: [20, 20] });
+        L.marker([cam.lat, cam.lng], {icon: icon}).addTo(map)
+            .bindPopup(<b>Сергек ${cam.id}</b><br>Скорость: 58 км/ч<br>Нарушений нет.);
+    });
+
+    // 5. Живой автобус
+    const busIcon = L.divIcon({ className: 'bus-icon', html: '🚌', iconSize: [30, 30] });
+    const busMarker = L.marker([51.140, 71.420], { icon: busIcon }).addTo(map);
+
+    const busPath = [[51.140, 71.420], [51.145, 71.425], [51.150, 71.430], [51.155, 71.435], [51.150, 71.430], [51.145, 71.425]];
+    let step = 0;
+
+    function moveBus() {
+        step = (step + 1) % busPath.length;
+        busMarker.setLatLng(busPath[step]);
+    }
+    setInterval(moveBus, 2000); // Автобус двигается каждые 2 секунды
 
 </script>
 </body>
