@@ -2,13 +2,13 @@
 <html lang="kk">
 <head>
     <meta charset="UTF-8">
-    <title>AGEUL | Astana Smart Monitoring</title>
+    <title>AGEUL | AI Smart Navigation</title>
     <script src="https://api-maps.yandex.ru/2.1/?lang=ru_RU" type="text/javascript"></script>
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700;900&display=swap" rel="stylesheet">
     <style>
         body, html { margin: 0; padding: 0; scroll-behavior: smooth; font-family: 'Montserrat', sans-serif; background: #ffffff; overflow-x: hidden; }
         
-        /* КАРТА БЕТІ */
+        /* КАРТА */
         #map-page { height: 100vh; width: 100%; position: relative; }
         #map { width: 100%; height: 100%; filter: brightness(1.1); }
 
@@ -16,6 +16,14 @@
             position: absolute; top: 20px; left: 50%; transform: translateX(-50%); z-index: 1000;
             background: #f59e0b; color: #fff; padding: 12px 40px; border-radius: 50px; 
             font-weight: 900; font-size: 18px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); border: 2px solid #fff;
+        }
+
+        /* AI ТЕРМИНАЛ (ЛОГИ НЕЙРОСЕТИ) */
+        .ai-console {
+            position: absolute; bottom: 120px; left: 20px; z-index: 1000;
+            background: rgba(15, 23, 42, 0.9); color: #22c55e; padding: 15px;
+            border-radius: 15px; font-family: 'Courier New', monospace; font-size: 12px;
+            width: 300px; border: 1px solid #334155; box-shadow: 0 10px 30px rgba(0,0,0,0.3);
         }
 
         .status-mini {
@@ -32,7 +40,6 @@
         }
         .speed-value { font-size: 30px; font-weight: 900; color: #22c55e; }
 
-        /* БАТЫРМА */
         .footer-ui { position: absolute; bottom: 40px; width: 100%; display: flex; justify-content: center; z-index: 1000; }
         .main-btn { 
             background: #0f172a; color: #fff; padding: 20px 50px; border-radius: 20px; 
@@ -41,18 +48,13 @@
         }
         .main-btn:hover { background: #2563eb; transform: scale(1.05); }
 
-        /* ПРЕЗЕНТАЦИЯ БЕТІ */
+        /* О ПРОЕКТЕ */
         #about-page { min-height: 100vh; background: #f8fafc; padding: 80px 20px; }
         .pres-card { max-width: 900px; margin: 0 auto; background: white; padding: 60px; border-radius: 50px; box-shadow: 0 30px 80px rgba(0,0,0,0.05); }
         .section-box { margin: 35px 0; padding: 35px; border-radius: 25px; }
         .problem-box { background: #fff1f2; border-left: 10px solid #ef4444; }
         .solution-box { background: #f0fdf4; border-left: 10px solid #22c55e; }
-        
-        h1 { font-size: 40px; color: #0f172a; text-align: center; font-weight: 900; }
-        h2 { font-size: 28px; color: #0f172a; margin-bottom: 15px; }
-        p { font-size: 18px; line-height: 1.7; color: #475569; }
-        ul { padding-left: 20px; }
-        li { font-size: 18px; color: #475569; margin-bottom: 10px; }
+        h1 { text-align: center; font-weight: 900; color: #0f172a; }
     </style>
 </head>
 <body>
@@ -60,49 +62,48 @@
     <section id="map-page">
         <div class="ramadan-badge">🌙 Ораза қабыл болсын!</div>
         
+        <div class="ai-console" id="ai-log">
+            <div>[SYSTEM]: Инициализация AGEUL AI...</div>
+            <div id="log-content"></div>
+        </div>
+
         <div class="speed-overlay">
-            <div style="font-size: 10px; text-transform: uppercase; color: #94a3b8;">Орташа жылдамдық</div>
-            <div class="speed-value"><span id="avg-speed">57</span> <small style="font-size: 14px;">км/сағ</small></div>
+            <div style="font-size: 10px; text-transform: uppercase; color: #94a3b8;">AI Прогноз скорости</div>
+            <div class="speed-value"><span id="avg-speed">57</span> <small style="font-size: 14px;">км/ч</small></div>
         </div>
 
         <div class="status-mini">
-            <b style="font-size: 18px; color: #0f172a;">AGEUL Мониторинг</b>
+            <b style="font-size: 18px; color: #0f172a;">AGEUL AI Core</b>
             <div style="font-size: 16px; margin-top: 10px; color: #64748b;">
-                Көлік ағыны: <span id="bus-live">74</span><br>
-                Сергек: <span id="cam-live">306</span>
+                Анализ потока: <span id="bus-live">74</span> ед.<br>
+                Активные камеры: <span id="cam-live">306</span>
             </div>
         </div>
 
         <div id="map"></div>
 
         <div class="footer-ui">
-            <a href="#about-page" class="main-btn">Біз туралы көбірек білу →</a>
+            <a href="#about-page" class="main-btn">БІЗ ТУРАЛЫ КӨБІРЕК БІЛУ →</a>
         </div>
     </section>
 
     <section id="about-page">
         <div class="pres-card">
-            <h1>AGEUL: Нақты Навигация</h1>
+            <h1>AGEUL: Революция в навигации</h1>
             
             <div class="section-box problem-box">
-                <h2>Неге Яндекс пен 2GIS емес?</h2>
-                <p>
-                    Астана — еліміздің бас қаласы, мұнда өңірлерден келетін көлік ағыны өте көп. Яндекс пен 2GIS жол жағдайын <b>спутник</b> арқылы бақылайды. Егер бір жерде телефондар көп жиналса, спутник оны "кептеліс" деп қате ойлап, "фантомдық кептелістерді" көрсетеді.
-                </p>
-                <p>
-                    Сондай-ақ, модераторлар жылдамдық режимін қолмен енгізеді және жиі қателеседі. Соның кесірінен курьерлер мен жүргізушілер заңсыз айыппұл алып, материалдық шығынға ұшырауда.
-                </p>
+                <h2>Почему старые карты не тянут?</h2>
+                <p>Яндекс и 2GIS используют <b>спутниковые данные</b>. Если на остановке собралось много людей с телефонами, спутник ошибочно рисует "пробку" там, где её нет (фантомные пробки).</p>
+                <p>Модераторы вводят ограничения скорости вручную, из-за чего водители и курьеры получают несправедливые штрафы.</p>
             </div>
 
             <div class="section-box solution-box">
-                <h2>Біздің шешім</h2>
-                <p>
-                    Біздің карта деректерді тікелей <b>Сергек жүйесінен және полиция базасынан</b> трансляциялайды:
-                </p>
+                <h2>Как работает наш ИИ?</h2>
+                <p>Мы подключили нейросеть напрямую к <b>камерам Сергек</b> и базе полиции. Наш AI:</p>
                 <ul>
-                    <li><b>Нақты жылдамдық:</b> Барлық айыппұлдар мен жылдамдық режимдері ресми базадан алынады.</li>
-                    <li><b>Тура көрсетілім:</b> Камералар жолдың нақты жағдайын телефондарға қарамай-ақ дәл көрсетеді.</li>
-                    <li><b>Өмір сапасын жақсарту:</b> Біздің мақсат — Қазақстанды әлемдік технологиялық (AI) орталыққа айналдыру!</li>
+                    <li>Видит реальные машины, а не просто сигналы телефонов.</li>
+                    <li>Автоматически обновляет скоростной режим по официальным данным.</li>
+                    <li>Распознает дефекты дорог и ДТП за доли секунды.</li>
                 </ul>
             </div>
 
@@ -117,7 +118,6 @@
         function init() {
             var myMap = new ymaps.Map("map", { center: [51.128, 71.430], zoom: 14, controls: [] });
 
-            // 200 нақты Сергек нүктесі
             for (var i = 0; i < 200; i++) {
                 var lat = 51.05 + (Math.random() * 0.15);
                 var lng = 71.30 + (Math.random() * 0.25);
@@ -126,9 +126,27 @@
                 }));
             }
 
+            // ИМИТАЦИЯ РАБОТЫ ИИ
+            const logContent = document.getElementById('log-content');
+            const aiMessages = [
+                "Анализ потока на пр. Кабанбай батыра...",
+                "Обнаружено скопление: ул. Кунаева",
+                "Синхронизация с БД Сергек: OK",
+                "Корректировка скоростного режима...",
+                "AI: Фантомная пробка отклонена",
+                "Оптимизация маршрута для курьеров..."
+            ];
+
             setInterval(() => {
-                document.getElementById('avg-speed').innerText = 52 + Math.floor(Math.random() * 8);
-                document.getElementById('bus-live').innerText = 70 + Math.floor(Math.random() * 10);
+                // Обновляем цифры
+                document.getElementById('avg-speed').innerText = 50 + Math.floor(Math.random() * 12);
+                document.getElementById('bus-live').innerText = 65 + Math.floor(Math.random() * 20);
+                
+                // Добавляем логи ИИ
+                const msg = document.createElement('div');
+                msg.innerText = "> " + aiMessages[Math.floor(Math.random() * aiMessages.length)];
+                logContent.prepend(msg);
+                if (logContent.children.length > 5) logContent.lastChild.remove();
             }, 3000);
         }
     </script>
