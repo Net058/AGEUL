@@ -2,7 +2,7 @@
 <html lang="kk">
 <head>
     <meta charset="UTF-8">
-    <title>AGEUL | Intelligent Astana Monitoring</title>
+    <title>AGEUL | Astana Smart Monitoring</title>
     <script src="https://api-maps.yandex.ru/2.1/?lang=ru_RU" type="text/javascript"></script>
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700;900&display=swap" rel="stylesheet">
     <style>
@@ -12,49 +12,45 @@
         #map-page { height: 100vh; width: 100%; position: relative; }
         #map { width: 100%; height: 100%; filter: brightness(1.1); }
 
-        /* ОРАЗА БАННЕРІ - ҮЛКЕЙТІЛДІ */
         .ramadan-badge {
             position: absolute; top: 20px; left: 50%; transform: translateX(-50%); z-index: 1000;
-            background: #f59e0b; color: #fff; padding: 12px 35px; border-radius: 50px; 
-            font-weight: 900; font-size: 18px; box-shadow: 0 4px 15px rgba(0,0,0,0.2); border: 2px solid #fff;
+            background: #f59e0b; color: #fff; padding: 12px 40px; border-radius: 50px; 
+            font-weight: 900; font-size: 18px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); border: 2px solid #fff;
         }
 
-        /* СОЛ ЖАҚ ПАНЕЛЬ - ҮЛКЕЙТІЛДІ */
         .status-mini {
             position: absolute; top: 20px; left: 20px; z-index: 1000;
-            background: rgba(255, 255, 255, 0.95); padding: 20px; border-radius: 20px;
-            box-shadow: 0 6px 20px rgba(0,0,0,0.1); border: 1px solid #e2e8f0;
+            background: white; padding: 20px; border-radius: 20px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.08); border: 1px solid #e2e8f0;
         }
 
-        /* ОҢ ЖАҚ ЖЫЛДАМДЫҚ ПАНЕЛІ - ҮЛКЕЙТІЛДІ */
         .speed-overlay {
             position: absolute; top: 20px; right: 20px; z-index: 1000;
-            background: #0f172a; color: white; padding: 18px 30px; border-radius: 25px;
-            border-bottom: 5px solid #22c55e; box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+            background: #0f172a; color: white; padding: 15px 30px; border-radius: 25px;
+            border-bottom: 5px solid #22c55e; box-shadow: 0 10px 30px rgba(0,0,0,0.2);
             text-align: right;
         }
-        .speed-label { font-size: 12px; text-transform: uppercase; color: #94a3b8; font-weight: 700; }
-        .speed-value { font-size: 32px; font-weight: 900; color: #22c55e; }
+        .speed-value { font-size: 30px; font-weight: 900; color: #22c55e; }
 
-        /* ТӨМЕНГІ БАТЫРМА - ҮЛКЕЙТІЛДІ ЖӘНЕ ОРТАҒА ҚОЙЫЛДЫ */
+        /* БАТЫРМА */
         .footer-ui { position: absolute; bottom: 40px; width: 100%; display: flex; justify-content: center; z-index: 1000; }
         .main-btn { 
             background: #0f172a; color: #fff; padding: 20px 50px; border-radius: 20px; 
             text-decoration: none; font-weight: 900; font-size: 20px; transition: 0.3s;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.4);
+            box-shadow: 0 15px 35px rgba(0,0,0,0.3);
         }
         .main-btn:hover { background: #2563eb; transform: scale(1.05); }
 
         /* ПРЕЗЕНТАЦИЯ БЕТІ */
         #about-page { min-height: 100vh; background: #f8fafc; padding: 80px 20px; }
-        .pres-card { max-width: 1000px; margin: 0 auto; background: white; padding: 60px; border-radius: 50px; box-shadow: 0 30px 80px rgba(0,0,0,0.1); }
-        .section-box { margin: 40px 0; padding: 35px; border-radius: 25px; }
-        .problem-box { background: #fff1f2; border-left: 8px solid #ef4444; }
-        .solution-box { background: #f0fdf4; border-left: 8px solid #22c55e; }
+        .pres-card { max-width: 900px; margin: 0 auto; background: white; padding: 60px; border-radius: 50px; box-shadow: 0 30px 80px rgba(0,0,0,0.05); }
+        .section-box { margin: 35px 0; padding: 35px; border-radius: 25px; }
+        .problem-box { background: #fff1f2; border-left: 10px solid #ef4444; }
+        .solution-box { background: #f0fdf4; border-left: 10px solid #22c55e; }
         
-        h1 { font-size: 45px; }
-        h2 { font-size: 30px; color: #0f172a; }
-        p { font-size: 18px; line-height: 1.8; color: #475569; }
+        h1 { font-size: 40px; color: #0f172a; text-align: center; font-weight: 900; }
+        h2 { font-size: 28px; color: #0f172a; margin-bottom: 15px; }
+        p { font-size: 18px; line-height: 1.7; color: #475569; }
     </style>
 </head>
 <body>
@@ -63,15 +59,15 @@
         <div class="ramadan-badge">🌙 Ораза қабыл болсын!</div>
         
         <div class="speed-overlay">
-            <div class="speed-label">Орташа жылдамдық</div>
-            <div class="speed-value"><span id="avg-speed">57</span> <small style="font-size: 16px;">км/сағ</small></div>
+            <div style="font-size: 10px; text-transform: uppercase; color: #94a3b8;">Орташа жылдамдық</div>
+            <div class="speed-value"><span id="avg-speed">57</span> <small style="font-size: 14px;">км/сағ</small></div>
         </div>
 
         <div class="status-mini">
             <b style="font-size: 18px; color: #0f172a;">AGEUL Мониторинг</b>
             <div style="font-size: 16px; margin-top: 10px; color: #64748b;">
-                🚗 Автобус: <span id="bus-live" style="color:#2563eb; font-weight:bold;">74</span><br>
-                📡 Сергек: <span id="cam-live" style="color:#ef4444; font-weight:bold;">306</span>
+                🚗 Автобус: <span id="bus-live">74</span><br>
+                📡 Сергек: <span id="cam-live">306</span>
             </div>
         </div>
 
@@ -84,30 +80,32 @@
 
     <section id="about-page">
         <div class="pres-card">
-            <h1 style="text-align: center; color: #0f172a;">AGEUL Стартап</h1>
-            <p style="text-align: center; font-size: 20px; font-weight: bold; color: #2563eb;">Астана қаласының ақылды навигациясы</p>
-
+            <h1>AGEUL Жобасы</h1>
+            
             <div class="section-box problem-box">
-                <h2>Неге бұл маңызды?</h2>
+                [span_0](start_span)<h2>Неге Яндекс пен 2GIS қателеседі?[span_0](end_span)</h2>
                 <p>
-                    [span_0](start_span)[span_1](start_span)Астанада көлік саны өте көп[span_0](end_span)[span_1](end_span). [span_2](start_span)2025 жылдың алғашқы 4 айында 500-ден астам жол апаты тіркелген[span_2](end_span). [span_3](start_span)2GIS немесе Яндекс карталары спутникпен жұмыс істегендіктен, телефондар жиналған жерде <b>"фантомдық кептелістерді"</b> қате көрсетеді[span_3](end_span). Бұл жүргізушілер мен курьерлердің қате айыппұл алуына әкеледі.
+                    Қазіргі карталар жол жағдайын <b>спутник</b> арқылы бақылайды. [span_1](start_span)[span_2](start_span)Бұл үлкен мәселе тудырады: егер бір жерде адамдар мен телефондар көп жиналса, навигатор оны өтірік кептеліс («фантомдық кептеліс») деп көрсетеді[span_1](end_span)[span_2](end_span). 
+                </p>
+                <p>
+                    [span_3](start_span)[span_4](start_span)Сондай-ақ, модераторлар жылдамдық режимін қолмен жазады, соның кесірінен курьерлер мен қарапайым жүргізушілер жазықсыз айыппұл арқалап жатыр[span_3](end_span)[span_4](end_span).
                 </p>
             </div>
 
             <div class="section-box solution-box">
-                <h2>Біздің шешім</h2>
+                [span_5](start_span)<h2>Біздің шешім[span_5](end_span)</h2>
                 <p>
-                    [span_4](start_span)Біз <b>Сергек жүйесінің</b> нақты деректеріне негізделген жаңа навигация жасадық[span_4](end_span).
+                    [span_6](start_span)[span_7](start_span)Біз деректерді спутниктен емес, тікелей <b>Сергек жүйесінен және полиция базасынан</b> аламыз[span_6](end_span)[span_7](end_span). Бұл дегеніміз:
                 </p>
                 <ul>
-                    [span_5](start_span)<li><p><b>Нақтылық:</b> Камералар кептелісті қатесіз көрсетеді[span_5](end_span).</p></li>
-                    [span_6](start_span)<li><p><b>Заңдылық:</b> Жылдамдық режимі тікелей полиция базасынан алынады[span_6](end_span).</p></li>
-                    [span_7](start_span)<li><p><b>Сапа:</b> Жолдағы шұңқырлар мен ақаулар көрініп тұрады[span_7](end_span).</p></li>
+                    [span_8](start_span)<li><p><b>Нақты жылдамдық:</b> Айыппұлдар мен шектеулер ресми базамен сәйкес келеді[span_8](end_span).</p></li>
+                    [span_9](start_span)<li><p><b>Шынайы кептеліс:</b> Камералар жолдың жағдайын телефондарға қарап емес, нақты көзбен көреді[span_9](end_span).</p></li>
+                    [span_10](start_span)<li><p><b>Жол сапасы:</b> Жолдағы шұңқырлар мен ақаулар бірден байқалады[span_10](end_span).</p></li>
                 </ul>
             </div>
 
             <div style="text-align: center; margin-top: 40px;">
-                <a href="#map-page" style="font-weight: bold; color: #0f172a; text-decoration: none; font-size: 18px;">← Картаға оралу</a>
+                <a href="#map-page" style="color: #0f172a; font-weight: bold; text-decoration: none;">← Картаға оралу</a>
             </div>
         </div>
     </section>
@@ -115,24 +113,18 @@
     <script type="text/javascript">
         ymaps.ready(init);
         function init() {
-            var myMap = new ymaps.Map("map", { 
-                center: [51.128, 71.430], 
-                zoom: 14, 
-                controls: [] 
-            });
+            var myMap = new ymaps.Map("map", { center: [51.128, 71.430], zoom: 14, controls: [] });
 
-            // Картаға нүктелер қосу
-            for (var i = 0; i < 150; i++) {
+            for (var i = 0; i < 200; i++) {
                 var lat = 51.05 + (Math.random() * 0.15);
                 var lng = 71.30 + (Math.random() * 0.25);
                 myMap.geoObjects.add(new ymaps.Placemark([lat, lng], {}, {
-                    preset: 'islands#redCircleDotIcon', iconColor: '#ff0000', iconScale: 0.8
+                    preset: 'islands#redCircleDotIcon', iconColor: '#ff0000', iconScale: 0.7
                 }));
             }
 
-            // Мәліметтерді жаңарту
             setInterval(() => {
-                document.getElementById('avg-speed').innerText = 54 + Math.floor(Math.random() * 6);
+                document.getElementById('avg-speed').innerText = 52 + Math.floor(Math.random() * 8);
                 document.getElementById('bus-live').innerText = 70 + Math.floor(Math.random() * 10);
             }, 3000);
         }
