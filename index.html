@@ -2,100 +2,97 @@
 <html lang="kk">
 <head>
     <meta charset="UTF-8">
-    <title>AGEUL - Astana Monitoring Official</title>
+    <title>AGEUL - Astana Interactive Map</title>
     <script src="https://api-maps.yandex.ru/2.1/?lang=ru_RU" type="text/javascript"></script>
     <style>
-        body, html { margin: 0; padding: 0; width: 100%; height: 100%; overflow: hidden; background: #000; }
+        body, html { margin: 0; padding: 0; width: 100%; height: 100%; overflow: hidden; font-family: sans-serif; }
         #map { width: 100%; height: 100vh; }
-        .ui-header {
-            position: absolute; top: 20px; left: 20px; z-index: 1000;
-            background: rgba(13, 17, 23, 0.95); padding: 15px; border-radius: 10px;
-            border: 2px solid #38bdf8; color: white; width: 240px; font-family: sans-serif;
+
+        /* Төменгі панель (Сен жіберген скриншоттағыдай) */
+        #bottom-panel {
+            position: absolute; bottom: -400px; left: 0; width: 100%;
+            background: white; border-top-left-radius: 20px; border-top-right-radius: 20px;
+            z-index: 2000; transition: bottom 0.4s ease;
+            box-shadow: 0 -5px 20px rgba(0,0,0,0.3);
+            padding: 20px; box-sizing: border-box;
         }
+        #bottom-panel.active { bottom: 0; }
+
+        .panel-handle { width: 40px; height: 5px; background: #ccc; margin: 0 auto 15px; border-radius: 10px; }
+        .location-title { font-size: 20px; font-weight: bold; margin-bottom: 5px; }
+        .location-desc { color: #666; font-size: 14px; margin-bottom: 15px; }
+        
+        .photo-container { width: 100%; height: 180px; background: #eee; border-radius: 12px; overflow: hidden; }
+        .photo-container img { width: 100%; height: 100%; object-fit: cover; }
+
+        .close-btn { position: absolute; right: 20px; top: 20px; font-size: 24px; cursor: pointer; color: #999; }
     </style>
 </head>
 <body>
 
-<div class="ui-header">
-    <h3 style="margin:0; font-size: 18px; color: #38bdf8;">SmartCity: Астана</h3>
-    <p style="font-size: 12px; margin: 10px 0 0 0;">Проект: <b>AGEUL</b></p>
-    <p style="font-size: 12px;">Сергек: <span style="color:#ff3b30;">400+ активті (қызыл)</span></p>
+<div id="bottom-panel">
+    <div class="panel-handle"></div>
+    <div class="close-btn" onclick="closePanel()">×</div>
+    <div class="location-title" id="p-title">Dropped pin</div>
+    <div class="location-desc" id="p-desc">Near Esil District, Astana</div>
+    
+    <div class="photo-container">
+        <img id="p-img" src="https://lh5.googleusercontent.com/p/AF1QipN3-v_YvCgYq0m_B0_p9Z0R0e0_0_0" alt="Street View">
+    </div>
 </div>
 
 <div id="map"></div>
 
 <script type="text/javascript">
     ymaps.ready(init);
+    var myMap;
 
     function init() {
-        var myMap = new ymaps.Map("map", {
+        myMap = new ymaps.Map("map", {
             center: [51.128, 71.430],
             zoom: 14,
-            controls: ['trafficControl', 'zoomControl', 'typeSelector']
+            controls: []
         });
 
-        // 1. ҚЫЗЫЛ НҮКТЕЛЕР (Сергек) - Бүкіл қала бойынша жол жиектерінде
-        for (var i = 0; i < 400; i++) {
-            var lat = 51.07 + (Math.random() * 0.14);
-            var lng = 71.32 + (Math.random() * 0.22);
-            var sergek = new ymaps.Placemark([lat, lng], {}, {
+        // Картаның кез келген жерін басқанда (мышкамен)
+        myMap.events.add('click', function (e) {
+            var coords = e.get('coords');
+            showInfo("Таңдалған нүкте", "Координаттар: " + coords[0].toFixed(4) + ", " + coords[1].toFixed(4), "https://avatars.mds.yandex.net/get-altay/1922501/2a0000016da88656a9e1451f251c6a7e027d/orig");
+        });
+
+        // Сергектің нүктелерін қосу
+        for (var i = 0; i < 50; i++) {
+            var lat = 51.11 + (Math.random() * 0.04);
+            var lng = 71.40 + (Math.random() * 0.06);
+            
+            var placemark = new ymaps.Placemark([lat, lng], {
+                title: "Сергек №" + (1000 + i),
+                desc: "Астана қ., Достық көшесі маңы"
+            }, {
                 preset: 'islands#redCircleDotIcon',
-                iconColor: '#ff0000',
-                iconScale: 0.7
+                iconColor: '#ff0000'
             });
-            myMap.geoObjects.add(sergek);
+
+            // Нүктені басқанда панель шығады
+            placemark.events.add('click', function (e) {
+                var target = e.get('target');
+                showInfo(target.properties.get('title'), target.properties.get('desc'), "https://images.unsplash.com/photo-1596438415017-098555027581?auto=format&fit=crop&w=800&q=80");
+                e.stopPropagation(); // Картаның клигімен араласпау үшін
+            });
+
+            myMap.geoObjects.add(placemark);
         }
+    }
 
-        // 2. 56-ШЫ АВТОБУС - НАҚТЫ ЖОЛДЫҢ БОЙЫМЕН (ДЕТАЛЬНО)
-        // Тұран даңғылы мен Сығанақ көшесінің нақты бұрылыстары
-        var path56 = [
-            [51.1513, 71.3965], [51.1501, 71.4022], [51.1485, 71.4085], [51.1465, 71.4158], // Тұран
-            [51.1441, 71.4225], [51.1415, 71.4268], [51.1390, 71.4285], // Тұран-Сығанақ қиылысы
-            [51.1355, 71.4305], [51.1315, 71.4325], [51.1275, 71.4345], [51.1225, 71.4368], // Сығанақ бойы
-            [51.1195, 71.4405], [51.1185, 71.4485], [51.1172, 71.4585], [51.1152, 71.4725], // Мәңгілік Ел
-            [51.1125, 71.4855], [51.1105, 71.5005]
-        ];
+    function showInfo(title, desc, img) {
+        document.getElementById('p-title').innerText = title;
+        document.getElementById('p-desc').innerText = desc;
+        document.getElementById('p-img').src = img;
+        document.getElementById('bottom-panel').classList.add('active');
+    }
 
-        // Көк маршрут сызығы (Яндекс картасындағы жолдың дәл үстінде)
-        var line56 = new ymaps.Polyline(path56, {}, {
-            strokeColor: "#007aff", strokeWidth: 5, strokeOpacity: 0.8
-        });
-        myMap.geoObjects.add(line56);
-
-        var bus56 = new ymaps.Placemark(path56[0], { iconContent: '56' }, {
-            preset: 'islands#blueStretchyIcon'
-        });
-        myMap.geoObjects.add(bus56);
-
-        // 3. 15A МАРШРУТЫ - САРАЙШЫҚ ПЕН ҚАБАНБАЙ БОЙЫМЕН
-        var path15A = [
-            [51.1785, 71.4225], [51.1725, 71.4235], [51.1655, 71.4248], [51.1585, 71.4265], // Оң жағалау
-            [51.1515, 71.4295], [51.1455, 71.4345], [51.1395, 71.4385], // Көпір және Сарайшық
-            [51.1325, 71.4425], [51.1265, 71.4455], [51.1215, 71.4495], [51.1165, 71.4625], // Қабанбай
-            [51.1125, 71.4785], [51.1095, 71.4925]
-        ];
-
-        var line15A = new ymaps.Polyline(path15A, {}, {
-            strokeColor: "#ff9500", strokeWidth: 5, strokeOpacity: 0.7
-        });
-        myMap.geoObjects.add(line15A);
-
-        var bus15A = new ymaps.Placemark(path15A[0], { iconContent: '15A' }, {
-            preset: 'islands#orangeStretchyIcon'
-        });
-        myMap.geoObjects.add(bus15A);
-
-        // ҚОЗҒАЛЫС АНИМАЦИЯСЫ (Бірқалыпты)
-        function animate(marker, path, ms) {
-            var i = 0;
-            setInterval(function() {
-                i = (i + 1) % path.length;
-                marker.geometry.setCoordinates(path[i]);
-            }, ms);
-        }
-
-        animate(bus56, path56, 2500);  // 56-шы автобус жылдамдығы
-        animate(bus15A, path15A, 3500); // 15A-шы автобус жылдамдығы
+    function closePanel() {
+        document.getElementById('bottom-panel').classList.remove('active');
     }
 </script>
 </body>
