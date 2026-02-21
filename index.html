@@ -1,98 +1,113 @@
 <!DOCTYPE html>
-<html lang="ru">
+<html lang="kk">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AGEUL - Astana Smart City Map</title>
+    <title>AGEUL - Astana Monitoring System</title>
+    
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    
     <style>
-        body, html { margin: 0; padding: 0; height: 100%; background: #0b0d11; font-family: 'Segoe UI', sans-serif; }
+        body, html { margin: 0; padding: 0; height: 100%; background: #000; font-family: 'Segoe UI', sans-serif; }
         #map { height: 100vh; width: 100%; }
         
+        /* Панель управления */
         .ui-panel {
-            position: absolute; top: 20px; left: 20px; z-index: 1000;
-            background: rgba(15, 23, 42, 0.95); padding: 15px; border-radius: 12px;
-            border: 1px solid #38bdf8; width: 240px; color: white; pointer-events: none;
+            position: absolute; top: 15px; left: 15px; z-index: 1000;
+            background: rgba(255, 255, 255, 0.95); padding: 15px; border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.3); width: 220px; color: #333;
+            border-left: 5px solid #ff0000;
         }
 
-        /* Сергектің қызыл нүктелері */
-        .sergek-dot { background: #ff4444; border: 1.5px solid white; border-radius: 50%; box-shadow: 0 0 10px #ff4444; }
+        /* Яндекс стиліндегі Сергек белгілері (Қызыл) */
+        .sergek-marker {
+            background: #ff0000; border: 2px solid #fff; border-radius: 50%;
+            box-shadow: 0 0 10px rgba(255,0,0,0.5);
+        }
 
-        /* Көк аялдамалар */
-        .stop-dot { background: #38bdf8; border: 1px solid white; border-radius: 50%; box-shadow: 0 0 8px #38bdf8; }
+        /* Аялдамалар (Көк) */
+        .stop-marker {
+            background: #0078ff; border: 1.5px solid #fff; border-radius: 2px;
+            box-shadow: 0 0 5px rgba(0,120,255,0.5);
+        }
 
-        /* Автобус белгісі */
-        .bus-marker { font-size: 26px; transition: all 1.5s linear; filter: drop-shadow(0 0 5px #38bdf8); }
+        /* Автобус иконкасы */
+        .bus-icon { font-size: 24px; transition: all 1s linear; filter: drop-shadow(0 0 3px #000); }
     </style>
 </head>
 <body>
 
 <div class="ui-panel">
-    <h3 style="margin:0; color:#38bdf8;">SmartCity: Астана</h3>
-    <p style="font-size:12px; margin:5px 0;">Система: <span style="color:#22c55e;">ONLINE</span></p>
-    <p style="font-size:12px; margin:5px 0;">Объекты: <b>Дорожный мониторинг</b></p>
-    <p style="font-size:11px; color:#94a3b8; margin-top:10px;">Автобусы и камеры синхронизированы с дорожной сетью.</p>
+    <h3 style="margin:0; font-size: 16px; color: #000;">SmartCity Astana AI</h3>
+    <p style="margin:5px 0; font-size:12px;"><b>Сергек:</b> <span style="color:red;">100+ нүкте</span></p>
+    <p style="margin:5px 0; font-size:12px;"><b>Статус:</b> <span style="color:green;">Жүйе қосулы</span></p>
+    <p style="margin:5px 0; font-size:12px;"><b>Проект:</b> AGEUL</p>
 </div>
 
 <div id="map"></div>
 
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+
 <script>
-    const map = L.map('map', { zoomControl: false }).setView([51.135, 71.430], 14);
+    // 1. Картаны инициализациялау (Яндекс стиліндегі координаталар)
+    const map = L.map('map', { zoomControl: false }).setView([51.130, 71.430], 13);
 
-    L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png').addTo(map);
+    // 2. ЯНДЕКС КАРТА ҚАБАТЫ (Tile)
+    L.tileLayer('https://core-renderer-tiles.maps.yandex.net/tiles?l=map&v=21.01.19-0&x={x}&y={y}&z={z}&scale=1&lang=ru_RU', {
+        attribution: '© Yandex'
+    }).addTo(map);
 
-    // --- ЖОЛДАРДЫҢ БОЙЫНДАҒЫ КАМЕРАЛАР (СЕРГЕК) ---
-    const roadsSergek = [
-        // Қабанбай батыр даңғылы
-        [51.138, 71.415], [51.134, 71.428], [51.130, 71.440], [51.126, 71.455],
-        // Мәңгілік Ел
-        [51.125, 71.430], [51.121, 71.445], [51.117, 71.460], [51.113, 71.475],
-        // Тұран даңғылы
-        [51.145, 71.405], [51.141, 71.420], [51.137, 71.435], [51.133, 71.450],
-        // Сарыарқа / Республика
-        [51.160, 71.420], [51.155, 71.430], [51.150, 71.440], [51.165, 71.415],
-        // Кері бағыттар мен қиылыстар
-        [51.148, 71.410], [51.120, 71.410], [51.152, 71.445], [51.135, 71.465]
-    ];
-
-    roadsSergek.forEach(coord => {
-        L.marker(coord, { icon: L.divIcon({ className: 'sergek-dot', iconSize: [11, 11] }) }).addTo(map);
-    });
-
-    // --- АЯЛДАМАЛАР (КӨК НҮКТЕЛЕР) ---
-    const busStops = [
-        [51.139, 71.412], [51.136, 71.425], [51.132, 71.438], [51.128, 71.452], // Линия 1
-        [51.146, 71.408], [51.143, 71.422], [51.139, 71.436], [51.135, 71.453]  // Линия 2
-    ];
-
-    busStops.forEach(coord => {
-        L.marker(coord, { icon: L.divIcon({ className: 'stop-dot', iconSize: [9, 9] }) }).addTo(map);
-    });
-
-    // --- АВТОБУСТАРДЫҢ ЖОЛМЕН ҚОЗҒАЛЫСЫ ---
-    function startBus(route, emoji, time) {
-        const icon = L.divIcon({ html: emoji, className: 'bus-marker', iconSize: [30, 30] });
-        const marker = L.marker(route[0], { icon: icon }).addTo(map);
-        let pos = 0;
-
-        setInterval(() => {
-            pos = (pos + 1) % route.length;
-            marker.setLatLng(route[pos]);
-        }, time);
+    // Функция: Жолдың бойына нүктелерді автоматты қосу
+    function addMarkersOnRoad(start, end, count, className) {
+        for (let i = 0; i < count; i++) {
+            let lat = start[0] + (end[0] - start[0]) * (i / count);
+            let lng = start[1] + (end[1] - start[1]) * (i / count);
+            // Аздап "шашырату" (нақты жол жиегі болу үшін)
+            lat += (Math.random() - 0.5) * 0.0005;
+            lng += (Math.random() - 0.5) * 0.0005;
+            
+            L.marker([lat, lng], {
+                icon: L.divIcon({ className: className, iconSize: [10, 10] })
+            }).addTo(map);
+        }
     }
 
-    // Маршрут 1: Қабанбай батыр бойымен
-    startBus([
-        [51.139, 71.412], [51.136, 71.425], [51.132, 71.438], [51.128, 71.452],
-        [51.132, 71.438], [51.136, 71.425] // Кері қайту
-    ], '🚌', 2000);
+    // 3. СЕРГЕКТЕР (100 ШТУК - Негізгі даңғылдар бойына)
+    // Мәңгілік Ел бойы (30 камера)
+    addMarkersOnRoad([51.125, 71.420], [51.100, 71.500], 30, 'sergek-marker');
+    // Қабанбай Батыр (30 камера)
+    addMarkersOnRoad([51.145, 71.400], [51.120, 71.470], 30, 'sergek-marker');
+    // Тұран даңғылы (20 камера)
+    addMarkersOnRoad([51.150, 71.405], [51.135, 71.460], 20, 'sergek-marker');
+    // Сарыарқа/Республика (20 камера)
+    addMarkersOnRoad([51.170, 71.420], [51.140, 71.440], 20, 'sergek-marker');
 
-    // Маршрут 2: Тұран бойымен
-    startBus([
-        [51.146, 71.408], [51.143, 71.422], [51.139, 71.436], [51.135, 71.453],
-        [51.139, 71.436], [51.143, 71.422] // Кері қайту
-    ], '🚐', 2500);
+    // 4. АЯЛДАМАЛАР (Көк нүктелер - Жол бойында)
+    const stops = [
+        [51.138, 71.415], [51.135, 71.428], [51.131, 71.441], [51.128, 71.455],
+        [51.145, 71.410], [51.142, 71.425], [51.138, 71.438], [51.134, 71.452]
+    ];
+    stops.forEach(s => {
+        L.marker(s, { icon: L.divIcon({ className: 'stop-marker', iconSize: [8, 8] }) }).addTo(map);
+    });
+
+    // 5. АВТОБУСТАР (Нақты жолмен жүру)
+    function startBus(route, emoji) {
+        const marker = L.marker(route[0], { 
+            icon: L.divIcon({ html: emoji, className: 'bus-icon', iconSize: [30, 30] }) 
+        }).addTo(map);
+        
+        let step = 0;
+        setInterval(() => {
+            step = (step + 1) % route.length;
+            marker.setLatLng(route[step]);
+        }, 1500);
+    }
+
+    // Маршрут: Қабанбай батыр бойымен
+    startBus([[51.145, 71.400], [51.142, 71.415], [51.138, 71.430], [51.134, 71.445], [51.130, 71.460]], '🚌');
+    // Маршрут: Тұран бойымен
+    startBus([[51.150, 71.405], [51.145, 71.420], [51.140, 71.435], [51.135, 71.450]], '🚐');
 
 </script>
 </body>
