@@ -2,56 +2,77 @@
 <html lang="kk">
 <head>
     <meta charset="UTF-8">
-    <title>AGEUL - Astana Monitoring Full</title>
+    <title>AGEUL - Astana Smart Startup</title>
     <script src="https://api-maps.yandex.ru/2.1/?lang=ru_RU" type="text/javascript"></script>
     <style>
-        body, html { margin: 0; padding: 0; width: 100%; height: 100%; overflow: hidden; font-family: sans-serif; }
-        #map { width: 100%; height: 100vh; }
+        body, html { margin: 0; padding: 0; width: 100%; height: 100%; overflow: hidden; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+        #map { width: 100%; height: 100vh; filter: brightness(0.9) contrast(1.1); }
 
-        /* Төменгі панель (Сен жіберген скриншоттағыдай стиль) */
-        #bottom-panel {
-            position: absolute; bottom: -450px; left: 0; width: 100%;
-            background: white; border-top-left-radius: 25px; border-top-right-radius: 25px;
-            z-index: 2000; transition: bottom 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.1);
-            padding: 20px; box-sizing: border-box;
-            box-shadow: 0 -5px 25px rgba(0,0,0,0.4);
-        }
-        #bottom-panel.active { bottom: 0; }
-
-        .panel-handle { width: 45px; height: 5px; background: #e0e0e0; margin: 0 auto 20px; border-radius: 10px; }
-        .location-title { font-size: 22px; font-weight: bold; color: #1a1a1a; margin-bottom: 5px; }
-        .location-desc { color: #70757a; font-size: 15px; margin-bottom: 20px; }
-        
-        .photo-container { width: 100%; height: 220px; background: #f0f0f0; border-radius: 15px; overflow: hidden; border: 1px solid #eee; }
-        .photo-container img { width: 100%; height: 100%; object-fit: cover; }
-
-        .close-btn { position: absolute; right: 25px; top: 25px; font-size: 28px; cursor: pointer; color: #dadce0; }
-        
-        /* AGEUL үстіңгі көрсеткіші */
+        /* Стартап панелі - Glassmorphism стилі */
         .ui-header {
             position: absolute; top: 20px; left: 20px; z-index: 1000;
-            background: rgba(255, 255, 255, 0.9); padding: 12px 20px; border-radius: 30px;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.2); font-weight: bold; display: flex; align-items: center; gap: 10px;
+            background: rgba(255, 255, 255, 0.1); backdrop-filter: blur(10px);
+            padding: 15px 25px; border-radius: 20px;
+            border: 1px solid rgba(255, 255, 255, 0.2); color: white; width: 260px;
+            box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
         }
-        .dot { width: 10px; height: 10px; background: #ff3b30; border-radius: 50%; animation: blink 1s infinite; }
-        @keyframes blink { 0% { opacity: 1; } 50% { opacity: 0.3; } 100% { opacity: 1; } }
+
+        /* Ораза тілегі */
+        .ramadan-wish {
+            position: absolute; top: 20px; right: 20px; z-index: 1000;
+            background: linear-gradient(135deg, #ffd700, #ffa500);
+            padding: 10px 20px; border-radius: 50px; font-weight: bold;
+            color: #000; box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+            display: flex; align-items: center; gap: 10px;
+        }
+
+        /* КИІЗ ҮЙ - Оң жақ төменгі бұрыш */
+        .yurt-icon {
+            position: absolute; bottom: 120px; right: 20px; z-index: 1000;
+            width: 80px; height: 80px;
+            background: url('https://img.icons8.com/color/96/yurt.png') no-repeat center;
+            background-size: contain; filter: drop-shadow(0 5px 15px rgba(0,0,0,0.5));
+            cursor: pointer; transition: transform 0.3s;
+        }
+        .yurt-icon:hover { transform: scale(1.1); }
+
+        /* Bottom Sheet - Төменгі панель */
+        #bottom-panel {
+            position: absolute; bottom: -500px; left: 0; width: 100%;
+            background: #fff; border-top-left-radius: 30px; border-top-right-radius: 30px;
+            z-index: 2000; transition: bottom 0.5s cubic-bezier(0.1, 0.7, 0.1, 1);
+            padding: 30px; box-sizing: border-box;
+        }
+        #bottom-panel.active { bottom: 0; }
+        .panel-handle { width: 50px; height: 6px; background: #e0e0e0; margin: 0 auto 20px; border-radius: 10px; }
+        .photo-container { width: 100%; height: 250px; background: #f8f9fa; border-radius: 20px; overflow: hidden; margin-top: 15px; }
+        .photo-container img { width: 100%; height: 100%; object-fit: cover; }
+        
+        .close-btn { position: absolute; right: 30px; top: 25px; font-size: 30px; color: #ccc; cursor: pointer; }
     </style>
 </head>
 <body>
 
-<div class="ui-header">
-    <div class="dot"></div>
-    <span>AGEUL: 450+ Сергек активті</span>
+<div class="ramadan-wish">
+    <span>🌙 Ораза қабыл болсын!</span>
 </div>
+
+<div class="ui-header">
+    <h3 style="margin:0; color: #ffd700;">AGEUL Startup</h3>
+    <p style="font-size: 13px; margin: 5px 0;">Digital Astana Monitoring</p>
+    <hr style="border: 0; border-top: 1px solid rgba(255,255,255,0.1);">
+    <p style="font-size: 12px;">🛰️ Сергек: <span style="color: #00ff00;">450 нүкте белсенді</span></p>
+</div>
+
+<div class="yurt-icon" title="Қазақстанның мұрасы"></div>
 
 <div id="bottom-panel">
     <div class="panel-handle"></div>
     <div class="close-btn" onclick="closePanel()">×</div>
-    <div class="location-title" id="p-title">Dropped pin</div>
-    <div class="location-desc" id="p-desc">Астана қаласы, Есіл ауданы</div>
-    
+    <div class="location-title" id="p-title" style="font-size: 24px; font-weight: bold;">Нүкте таңдалды</div>
+    <div class="location-desc" id="p-desc" style="color: #888; margin-top: 5px;">Астана қаласы, Smart City бақылау аймағы</div>
     <div class="photo-container">
-        <img id="p-img" src="https://images.unsplash.com/photo-1541339907198-e08756ebafe3?auto=format&fit=crop&w=800&q=80" alt="Street View">
+        <img id="p-img" src="" alt="Street Photo">
     </div>
 </div>
 
@@ -68,25 +89,24 @@
             controls: ['trafficControl', 'zoomControl']
         });
 
-        // 1. БАРЛЫҚ СЕРГЕКТЕРДІ ҚАЙТАРУ (450 нүкте)
-        var clusterer = new ymaps.Clusterer({ preset: 'islands#redClusterIcons' });
+        // "Пробки" режимін автоматты қосу
+        myMap.controls.get('trafficControl').showTraffic();
 
+        // Сергектің 450 қызыл нүктесі
         for (var i = 0; i < 450; i++) {
             var lat = 51.06 + (Math.random() * 0.16);
             var lng = 71.30 + (Math.random() * 0.25);
             
             var placemark = new ymaps.Placemark([lat, lng], {
-                title: "Сергек бақылау нүктесі #" + (2000 + i),
-                desc: "Астана, Нұржол желекжолы маңы",
-                // Түрлі суреттер имитациясы
-                img: i % 2 === 0 ? "https://images.unsplash.com/photo-1517733948473-28b5a1484b6a?auto=format&fit=crop&w=800" : "https://images.unsplash.com/photo-1449824913935-59a10b8d2000?auto=format&fit=crop&w=800"
+                title: "AGEUL Студиясы - Камера #" + (3000 + i),
+                desc: "Бақылау статусы: Белсенді",
+                img: "https://images.unsplash.com/photo-1574950578143-858c6fc58922?auto=format&fit=crop&w=1000"
             }, {
                 preset: 'islands#redCircleDotIcon',
-                iconColor: '#ff0000',
+                iconColor: '#ff3b30',
                 iconScale: 0.8
             });
 
-            // Әр нүктені басқанда панель шығады
             placemark.events.add('click', function (e) {
                 var target = e.get('target');
                 showInfo(target.properties.get('title'), target.properties.get('desc'), target.properties.get('img'));
@@ -95,10 +115,9 @@
             myMap.geoObjects.add(placemark);
         }
 
-        // Картаның өзін басқанда да панель шығару (Dropped pin эффектісі)
         myMap.events.add('click', function (e) {
             var coords = e.get('coords');
-            showInfo("Таңдалған орын", "Координаттар: " + coords[0].toFixed(4) + ", " + coords[1].toFixed(4), "https://images.unsplash.com/photo-1566438480900-0609be27a4be?auto=format&fit=crop&w=800");
+            showInfo("Нүкте: " + coords[0].toFixed(3), "Астана қаласы мониторингі", "https://images.unsplash.com/photo-1566438480900-0609be27a4be?auto=format&fit=crop&w=1000");
         });
     }
 
