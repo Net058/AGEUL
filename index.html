@@ -3,109 +3,108 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AGEUL - Astana Smart Transport</title>
+    <title>AGEUL - Astana Smart City Hackathon</title>
+    
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    
     <style>
-        body, html { margin: 0; padding: 0; height: 100%; background: #0b0d11; overflow: hidden; font-family: 'Segoe UI', sans-serif; }
-        #map { height: 100vh; width: 100%; background: #0b0d11; }
+        body, html { margin: 0; padding: 0; height: 100%; background: #111; overflow: hidden; font-family: sans-serif; }
+        #map { height: 100vh; width: 100%; background: #1a1a1a; }
+        
+        /* Яндекс немесе басқа жазуларды өшіру */
         .leaflet-control-attribution { display: none !important; }
 
-        /* 2GIS стиліндегі автобус маркері */
-        .bus-56-icon {
+        /* 2GIS стиліндегі Автобус 56 маркері */
+        .bus-56-badge {
             background: #007aff; color: white; border: 2px solid white;
-            border-radius: 20px; padding: 2px 8px; font-weight: bold;
-            font-size: 12px; white-space: nowrap; display: flex; align-items: center;
-            box-shadow: 0 0 10px rgba(0,122,255,0.8);
-        }
-        .bus-56-icon::before { content: '🚌 '; margin-right: 4px; }
-
-        /* Сергек - BAQ.KZ стиліндегі қызыл нүктелер */
-        .sergek-node {
-            background: #ff0000; border: 1px solid #fff; border-radius: 50%;
-            box-shadow: 0 0 6px #ff0000;
+            border-radius: 15px; padding: 2px 10px; font-weight: bold;
+            font-size: 13px; display: flex; align-items: center; gap: 4px;
+            box-shadow: 0 0 10px rgba(0,122,255,0.6);
         }
 
-        /* Аялдама белгісі */
-        .stop-icon {
-            background: rgba(255,255,255,0.2); border: 1.5px solid #38bdf8;
-            border-radius: 50%; width: 10px; height: 10px;
+        /* Сергек - Скриншоттағыдай көкшіл-суық нүктелер немесе қызыл (қалауыңша) */
+        /* Мен саған нақты көрінетіндей қызыл-жарқыл бердім */
+        .sergek-dot {
+            background: #ff3b30; border: 1px solid white; border-radius: 50%;
+            box-shadow: 0 0 5px #ff3b30;
         }
 
-        /* Ақпарат панелі */
-        .ui-overlay {
-            position: absolute; top: 15px; left: 15px; z-index: 1000;
-            background: rgba(15, 23, 42, 0.95); padding: 15px; border-radius: 10px;
-            border: 1px solid #38bdf8; color: white; width: 220px;
+        /* Аялдама - Ақ кішкентай нүктелер */
+        .stop-dot {
+            background: #fff; border: 1px solid #007aff; border-radius: 50%;
+        }
+
+        /* Интерфейс (Скриншоттағыдай) */
+        .header-info {
+            position: absolute; top: 20px; left: 20px; z-index: 1000;
+            background: rgba(0, 0, 0, 0.85); padding: 15px; border-radius: 12px;
+            border: 1px solid #444; color: white; width: 240px;
         }
     </style>
 </head>
 <body>
 
-<div class="ui-overlay">
-    <h3 style="margin:0; color:#38bdf8;">AGEUL: Мониторинг</h3>
-    <p style="font-size:12px; margin:8px 0 0 0;">Маршрут: <span style="color:#22c55e;">Автобус 56 (Актив)</span></p>
-    <p style="font-size:11px; color:#94a3b8;">Сергек жүйесі: Қосулы</p>
+<div class="header-info">
+    <h2 style="margin:0; font-size: 18px; color: #38bdf8;">SmartCity: Astana</h2>
+    <p style="font-size: 12px; margin: 10px 0 0 0;">Проект: <b>AGEUL</b></p>
+    <p style="font-size: 12px; margin: 5px 0;">Объекты: <span style="color: #ff3b30;">400+ Sergek</span></p>
+    <p style="font-size: 12px; margin: 5px 0;">Транспорт: <span style="color: #007aff;">Bus 56 (Active)</span></p>
 </div>
 
 <div id="map"></div>
 
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 <script>
-    // 1. Картаны баптау (2GIS стиліндегі қараңғы фон)
-    const map = L.map('map', { zoomControl: false }).setView([51.130, 71.430], 14);
+    // 1. Астана орталығы және қараңғы стиль (Яндекс емес, кәсіби Dark Mode)
+    const map = L.map('map', { zoomControl: false, attributionControl: false }).setView([51.135, 71.435], 13);
+    
     L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png').addTo(map);
 
-    // 2. СЕРГЕКТЕРДІ ЖОЛ БОЙЫНА ЖҮЙЕЛІ ТҮРДЕ ШАШУ (100+)
-    function placeSergeks(start, end, count) {
-        for (let i = 0; i <= count; i++) {
-            let lat = start[0] + (end[0] - start[0]) * (i / count);
-            let lng = start[1] + (end[1] - start[1]) * (i / count);
-            // Жолдың шетінде тұруы үшін аздап офсет
-            L.marker([lat + 0.0001, lng + 0.0001], {
-                icon: L.divIcon({ className: 'sergek-node', iconSize: [8, 8] })
+    // 2. 400 КАМЕРАНЫ ШАШЫРАТУ (Скриншоттағыдай тығыз)
+    function spawnSergek(lat, lng, area) {
+        for (let i = 0; i < 100; i++) { // Әр ауданға 100-ден
+            let rLat = lat + (Math.random() - 0.5) * area;
+            let rLng = lng + (Math.random() - 0.5) * area;
+            L.marker([rLat, rLng], {
+                icon: L.divIcon({ className: 'sergek-dot', iconSize: [8, 8] })
             }).addTo(map);
         }
     }
+    // Астананың негізгі 4 бағытына 100-ден тастау (Жалпы 400)
+    spawnSergek(51.128, 71.430, 0.05); // Сол жағалау
+    spawnSergek(51.150, 71.420, 0.04); // Оң жағалау (Тұран/Сарыарқа)
+    spawnSergek(51.160, 71.450, 0.05); // Алматы ауданы
+    spawnSergek(51.110, 71.410, 0.04); // EXPO маңы
 
-    // Негізгі даңғылдар бойымен (Қабанбай, Тұран, Мәңгілік Ел, Сарыарқа)
-    placeSergeks([51.145, 71.405], [51.120, 71.470], 35); 
-    placeSergeks([51.155, 71.415], [51.135, 71.465], 30);
-    placeSergeks([51.127, 71.425], [51.100, 71.500], 35);
-
-    // 3. АВТОБУС 56 МАРШРУТЫ (Нақты жол қисықтарымен)
-    const route56 = [
-        [51.145, 71.405], [51.143, 71.415], [51.140, 71.422], 
-        [51.135, 71.430], [51.130, 71.440], [51.125, 71.455], [51.122, 71.470]
+    // 3. АВТОБУС 56 МАРШРУТЫ (2GIS-тегідей көк сызық)
+    const path56 = [
+        [51.145, 71.405], [51.143, 71.415], [51.140, 71.425], 
+        [51.135, 71.435], [51.130, 71.445], [51.125, 71.455], [51.120, 71.470]
     ];
-    
-    // Көк бағыттаушы сызық (2GIS-тегідей)
-    L.polyline(route56, { color: '#007aff', weight: 5, opacity: 0.6 }).addTo(map);
+    L.polyline(path56, { color: '#007aff', weight: 6, opacity: 0.7 }).addTo(map);
 
-    // Аялдамаларды жол бойына қою
-    route56.forEach(pos => {
-        L.marker(pos, { icon: L.divIcon({ className: 'stop-icon', iconSize: [10, 10] }) }).addTo(map);
+    // Аялдамалар (Ақ нүктелер)
+    path56.forEach(coord => {
+        L.marker(coord, { icon: L.divIcon({ className: 'stop-dot', iconSize: [8, 8] }) }).addTo(map);
     });
 
-    // 4. ТІРІ АВТОБУС "56" (Баяу және бірқалыпты қозғалыс)
+    // 4. ТІРІ АВТОБУС "56" (Көк badge)
     const busIcon = L.divIcon({ 
-        className: 'bus-56-icon', 
-        html: '56', 
-        iconSize: [60, 25],
-        iconAnchor: [30, 12]
+        className: 'bus-56-badge', 
+        html: '<span>🚌 56</span>', 
+        iconSize: [70, 25],
+        iconAnchor: [35, 12]
     });
 
-    const busMarker = L.marker(route56[0], { icon: busIcon }).addTo(map);
+    const busMarker = L.marker(path56[0], { icon: busIcon }).addTo(map);
 
-    let currentStep = 0;
+    let step = 0;
     function moveBus() {
-        currentStep = (currentStep + 1) % route56.length;
-        
-        // Автобус "тупит" етпеуі үшін және жылдам болмауы үшін жылжу интервалы
-        busMarker.setLatLng(route56[currentStep]);
+        step = (step + 1) % path56.length;
+        busMarker.setLatLng(path56[step]);
     }
-
-    // Автобус жылдамдығын баяулаттым (әр 3 секунд сайын келесі нүктеге)
-    setInterval(moveBus, 3000);
+    // Нақты байсалды жылдамдық (әр 2.5 секунд сайын)
+    setInterval(moveBus, 2500);
 
 </script>
 </body>
