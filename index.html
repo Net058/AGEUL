@@ -2,27 +2,15 @@
 <html lang="kk">
 <head>
     <meta charset="UTF-8">
-    <title>AGEUL | Global AI Monitoring Astana</title>
+    <title>AGEUL | AI Monitoring Astana</title>
     <script src="https://api-maps.yandex.ru/2.1/?lang=ru_RU" type="text/javascript"></script>
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700;900&display=swap" rel="stylesheet">
     <style>
-        body, html { margin: 0; padding: 0; scroll-behavior: smooth; font-family: 'Montserrat', sans-serif; background: #0f172a; overflow-x: hidden; }
+        body, html { margin: 0; padding: 0; scroll-behavior: smooth; font-family: 'Montserrat', sans-serif; background: #ffffff; overflow-x: hidden; }
         
-        /* 1-БЕТ: КАРТА */
+        /* КАРТА БЕТІ */
         #map-page { height: 100vh; width: 100%; position: relative; }
-        #map { width: 100%; height: 100%; filter: brightness(0.9) contrast(1.1); transition: filter 2s ease; }
-
-        /* ЖОҒАРҒЫ СТАТИСТИКА */
-        .top-stats {
-            position: absolute; top: 20px; left: 20px; right: 20px;
-            display: flex; justify-content: space-between; z-index: 1000;
-        }
-        .stat-card {
-            background: white; padding: 12px 25px; border-radius: 20px;
-            box-shadow: 0 10px 25px rgba(0,0,0,0.2); min-width: 140px;
-        }
-        .stat-card span { display: block; font-size: 10px; color: #64748b; font-weight: 800; text-transform: uppercase; }
-        .stat-card b { font-size: 24px; color: #0f172a; }
+        #map { width: 100%; height: 100%; filter: brightness(1.1); transition: filter 2s ease; }
 
         /* AI ROAD ANALYSIS (СОЛ ЖАҚ БҰРЫШ) */
         .road-analysis {
@@ -37,52 +25,57 @@
         .bar-fill { height: 100%; background: #3b82f6; width: 0%; transition: width 1s; }
 
         /* ОҢ ЖАҚ ИНДИКАТОРЛАР */
-        .indicators { position: absolute; top: 110px; right: 20px; z-index: 1000; display: flex; flex-direction: column; gap: 12px; }
+        .indicators { position: absolute; top: 20px; right: 20px; z-index: 1000; display: flex; flex-direction: column; gap: 12px; }
         .indicator-item {
-            background: #1e293b; color: white; padding: 15px; border-radius: 15px;
+            background: #0f172a; color: white; padding: 15px; border-radius: 20px;
             border-right: 5px solid #22c55e; width: 180px; font-size: 13px; transition: 0.5s;
         }
         .ind-val { float: right; font-weight: 900; color: #22c55e; }
 
-        /* AI КОНСОЛЬ */
+        /* AI ТЕРМИНАЛ (ЛОГИ) */
         .ai-console {
-            position: absolute; bottom: 120px; left: 20px; z-index: 1000;
-            background: rgba(10, 15, 28, 0.95); color: #22c55e; padding: 15px;
+            position: absolute; bottom: 130px; left: 20px; z-index: 1000;
+            background: rgba(15, 23, 42, 0.95); color: #22c55e; padding: 15px;
             border-radius: 15px; font-family: 'Courier New', monospace; font-size: 11px;
-            width: 320px; border-left: 4px solid #22c55e;
+            width: 320px; border-left: 4px solid #22c55e; box-shadow: 0 10px 30px rgba(0,0,0,0.4);
         }
 
-        .footer-ui { position: absolute; bottom: 35px; width: 100%; display: flex; justify-content: center; z-index: 1000; }
+        .status-mini {
+            position: absolute; top: 20px; left: 20px; z-index: 1000;
+            background: white; padding: 20px; border-radius: 20px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.08); border: 1px solid #e2e8f0;
+        }
+
+        .speed-overlay {
+            position: absolute; bottom: 130px; right: 20px; z-index: 1000;
+            background: #0f172a; color: white; padding: 15px 30px; border-radius: 25px;
+            border-bottom: 5px solid #22c55e; box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            text-align: right;
+        }
+        .speed-value { font-size: 32px; font-weight: 900; color: #22c55e; }
+
+        /* БАТЫРМА */
+        .footer-ui { position: absolute; bottom: 40px; width: 100%; display: flex; justify-content: center; z-index: 1000; }
         .main-btn { 
-            background: #2563eb; color: #fff; padding: 18px 50px; border-radius: 35px; 
-            text-decoration: none; font-weight: 900; font-size: 20px; transition: 0.3s;
-            box-shadow: 0 15px 40px rgba(37,99,235,0.4);
+            background: #0f172a; color: #fff; padding: 20px 60px; border-radius: 25px; 
+            text-decoration: none; font-weight: 900; font-size: 22px; transition: 0.3s;
+            box-shadow: 0 15px 40px rgba(0,0,0,0.4); border: 1px solid rgba(255,255,255,0.1);
         }
 
-        /* 2-БЕТ */
-        #about-page { min-height: 100vh; background: #f8fafc; padding: 100px 20px; display: flex; align-items: center; }
-        .pres-card { max-width: 950px; margin: 0 auto; background: white; padding: 60px; border-radius: 50px; box-shadow: 0 30px 80px rgba(0,0,0,0.08); }
-        .section-box { margin: 30px 0; padding: 30px; border-radius: 25px; border-left: 10px solid; }
-        .problem-box { background: #fff1f2; border-color: #ef4444; }
-        .solution-box { background: #f0fdf4; border-color: #22c55e; }
-        h1 { text-align: center; font-weight: 900; color: #0f172a; font-size: 45px; margin-bottom: 40px; }
-        h2 { font-size: 26px; color: #1e293b; margin-top: 0; }
+        /* ПРЕЗЕНТАЦИЯ БЕТІ (2-БЕТ) */
+        #about-page { min-height: 100vh; background: #f8fafc; padding: 80px 20px; }
+        .pres-card { max-width: 950px; margin: 0 auto; background: white; padding: 60px; border-radius: 50px; box-shadow: 0 30px 80px rgba(0,0,0,0.05); }
+        .section-box { margin: 35px 0; padding: 35px; border-radius: 25px; }
+        .problem-box { background: #fff1f2; border-left: 10px solid #ef4444; }
+        .solution-box { background: #f0fdf4; border-left: 10px solid #22c55e; }
+        h1 { text-align: center; font-weight: 900; color: #0f172a; font-size: 42px; }
+        h2 { font-size: 28px; color: #0f172a; }
         p { font-size: 18px; line-height: 1.7; color: #475569; }
     </style>
 </head>
 <body>
 
     <section id="map-page">
-        <div class="top-stats">
-            <div style="display: flex; gap: 15px;">
-                <div class="stat-card"><span>📹 SERGEK ACTIVE</span><b id="sergek-count">712</b></div>
-                <div class="stat-card"><span>🚌 BUS ON LINE</span><b id="bus-count">485</b></div>
-            </div>
-            <div class="stat-card" style="background: #0f172a; color: white;">
-                <span style="color: #3b82f6;">AI SPEED AVG</span><b style="color: white;"><span id="speed-val">58</span> км/с</b>
-            </div>
-        </div>
-
         <div class="road-analysis">
             <h4>📡 AI Road Analysis</h4>
             <div class="analysis-item">Жол сапасы: <span id="road-q">94%</span><div class="bar"><div id="road-q-bar" class="bar-fill" style="width: 94%"></div></div></div>
@@ -92,34 +85,65 @@
 
         <div class="indicators">
             <div class="indicator-item" style="border-right-color: #22c55e;">Ауа ластануы <span class="ind-val" id="pollution-pct">0%</span></div>
-            <div class="indicator-item" style="border-right-color: #3b82f6;">Кептеліс деңгейі <span class="ind-val" id="traffic-pct">12%</span></div>
             <div class="indicator-item" id="weather-card" style="border-right-color: #f59e0b; background: #451a03;">
                 АУА РАЙЫ: <span class="ind-val" id="weather-text" style="color:#f59e0b">АШЫҚ</span>
             </div>
         </div>
+        
+        <div class="ai-console">
+            <div style="color: #94a3b8; margin-bottom: 5px;">[AGEUL CORE v2.1 ACTIVE]</div>
+            <div id="ai-log-content"></div>
+        </div>
 
-        <div class="ai-console"><div style="color: #94a3b8; margin-bottom: 5px;">[AGEUL CORE v2.5 ACTIVE]</div><div id="ai-log-content"></div></div>
+        <div class="speed-overlay">
+            <div style="font-size: 10px; text-transform: uppercase; color: #94a3b8; font-weight: 700;">AI Орташа жылдамдық</div>
+            <div class="speed-value"><span id="avg-speed">57</span> <small style="font-size: 14px;">км/сағ</small></div>
+        </div>
+
+        <div class="status-mini">
+            <b style="font-size: 18px; color: #0f172a;">AGEUL AI Core</b>
+            <div style="font-size: 16px; margin-top: 10px; color: #64748b;">
+                📍 Тірі ағын: <span id="bus-live" style="color: #2563eb; font-weight: 800;">74</span><br>
+                📹 Сергектер: <span style="color: #ef4444; font-weight: 800;">700+</span>
+            </div>
+        </div>
+
         <div id="map"></div>
-        <div class="footer-ui"><a href="#about-page" class="main-btn">ТОЛЫҒЫРАҚ БІЛУ →</a></div>
+
+        <div class="footer-ui">
+            <a href="#about-page" class="main-btn">БІЗ ТУРАЛЫ КӨБІРЕК БІЛУ →</a>
+        </div>
     </section>
 
     <section id="about-page">
         <div class="pres-card">
             <h1>AGEUL: Болашақ Навигациясы</h1>
+            
             <div class="section-box problem-box">
                 <h2>Неге Яндекс пен 2GIS емес?</h2>
-                <p>Яндекс пен 2GIS жол жағдайын спутник арқылы бақылайды. Егер бір жерде телефондар көп жиналса, жүйе оны қате "кептеліс" деп көрсетеді (фантомдық кептелістер).</p>
+                <p>
+                    Яндекс пен 2GIS жол жағдайын <b>спутник</b> арқылы бақылайды. Егер бір жерде телефондар көп жиналса, жүйе оны қате "кептеліс" деп көрсетеді (фантомдық кептелістер).
+                </p>
+                <p>
+                    Сонымен қатар, модераторлар жылдамдық шектеуін қолмен енгізеді, бұл курьерлер мен жүргізушілердің жазықсыз айыппұл арқалауына әкеледі.
+                </p>
             </div>
+
             <div class="section-box solution-box">
                 <h2>Біздің AI қалай жұмыс істейді?</h2>
-                <p>AGEUL деректерді тікелей Сергек камераларынан алады. Біздің жасанды интеллект:</p>
-                <ul style="font-size: 18px; color: #475569; line-height: 1.8;">
-                    <li>Нақты уақытта көліктерді танып, шынайы кептелісті есептейді.</li>
-                    <li>Ауа райын бақылап, жол қауіпсіздігін талдайды.</li>
-                    <li>Экологиялық мониторинг және жол сапасын бақылау.</li>
+                <p>
+                    AGEUL деректерді спутниктен емес, тікелей <b>Сергек камераларынан</b> және полиция базасынан алады. Біздің жасанды интеллект:
+                </p>
+                <ul>
+                    <li><p>Нақты уақытта көліктерді танып, шынайы кептелісті есептейді.</p></li>
+                    <li><p>Жылдамдық режимдерін ресми базамен сәт сайын синхрондайды.</p></li>
+                    <li><p>Жолдағы ақаулар мен шұңқырларды бірден анықтайды.</p></li>
                 </ul>
             </div>
-            <div style="text-align: center; margin-top: 40px;"><a href="#map-page" style="color: #2563eb; font-weight: 800; text-decoration: none; font-size: 18px;">← КАРТАҒА ҚАЙТУ</a></div>
+
+            <div style="text-align: center; margin-top: 40px;">
+                <a href="#map-page" style="color: #0f172a; font-weight: 800; text-decoration: none; font-size: 18px;">← КАРТАҒА ОРАЛУ</a>
+            </div>
         </div>
     </section>
 
@@ -127,15 +151,19 @@
         ymaps.ready(init);
         function init() {
             var myMap = new ymaps.Map("map", { center: [51.128, 71.430], zoom: 14, controls: [] });
+
             for (var i = 0; i < 150; i++) {
-                myMap.geoObjects.add(new ymaps.Placemark([51.04 + (Math.random() * 0.18), 71.28 + (Math.random() * 0.30)], {}, {preset: 'islands#redCircleDotIcon', iconColor: '#ff0000', iconScale: 0.7}));
+                var lat = 51.04 + (Math.random() * 0.18);
+                var lng = 71.28 + (Math.random() * 0.30);
+                myMap.geoObjects.add(new ymaps.Placemark([lat, lng], {}, {
+                    preset: 'islands#redCircleDotIcon', iconColor: '#ff0000', iconScale: 0.7
+                }));
             }
 
             const weatherTypes = [
-                {t: "АШЫҚ", c: "#451a03", b: "#f59e0b", f: "brightness(0.9)"},
-                {t: "ЖАҢБЫР", c: "#1e3a8a", b: "#3b82f6", f: "brightness(0.7) contrast(1.2)"},
-                {t: "ТҰМАН", c: "#374151", b: "#94a3b8", f: "blur(1px) grayscale(0.5)"},
-                {t: "ҚАР", c: "#0f172a", b: "#ffffff", f: "brightness(1.1) sepia(0.1)"}
+                {t: "АШЫҚ", c: "#451a03", b: "#f59e0b", f: "brightness(1.1)"},
+                {t: "ЖАҢБЫР", c: "#1e3a8a", b: "#3b82f6", f: "brightness(0.8) contrast(1.2)"},
+                {t: "ТҰМАН", c: "#374151", b: "#94a3b8", f: "blur(1px) grayscale(0.5)"}
             ];
 
             setInterval(() => {
@@ -147,19 +175,19 @@
                 document.getElementById('weather-card').style.borderRightColor = w.b;
                 document.getElementById('map').style.filter = w.f;
 
-                // 2. Басқа деректер
-                document.getElementById('bus-count').innerText = 480 + Math.floor(Math.random() * 20);
-                document.getElementById('speed-val').innerText = 50 + Math.floor(Math.random() * 15);
+                // 2. Деректерді жаңарту
+                document.getElementById('avg-speed').innerText = 52 + Math.floor(Math.random() * 9);
+                document.getElementById('bus-live').innerText = 70 + Math.floor(Math.random() * 12);
                 document.getElementById('pollution-pct').innerText = Math.floor(Math.random() * 21) + "%";
                 
                 let roadQ = 90 + Math.floor(Math.random() * 10);
                 document.getElementById('road-q').innerText = roadQ + "%";
                 document.getElementById('road-q-bar').style.width = roadQ + "%";
 
-                // 3. AI Логтар
+                // 3. Логтар
                 const logBox = document.getElementById('ai-log-content');
                 const newLine = document.createElement('div');
-                newLine.innerText = "> AI: Ауа райы талданды - " + w.t;
+                newLine.innerText = "> AI: Анализ - " + w.t + " жағдайындағы трафик";
                 logBox.prepend(newLine);
                 if (logBox.children.length > 5) logBox.lastChild.remove();
             }, 5000);
