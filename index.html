@@ -4,138 +4,133 @@
     <meta charset="UTF-8">
     <title>AGEUL | Astana Intelligence Monitoring</title>
     <script src="https://api-maps.yandex.ru/2.1/?lang=ru_RU" type="text/javascript"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700;900&display=swap" rel="stylesheet">
     <style>
-        body, html { margin: 0; padding: 0; scroll-behavior: smooth; font-family: 'Inter', sans-serif; background: #020617; color: white; overflow-x: hidden; }
+        body, html { margin: 0; padding: 0; scroll-behavior: smooth; font-family: 'Montserrat', sans-serif; background: #020617; color: white; overflow: hidden; }
         
         /* КАРТА БЕТІ */
-        #map-page { height: 100vh; width: 100%; position: relative; border: 2px solid #0ea5e9; box-sizing: border-box; }
-        #map { width: 100%; height: 100%; filter: contrast(1.1) brightness(0.8); }
+        #map-page { height: 100vh; width: 100%; position: relative; }
+        #map { width: 100%; height: 100%; filter: brightness(0.8) contrast(1.2); }
 
-        /* СКАНЕРЛЕУ СЫЗЫҒЫ (Decoration) */
-        .scan-line {
-            position: absolute; top: 0; left: 0; width: 100%; height: 2px;
-            background: rgba(14, 165, 233, 0.5); box-shadow: 0 0 15px #0ea5e9;
-            z-index: 500; animation: scan 4s linear infinite; pointer-events: none;
+        /* ОРАЗА ТІЛЕГІ (ОРТАДА) */
+        .ramadan-badge {
+            position: absolute; top: 20px; left: 50%; transform: translateX(-50%); z-index: 1000;
+            background: linear-gradient(135deg, #fbbf24, #d97706); color: #000;
+            padding: 10px 30px; border-radius: 50px; font-weight: 900; border: 2px solid #fff;
+            box-shadow: 0 5px 20px rgba(251, 191, 36, 0.5);
         }
 
-        /* LIVE СТАТИСТИКА */
-        .live-stats {
-            position: absolute; top: 25px; left: 25px; z-index: 1000;
+        /* СОЛ ЖАҚТАҒЫ ИНФОРМАЦИЯ ПАНЕЛІ (Жаңа дизайн) */
+        .info-sidebar {
+            position: absolute; top: 20px; left: 20px; width: 320px; z-index: 1000;
+            display: flex; flex-direction: column; gap: 15px;
+        }
+
+        .glass-box {
             background: rgba(15, 23, 42, 0.85); backdrop-filter: blur(15px);
-            padding: 20px; border-radius: 20px; border: 1px solid #0ea5e9;
-            box-shadow: 0 0 20px rgba(14, 165, 233, 0.2);
+            padding: 20px; border-radius: 20px; border: 1px solid rgba(56, 189, 248, 0.3);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
         }
-        .stat-val { font-size: 24px; font-weight: 800; color: #38bdf8; }
-        .stat-label { font-size: 11px; text-transform: uppercase; color: #94a3b8; margin-left: 10px; }
 
-        /* ЖҮЙЕЛІК ЖУРНАЛ (Decoration) */
-        .system-log {
-            position: absolute; top: 150px; left: 25px; z-index: 1000;
-            font-family: 'Courier New', monospace; font-size: 10px; color: #22c55e;
-            background: rgba(0,0,0,0.5); padding: 10px; border-radius: 10px; width: 180px;
-        }
+        /* LIVE STATS */
+        .stat-item { margin-bottom: 10px; display: flex; justify-content: space-between; align-items: center; }
+        .stat-val { color: #38bdf8; font-weight: 900; font-size: 20px; }
+        .stat-label { font-size: 11px; color: #94a3b8; text-transform: uppercase; }
+
+        /* КЛИК ЖАСАҒАНДА ШЫҒАТЫН ДЕРЕКТЕР (Сол жақта) */
+        #point-details { display: none; animation: slideIn 0.4s ease-out; }
+        #point-details img { width: 100%; height: 160px; border-radius: 15px; object-fit: cover; margin-top: 10px; border: 1px solid #333; }
 
         /* ОҢ ЖАҚ ТӨМЕНГІ БҰРЫШ */
-        .bottom-ui { position: absolute; bottom: 30px; right: 25px; z-index: 1000; display: flex; flex-direction: column; align-items: center; gap: 15px; }
-        .yurt { width: 80px; height: 80px; background: url('https://img.icons8.com/color/96/yurt.png') no-repeat center/contain; animation: float 3s infinite; }
+        .bottom-right { position: absolute; bottom: 30px; right: 30px; z-index: 1000; text-align: center; }
+        .yurt { width: 80px; height: 80px; background: url('https://img.icons8.com/color/96/yurt.png') no-repeat center/contain; margin-bottom: 15px; animation: float 3s infinite; }
         .nav-btn {
-            background: linear-gradient(135deg, #0ea5e9, #2563eb); color: white; padding: 15px 30px; border-radius: 15px;
-            text-decoration: none; font-weight: bold; border: 1px solid rgba(255,255,255,0.2); transition: 0.3s;
+            background: #1d4ed8; color: white; padding: 15px 30px; border-radius: 15px;
+            text-decoration: none; font-weight: bold; display: block; transition: 0.3s;
+            box-shadow: 0 5px 15px rgba(29, 78, 216, 0.4); border: 1px solid rgba(255,255,255,0.1);
         }
-        .nav-btn:hover { transform: scale(1.05); box-shadow: 0 0 20px #0ea5e9; }
+        .nav-btn:hover { background: #2563eb; transform: translateY(-3px); }
 
-        /* СИПАТТАМА БЕТІ */
-        #about-page { min-height: 100vh; background: #020617; display: flex; justify-content: center; align-items: center; padding: 50px; }
-        .glass-card { background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.1); padding: 50px; border-radius: 40px; text-align: center; max-width: 800px; }
-
-        /* BOTTOM PANEL (HIDING LOGIC) */
-        #bottom-panel { position: absolute; bottom: -500px; left: 0; width: 100%; background: white; border-radius: 30px 30px 0 0; z-index: 2000; transition: 0.5s; padding: 30px; color: #000; }
-        #bottom-panel.active { bottom: 0; }
-
-        @keyframes scan { 0% { top: 0; } 100% { top: 100%; } }
         @keyframes float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-10px); } }
+        @keyframes slideIn { from { opacity: 0; transform: translateX(-20px); } to { opacity: 1; transform: translateX(0); } }
     </style>
 </head>
 <body>
 
     <section id="map-page">
-        <div class="scan-line"></div>
-        
-        <div class="live-stats">
-            <div><span class="stat-val" id="bus-num">70</span><span class="stat-label">Автобус желіде</span></div>
-            <div style="margin-top:10px;"><span class="stat-val" id="cam-num">300</span><span class="stat-label">Сергек Online</span></div>
-        </div>
+        <div class="ramadan-badge">🌙 Ораза қабыл болсын!</div>
 
-        <div class="system-log" id="log-box">
-            > Жүйе қосылды...<br>
-            > Камералар тексерілуде...<br>
-            > Деректер қабылданды.
+        <div class="info-sidebar">
+            <div class="glass-box">
+                <h3 style="margin:0 0 15px; font-size: 14px; color: #38bdf8;">AGEUL MONITORING</h3>
+                <div class="stat-item">
+                    <span class="stat-label">Автобус желіде:</span>
+                    <span class="stat-val" id="bus-num">70</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-label">Сергек Online:</span>
+                    <span class="stat-val" id="cam-num">300</span>
+                </div>
+            </div>
+
+            <div class="glass-box" id="point-details">
+                <div style="display:flex; justify-content:space-between;">
+                    <span id="p-title" style="font-weight:bold; color:#fff;">Нүкте таңдалды</span>
+                    <span onclick="closeInfo()" style="cursor:pointer; color:#94a3b8;">×</span>
+                </div>
+                <img id="p-img" src="" alt="Live View">
+                <p style="font-size: 11px; color: #94a3b8; margin-top: 10px;">Статус: Белсенді бақылау астында</p>
+            </div>
         </div>
 
         <div id="map"></div>
 
-        <div class="bottom-ui">
+        <div class="bottom-right">
             <div class="yurt"></div>
-            <a href="#about-page" class="nav-btn" onclick="closePanel()">Біз туралы көбірек білу →</a>
-        </div>
-
-        <div id="bottom-panel">
-            <div style="width:40px; height:4px; background:#ddd; margin:0 auto 20px; border-radius:10px;"></div>
-            <h2 id="p-title">Нүкте</h2>
-            <div style="width:100%; height:200px; background:#f0f0f0; border-radius:15px; overflow:hidden;"><img id="p-img" src="" style="width:100%; height:100%; object-fit:cover;"></div>
-            <button onclick="closePanel()" style="margin-top:15px; width:100%; padding:15px; background:#020617; color:white; border-radius:10px; border:none; cursor:pointer;">Жабу</button>
+            <a href="#about-page" class="nav-btn">Біз туралы көбірек білу →</a>
         </div>
     </section>
 
-    <section id="about-page">
-        <div class="glass-card">
-            <h1 style="color:#0ea5e9;">AGEUL Стартап</h1>
-            <p style="color:#94a3b8; font-size:18px;">Астана қаласының цифрлық егізі. Біз қала қозғалысын нақты уақытта басқаруға мүмкіндік береміз.</p>
-            <a href="#map-page" style="color:#38bdf8; text-decoration:none; font-weight:bold;">← Картаға оралу</a>
+    <section id="about-page" style="height:100vh; background:#020617; display:flex; align-items:center; justify-content:center; padding:50px;">
+        <div style="background:rgba(255,255,255,0.03); border:1px solid rgba(255,255,255,0.1); padding:60px; border-radius:40px; text-align:center; max-width:800px; backdrop-filter:blur(20px);">
+            <h1 style="color:#38bdf8; font-size:40px; margin-bottom:20px;">AGEUL Стартап</h1>
+            <p style="color:#94a3b8; font-size:18px; line-height:1.6;">Біз қаланың қауіпсіздігін жаңа деңгейге шығарамыз. Сергек деректері мен жол қозғалысын бір жерде бақылаңыз.</p>
+            <a href="#map-page" style="display:inline-block; margin-top:40px; color:#38bdf8; text-decoration:none; font-weight:bold;">← Картаға оралу</a>
         </div>
     </section>
 
     <script type="text/javascript">
         ymaps.ready(init);
         function init() {
-            var myMap = new ymaps.Map("map", { center: [51.128, 71.430], zoom: 14, controls: [] });
+            var myMap = new ymaps.Map("map", { center: [51.128, 71.430], zoom: 14, controls: ['trafficControl'] });
 
-            // 450 СЕРГЕК
+            // 450 СЕРГЕК НҮКТЕЛЕРІ
             for (var i = 0; i < 450; i++) {
                 var lat = 51.05 + (Math.random() * 0.16);
                 var lng = 71.30 + (Math.random() * 0.25);
                 var p = new ymaps.Placemark([lat, lng], {
-                    title: "Камера #" + (5000 + i),
-                    img: "https://images.unsplash.com/photo-1541339907198-e08756ebafe3?auto=format&fit=crop&w=600"
+                    title: "AGEUL Сергек #" + (5000 + i),
+                    img: "https://images.unsplash.com/photo-1541339907198-e08756ebafe3?auto=format&fit=crop&w=800"
                 }, { preset: 'islands#redCircleDotIcon', iconColor: '#ff0000', iconScale: 0.7 });
 
                 p.events.add('click', function (e) {
                     var target = e.get('target');
                     document.getElementById('p-title').innerText = target.properties.get('title');
                     document.getElementById('p-img').src = target.properties.get('img');
-                    document.getElementById('bottom-panel').classList.add('active');
+                    document.getElementById('point-details').style.display = 'block';
                 });
                 myMap.geoObjects.add(p);
             }
 
-            // ДИНАМИКАЛЫҚ СТАТИСТИКА
+            // ОЙНАМАЛЫ САНДАР
             setInterval(() => {
-                let buses = 68 + Math.floor(Math.random() * 8); // 68-76 арасы
-                let cams = 295 + Math.floor(Math.random() * 10); // 295-305 арасы
-                document.getElementById('bus-num').innerText = buses;
-                document.getElementById('cam-num').innerText = cams;
-                
-                // Журналды жаңарту
-                const logs = ["> Нүкте тексерілді", "> Дерек жаңартылды", "> Трафик талданды", "> Байланыс тұрақты"];
-                document.getElementById('log-box').innerHTML += `<br> ${logs[Math.floor(Math.random()*logs.length)]}`;
-                if(document.getElementById('log-box').innerHTML.split('<br>').length > 5) {
-                    document.getElementById('log-box').innerHTML = "> Жүйе жұмыс істеп тұр...";
-                }
+                document.getElementById('bus-num').innerText = 68 + Math.floor(Math.random() * 8);
+                document.getElementById('cam-num').innerText = 296 + Math.floor(Math.random() * 10);
             }, 3000);
         }
 
-        function closePanel() {
-            document.getElementById('bottom-panel').classList.remove('active');
+        function closeInfo() {
+            document.getElementById('point-details').style.display = 'none';
         }
     </script>
 </body>
