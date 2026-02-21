@@ -2,152 +2,182 @@
 <html lang="kk">
 <head>
     <meta charset="UTF-8">
-    <title>AGEUL | AI Smart City Monitoring</title>
+    <title>AGEUL | Global AI Monitoring</title>
     <script src="https://api-maps.yandex.ru/2.1/?lang=ru_RU" type="text/javascript"></script>
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700;900&display=swap" rel="stylesheet">
     <style>
         body, html { margin: 0; padding: 0; scroll-behavior: smooth; font-family: 'Montserrat', sans-serif; background: #0f172a; overflow-x: hidden; }
         
+        /* 1 БЕТ: КАРТА */
         #map-page { height: 100vh; width: 100%; position: relative; }
-        #map { width: 100%; height: 100%; transition: filter 1.5s ease; }
+        #map { width: 100%; height: 100%; filter: brightness(0.8) contrast(1.2); }
 
-        /* ЖОҒАРҒЫ ПАНЕЛЬ (STATS) */
+        /* AI ROAD ANALYSIS (ЖАҢА) */
+        .road-analysis {
+            position: absolute; top: 100px; left: 20px; z-index: 1000;
+            background: rgba(15, 23, 42, 0.9); color: white; padding: 15px;
+            border-radius: 15px; border: 1px solid #3b82f6; width: 220px;
+            box-shadow: 0 0 20px rgba(59, 130, 246, 0.3);
+        }
+        .road-analysis h4 { margin: 0 0 10px 0; color: #3b82f6; font-size: 12px; text-transform: uppercase; letter-spacing: 1px; }
+        .analysis-item { font-size: 11px; margin-bottom: 8px; }
+        .bar { height: 4px; background: #1e293b; width: 100%; margin-top: 4px; border-radius: 2px; overflow: hidden; }
+        .bar-fill { height: 100%; background: #3b82f6; width: 0%; transition: width 1s; }
+
+        /* СТАТИСТИКА ПАНЕЛІ */
         .top-stats {
             position: absolute; top: 20px; left: 20px; right: 20px;
-            display: flex; gap: 15px; z-index: 1000;
+            display: flex; justify-content: space-between; z-index: 1000;
         }
-
+        .stat-group { display: flex; gap: 10px; }
         .stat-card {
-            background: rgba(255, 255, 255, 0.95); padding: 15px 25px; border-radius: 20px;
-            box-shadow: 0 10px 25px rgba(0,0,0,0.2); border: 1px solid #e2e8f0; min-width: 150px;
+            background: white; padding: 10px 20px; border-radius: 15px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.3); min-width: 120px;
         }
-        .stat-card b { display: block; font-size: 24px; color: #0f172a; }
-        .stat-card span { font-size: 11px; color: #64748b; font-weight: 700; text-transform: uppercase; }
+        .stat-card span { display: block; font-size: 9px; color: #64748b; font-weight: 800; text-transform: uppercase; }
+        .stat-card b { font-size: 20px; color: #0f172a; }
 
-        /* AI ТЕРМИНАЛ (ЛОГИ) */
+        /* AI ТЕРМИНАЛ */
         .ai-terminal {
             position: absolute; bottom: 120px; left: 20px; z-index: 1000;
-            background: rgba(10, 15, 28, 0.9); color: #22c55e; padding: 20px;
-            border-radius: 15px; font-family: 'Courier New', monospace; font-size: 12px;
-            width: 350px; border-top: 3px solid #22c55e; box-shadow: 0 20px 50px rgba(0,0,0,0.5);
+            background: rgba(10, 15, 28, 0.95); color: #22c55e; padding: 15px;
+            border-radius: 15px; font-family: 'Courier New', monospace; font-size: 11px;
+            width: 320px; border-left: 4px solid #22c55e;
         }
-        .ai-status-dot { height: 8px; width: 8px; background: #22c55e; border-radius: 50%; display: inline-block; margin-right: 10px; animation: blink 1s infinite; }
 
-        @keyframes blink { 0% { opacity: 1; } 50% { opacity: 0.3; } 100% { opacity: 1; } }
-
-        /* ПАЙЫЗДЫҚ КӨРСЕТКІШТЕР (ОҢ ЖАҚ) */
+        /* ОҢ ЖАҚ ИНДИКАТОРЛАР */
         .indicators { position: absolute; top: 100px; right: 20px; z-index: 1000; display: flex; flex-direction: column; gap: 10px; }
-        
         .indicator-item {
-            background: #0f172a; color: white; padding: 12px 20px; border-radius: 15px;
-            border-left: 4px solid #22c55e; width: 180px;
+            background: #1e293b; color: white; padding: 12px 15px; border-radius: 12px;
+            border-right: 4px solid #ef4444; width: 160px; font-size: 12px;
         }
-        .ind-val { float: right; font-weight: 900; color: #22c55e; }
+        .ind-val { float: right; font-weight: 900; color: #ef4444; }
 
         .footer-ui { position: absolute; bottom: 30px; width: 100%; display: flex; justify-content: center; z-index: 1000; }
-        .btn-glow { 
-            background: #2563eb; color: #fff; padding: 18px 45px; border-radius: 50px; 
-            text-decoration: none; font-weight: 900; box-shadow: 0 0 20px rgba(37,99,235,0.4);
-            transition: 0.3s; border: none; cursor: pointer;
+        .main-btn { 
+            background: #2563eb; color: #fff; padding: 15px 40px; border-radius: 30px; 
+            text-decoration: none; font-weight: 900; transition: 0.3s; box-shadow: 0 10px 30px rgba(37,99,235,0.5);
         }
+
+        /* 2 БЕТ: ПРЕЗЕНТАЦИЯ */
+        #about-page { min-height: 100vh; background: #f1f5f9; padding: 80px 20px; display: flex; align-items: center; }
+        .pres-card { max-width: 900px; margin: 0 auto; background: white; padding: 50px; border-radius: 40px; box-shadow: 0 20px 60px rgba(0,0,0,0.1); }
+        .section-box { margin: 25px 0; padding: 25px; border-radius: 20px; border-left: 8px solid; }
+        .problem-box { background: #fff1f2; border-color: #ef4444; }
+        .solution-box { background: #f0fdf4; border-color: #22c55e; }
+        h1 { font-weight: 900; font-size: 40px; color: #0f172a; margin-bottom: 30px; }
     </style>
 </head>
 <body>
 
     <section id="map-page">
         <div class="top-stats">
-            <div class="stat-card">
-                <span>📹 Сергек активті</span>
-                <b id="sergek-count">712</b>
+            <div class="stat-group">
+                <div class="stat-card"><span>📹 SERGEK AI</span><b id="sergek-count">712</b></div>
+                <div class="stat-card"><span>🚌 BUS LIVE</span><b id="bus-count">485</b></div>
             </div>
-            <div class="stat-card">
-                <span>🚌 Желідегі автобус</span>
-                <b id="bus-count">485</b>
+            <div class="stat-card" style="background: #0f172a; color: white;">
+                <span style="color: #3b82f6;">SPEED AVG</span><b style="color: white;"><span id="speed-val">58</span> км/с</b>
             </div>
-            <div class="stat-card">
-                <span>⚡ Жылдамдық (орта)</span>
-                <b><span id="speed-val" style="display:inline; font-size:24px; color:#0f172a;">54</span> км/с</b>
+        </div>
+
+        <div class="road-analysis">
+            <h4><span class="ai-status-dot"></span> AI Road Analysis</h4>
+            <div class="analysis-item">
+                Жол төсемінің сапасы: <span id="road-q">94%</span>
+                <div class="bar"><div id="road-q-bar" class="bar-fill" style="width: 94%"></div></div>
+            </div>
+            <div class="analysis-item">
+                Таңбалардың көрінуі: <span id="mark-q">88%</span>
+                <div class="bar"><div id="mark-q-bar" class="bar-fill" style="width: 88%; background: #22c55e;"></div></div>
+            </div>
+            <div class="analysis-item">
+                Шұңқырлар қаупі: <span id="pothole-q">2%</span>
+                <div class="bar"><div id="pothole-q-bar" class="bar-fill" style="width: 2%; background: #ef4444;"></div></div>
             </div>
         </div>
 
         <div class="indicators">
-            <div class="indicator-item">
-                Ауа ластануы <span class="ind-val" id="pollution-pct">0%</span>
+            <div class="indicator-item" style="border-right-color: #22c55e;">
+                Ауа ластануы <span class="ind-val" id="pollution-pct" style="color: #22c55e;">0%</span>
             </div>
-            <div class="indicator-item">
-                Жол кептелісі <span class="ind-val" id="traffic-pct">12%</span>
-            </div>
-            <div id="weather-label" class="indicator-item" style="border-left-color: #f59e0b; background: #451a03;">
-                АУА-РАЙЫ: <span class="ind-val" style="color:#f59e0b">КҮН АШЫҚ</span>
+            <div class="indicator-item" style="border-right-color: #3b82f6;">
+                Кептеліс деңгейі <span class="ind-val" id="traffic-pct" style="color: #3b82f6;">12%</span>
             </div>
         </div>
         
         <div class="ai-terminal">
-            <div><span class="ai-status-dot"></span> <b>AGEUL AI CORE ACTIVE</b></div>
-            <hr style="border: 0.5px solid #1e293b; margin: 10px 0;">
+            <div style="margin-bottom: 5px; color: #94a3b8;">[AGEUL SYSTEM v2.5]</div>
             <div id="ai-log-content"></div>
         </div>
 
         <div id="map"></div>
 
         <div class="footer-ui">
-            <button class="btn-glow" onclick="alert('Деректер жаңартылды!')">ЖҮЙЕНІ ЖАҢАРТУ</button>
+            <a href="#about-page" class="main-btn">ТОЛЫҚ МӘЛІМЕТ →</a>
+        </div>
+    </section>
+
+    <section id="about-page">
+        <div class="pres-card">
+            <h1>AGEUL: Нақты деректер технологиясы</h1>
+            
+            <div class="section-box problem-box">
+                <h2>Мәселе: "Фантомдық" кептелістер</h2>
+                <p>Кәдімгі навигаторлар спутниктік GPS-ке сүйенеді. Егер адамдар тротуарда жиналса, жүйе оны кептеліс деп қабылдайды. Бұл драйверлердің уақытын алады.</p>
+            </div>
+
+            <div class="section-box solution-box">
+                <h2>Шешім: AGEUL AI</h2>
+                <p>Біздің AI тікелей <b>Сергек</b> камераларынан видео-анализ жасайды. Ол нақты машиналарды санайды, олардың жылдамдығын көреді және жолдың сапасын (шұңқырлар мен таңбалар) бақылайды.</p>
+            </div>
+
+            <div style="text-align: center; margin-top: 30px;">
+                <a href="#map-page" style="text-decoration: none; color: #2563eb; font-weight: 800;">← КАРТАҒА ҚАЙТУ</a>
+            </div>
         </div>
     </section>
 
     <script type="text/javascript">
         ymaps.ready(init);
         function init() {
-            var myMap = new ymaps.Map("map", { 
-                center: [51.128, 71.430], 
-                zoom: 13, 
-                controls: [] 
-            });
+            var myMap = new ymaps.Map("map", { center: [51.128, 71.430], zoom: 13, controls: [] });
 
-            // Карта стилін сәл қараңғылау (түн/футуризм үшін)
-            myMap.panes.get('ground').getElement().style.filter = 'brightness(0.8) contrast(1.2)';
-
-            // Сергек нүктелерін қосу
-            for (var i = 0; i < 150; i++) {
+            // Картаға Сергек нүктелерін қосу
+            for (var i = 0; i < 100; i++) {
                 myMap.geoObjects.add(new ymaps.Placemark([51.05 + Math.random()*0.15, 71.3 + Math.random()*0.3], {}, {
                     preset: 'islands#redCircleDotIcon', iconScale: 0.6
                 }));
             }
 
             const logs = [
-                "Сергек-402: Жылдамдық асыру тіркелді",
-                "Автобус #10: Маршруттан ауытқу жоқ",
-                "AI: Кептеліс болжамы орындалуда",
-                "Ауа сапасы: Оң жағалау талданды",
-                "Жүйе: Фантомдық кептеліс жойылды",
-                "Data: 1.2TB ақпарат өңделді"
+                "Жол сапасы талданды: Сол жағалау",
+                "Шұңқыр анықталған жоқ: Орталық",
+                "Автобус жолағы бос: Тұран даңғылы",
+                "AI: Кептеліс деңгейі тұрақты",
+                "Сергек-912: Бағдарлама жаңартылды"
             ];
 
-            // ДИНАМИКАЛЫҚ ЖАҢАРТУ (ИМИТАЦИЯ)
             setInterval(() => {
-                // 1. Автобустар (на линии)
+                // Сандарды жаңарту
                 document.getElementById('bus-count').innerText = 480 + Math.floor(Math.random() * 20);
+                document.getElementById('speed-val').innerText = 55 + Math.floor(Math.random() * 10);
                 
-                // 2. Сергек активтілігі
-                document.getElementById('sergek-count').innerText = 710 + Math.floor(Math.random() * 5);
-                
-                // 3. Ластану (0 - 20%)
+                // Ластану (0-20%)
                 let pol = Math.floor(Math.random() * 21);
                 document.getElementById('pollution-pct').innerText = pol + "%";
                 
-                // 4. Жол кептелісі
-                document.getElementById('traffic-pct').innerText = 10 + Math.floor(Math.random() * 15) + "%";
+                // Жол талдау (Road Analysis) - Динамика
+                let roadQ = 90 + Math.floor(Math.random() * 10);
+                document.getElementById('road-q').innerText = roadQ + "%";
+                document.getElementById('road-q-bar').style.width = roadQ + "%";
 
-                // 5. AI Логтар
+                // Логтар
                 const logBox = document.getElementById('ai-log-content');
                 const newLine = document.createElement('div');
-                newLine.style.marginBottom = "4px";
-                newLine.innerHTML = `<span style="color:#64748b">[${new Date().toLocaleTimeString()}]</span> > ${logs[Math.floor(Math.random() * logs.length)]}`;
+                newLine.innerHTML = `> ${logs[Math.floor(Math.random() * logs.length)]}`;
                 logBox.prepend(newLine);
-                if (logBox.children.length > 6) logBox.lastChild.remove();
-
-                // Жылдамдық
-                document.getElementById('speed-val').innerText = 50 + Math.floor(Math.random() * 10);
+                if (logBox.children.length > 5) logBox.lastChild.remove();
             }, 3000);
         }
     </script>
