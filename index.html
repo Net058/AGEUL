@@ -1,26 +1,4 @@
- <!DOCTYPE html>
-<html lang="ru">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SmartCity Astana - AGEUL Monitoring</title>
-    
-    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
-    
-    <style>
-        body { margin: 0; padding: 0; font-family: 'Arial', sans-serif; background: #0b0d11; color: #fff; overflow: hidden; }
-        #map { height: 100vh; width: 100%; background: #1a1a1a; }
-        
-        /* СТИЛЬ КАМЕР СЕРГЕК */
-        .sergek-icon {
-            background: #ff0000;
-            border: 2px solid white;
-            border-radius: 50%;
-            text-align: center;
-            line-height: 20px;
-            font-size: 12px;
-            …
-[11:45, 2/21/2026] Daryn: <!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
@@ -112,7 +90,7 @@
     cameras.forEach(cam => {
         const icon = L.divIcon({ className: 'sergek-icon', html: 'S', iconSize: [20, 20] });
         L.marker([cam.lat, cam.lng], {icon: icon}).addTo(map)
-            .bindPopup(<b>Сергек ${cam.id}</b><br>Скорость: 58 км/ч<br>Нарушений нет.);
+            .bindPopup(`<b>Сергек ${cam.id}</b><br>Скорость: 58 км/ч<br>Нарушений нет.`);
     });
 
     // 5. Живой автобус
@@ -129,95 +107,5 @@
     setInterval(moveBus, 2000); // Автобус двигается каждые 2 секунды
 
 </script>
-</body>
-</html>
-[11:49, 2/21/2026] Daryn: <!DOCTYPE html>
-<html lang="ru">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SmartCity: Астана - AGEUL</title>
-    
-    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
-    
-    <style>
-        body, html { margin: 0; padding: 0; height: 100%; width: 100%; overflow: hidden; background: #0b0d11; }
-        
-        /* КАРТА КОНТЕЙНЕРІ: БИІКТІГІ 100% БОЛУЫ ТИІС */
-        #map { height: 100vh; width: 100%; z-index: 1; }
-        
-        /* ПАНЕЛЬ СТИЛЬДЕРІ (Сенің скриншотыңдағыдай) */
-        .ui-panel {
-            position: absolute;
-            top: 20px;
-            left: 20px;
-            z-index: 1000;
-            background: rgba(15, 23, 42, 0.9);
-            padding: 20px;
-            border-radius: 12px;
-            border: 1px solid #38bdf8;
-            width: 280px;
-            color: white;
-            font-family: 'Segoe UI', sans-serif;
-            backdrop-filter: blur(5px);
-        }
-
-        .ui-panel h2 { margin: 0 0 10px 0; font-size: 18px; color: #38bdf8; }
-        .status-item { margin-bottom: 8px; font-size: 14px; display: flex; justify-content: space-between; }
-        .online { color: #22c55e; font-weight: bold; }
-
-        /* СЕРГЕК ИКОНКАСЫ */
-        .sergek-icon {
-            background: #ff0000;
-            border: 2px solid white;
-            border-radius: 50%;
-            width: 20px; height: 20px;
-            box-shadow: 0 0 10px rgba(255,0,0,0.8);
-        }
-    </style>
-</head>
-<body>
-
-<div class="ui-panel">
-    <h2>SmartCity: Астана</h2>
-    <div class="status-item"><span>Система:</span> <span class="online">ONLINE</span></div>
-    <div class="status-item"><span>Камеры Sergek:</span> <span>124 активны</span></div>
-    <div class="status-item"><span>Проект:</span> <span style="color: #38bdf8;">AGEUL</span></div>
-    <hr style="border: 0.5px solid #334155; margin: 10px 0;">
-    <p style="font-size: 11px; color: #94a3b8;">Интеграция данных в реальном времени. Навигация на базе ИИ.</p>
-</div>
-
-<div id="map"></div>
-
-<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
-
-<script>
-    // ИНТЕРНЕТ ҚОСУЛЫ ЕКЕНІНЕ КӨЗ ЖЕТКІЗ!
-    try {
-        // 1. Картаны Астанаға бағыттау
-        const map = L.map('map', { zoomControl: false }).setView([51.147, 71.430], 13);
-
-        // 2. Қараңғы карта қабатын қосу (Dark Matter)
-        L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {
-            attribution: '© AGEUL'
-        }).addTo(map);
-
-        // 3. Сергек камераларын қосу
-        const locations = [
-            [51.150, 71.420], [51.145, 71.440], [51.135, 71.430]
-        ];
-
-        locations.forEach(pos => {
-            const icon = L.divIcon({ className: 'sergek-icon' });
-            L.marker(pos, { icon: icon }).addTo(map);
-        });
-
-        console.log("Карта сәтті жүктелді!");
-    } catch (e) {
-        console.error("Қате шықты: ", e);
-        alert("Карта жүктелмеді. Интернетті тексер!");
-    }
-</script>
-
 </body>
 </html>
