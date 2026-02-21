@@ -2,42 +2,56 @@
 <html lang="kk">
 <head>
     <meta charset="UTF-8">
-    <title>AGEUL - Astana Interactive Map</title>
+    <title>AGEUL - Astana Monitoring Full</title>
     <script src="https://api-maps.yandex.ru/2.1/?lang=ru_RU" type="text/javascript"></script>
     <style>
         body, html { margin: 0; padding: 0; width: 100%; height: 100%; overflow: hidden; font-family: sans-serif; }
         #map { width: 100%; height: 100vh; }
 
-        /* Төменгі панель (Сен жіберген скриншоттағыдай) */
+        /* Төменгі панель (Сен жіберген скриншоттағыдай стиль) */
         #bottom-panel {
-            position: absolute; bottom: -400px; left: 0; width: 100%;
-            background: white; border-top-left-radius: 20px; border-top-right-radius: 20px;
-            z-index: 2000; transition: bottom 0.4s ease;
-            box-shadow: 0 -5px 20px rgba(0,0,0,0.3);
+            position: absolute; bottom: -450px; left: 0; width: 100%;
+            background: white; border-top-left-radius: 25px; border-top-right-radius: 25px;
+            z-index: 2000; transition: bottom 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.1);
             padding: 20px; box-sizing: border-box;
+            box-shadow: 0 -5px 25px rgba(0,0,0,0.4);
         }
         #bottom-panel.active { bottom: 0; }
 
-        .panel-handle { width: 40px; height: 5px; background: #ccc; margin: 0 auto 15px; border-radius: 10px; }
-        .location-title { font-size: 20px; font-weight: bold; margin-bottom: 5px; }
-        .location-desc { color: #666; font-size: 14px; margin-bottom: 15px; }
+        .panel-handle { width: 45px; height: 5px; background: #e0e0e0; margin: 0 auto 20px; border-radius: 10px; }
+        .location-title { font-size: 22px; font-weight: bold; color: #1a1a1a; margin-bottom: 5px; }
+        .location-desc { color: #70757a; font-size: 15px; margin-bottom: 20px; }
         
-        .photo-container { width: 100%; height: 180px; background: #eee; border-radius: 12px; overflow: hidden; }
+        .photo-container { width: 100%; height: 220px; background: #f0f0f0; border-radius: 15px; overflow: hidden; border: 1px solid #eee; }
         .photo-container img { width: 100%; height: 100%; object-fit: cover; }
 
-        .close-btn { position: absolute; right: 20px; top: 20px; font-size: 24px; cursor: pointer; color: #999; }
+        .close-btn { position: absolute; right: 25px; top: 25px; font-size: 28px; cursor: pointer; color: #dadce0; }
+        
+        /* AGEUL үстіңгі көрсеткіші */
+        .ui-header {
+            position: absolute; top: 20px; left: 20px; z-index: 1000;
+            background: rgba(255, 255, 255, 0.9); padding: 12px 20px; border-radius: 30px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.2); font-weight: bold; display: flex; align-items: center; gap: 10px;
+        }
+        .dot { width: 10px; height: 10px; background: #ff3b30; border-radius: 50%; animation: blink 1s infinite; }
+        @keyframes blink { 0% { opacity: 1; } 50% { opacity: 0.3; } 100% { opacity: 1; } }
     </style>
 </head>
 <body>
+
+<div class="ui-header">
+    <div class="dot"></div>
+    <span>AGEUL: 450+ Сергек активті</span>
+</div>
 
 <div id="bottom-panel">
     <div class="panel-handle"></div>
     <div class="close-btn" onclick="closePanel()">×</div>
     <div class="location-title" id="p-title">Dropped pin</div>
-    <div class="location-desc" id="p-desc">Near Esil District, Astana</div>
+    <div class="location-desc" id="p-desc">Астана қаласы, Есіл ауданы</div>
     
     <div class="photo-container">
-        <img id="p-img" src="https://lh5.googleusercontent.com/p/AF1QipN3-v_YvCgYq0m_B0_p9Z0R0e0_0_0" alt="Street View">
+        <img id="p-img" src="https://images.unsplash.com/photo-1541339907198-e08756ebafe3?auto=format&fit=crop&w=800&q=80" alt="Street View">
     </div>
 </div>
 
@@ -50,38 +64,42 @@
     function init() {
         myMap = new ymaps.Map("map", {
             center: [51.128, 71.430],
-            zoom: 14,
-            controls: []
+            zoom: 13,
+            controls: ['trafficControl', 'zoomControl']
         });
 
-        // Картаның кез келген жерін басқанда (мышкамен)
-        myMap.events.add('click', function (e) {
-            var coords = e.get('coords');
-            showInfo("Таңдалған нүкте", "Координаттар: " + coords[0].toFixed(4) + ", " + coords[1].toFixed(4), "https://avatars.mds.yandex.net/get-altay/1922501/2a0000016da88656a9e1451f251c6a7e027d/orig");
-        });
+        // 1. БАРЛЫҚ СЕРГЕКТЕРДІ ҚАЙТАРУ (450 нүкте)
+        var clusterer = new ymaps.Clusterer({ preset: 'islands#redClusterIcons' });
 
-        // Сергектің нүктелерін қосу
-        for (var i = 0; i < 50; i++) {
-            var lat = 51.11 + (Math.random() * 0.04);
-            var lng = 71.40 + (Math.random() * 0.06);
+        for (var i = 0; i < 450; i++) {
+            var lat = 51.06 + (Math.random() * 0.16);
+            var lng = 71.30 + (Math.random() * 0.25);
             
             var placemark = new ymaps.Placemark([lat, lng], {
-                title: "Сергек №" + (1000 + i),
-                desc: "Астана қ., Достық көшесі маңы"
+                title: "Сергек бақылау нүктесі #" + (2000 + i),
+                desc: "Астана, Нұржол желекжолы маңы",
+                // Түрлі суреттер имитациясы
+                img: i % 2 === 0 ? "https://images.unsplash.com/photo-1517733948473-28b5a1484b6a?auto=format&fit=crop&w=800" : "https://images.unsplash.com/photo-1449824913935-59a10b8d2000?auto=format&fit=crop&w=800"
             }, {
                 preset: 'islands#redCircleDotIcon',
-                iconColor: '#ff0000'
+                iconColor: '#ff0000',
+                iconScale: 0.8
             });
 
-            // Нүктені басқанда панель шығады
+            // Әр нүктені басқанда панель шығады
             placemark.events.add('click', function (e) {
                 var target = e.get('target');
-                showInfo(target.properties.get('title'), target.properties.get('desc'), "https://images.unsplash.com/photo-1596438415017-098555027581?auto=format&fit=crop&w=800&q=80");
-                e.stopPropagation(); // Картаның клигімен араласпау үшін
+                showInfo(target.properties.get('title'), target.properties.get('desc'), target.properties.get('img'));
             });
 
             myMap.geoObjects.add(placemark);
         }
+
+        // Картаның өзін басқанда да панель шығару (Dropped pin эффектісі)
+        myMap.events.add('click', function (e) {
+            var coords = e.get('coords');
+            showInfo("Таңдалған орын", "Координаттар: " + coords[0].toFixed(4) + ", " + coords[1].toFixed(4), "https://images.unsplash.com/photo-1566438480900-0609be27a4be?auto=format&fit=crop&w=800");
+        });
     }
 
     function showInfo(title, desc, img) {
