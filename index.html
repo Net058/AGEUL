@@ -2,103 +2,108 @@
 <html lang="kk">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AGEUL - Astana Clean Map</title>
-    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <title>AGEUL - Astana Transport Monitoring</title>
+    <script src="https://api-maps.yandex.ru/2.1/?lang=ru_RU" type="text/javascript"></script>
     <style>
-        body, html { margin: 0; padding: 0; height: 100%; background: #0b0d11; overflow: hidden; }
-        #map { height: 100vh; width: 100%; }
-        
-        /* Барлық логотиптер мен авторлық құқық белгілерін өшіру */
-        .leaflet-control-attribution, .leaflet-control-zoom, .ymaps-2-1-79-copyright__wrap { 
-            display: none !important; 
-        }
+        body, html { margin: 0; padding: 0; width: 100%; height: 100%; overflow: hidden; }
+        #map { width: 100%; height: 100vh; }
 
-        /* Автобус белгілері (2GIS стилі) */
-        .bus-label {
-            background: #007aff; color: white; border: 2px solid white;
-            border-radius: 12px; padding: 2px 8px; font-weight: bold;
-            font-size: 12px; white-space: nowrap; box-shadow: 0 0 8px rgba(0,122,255,0.6);
-        }
-
-        /* Сергек камералары */
-        .sergek-dot {
-            background: #ff3b30; border: 1px solid white; border-radius: 50%;
-            box-shadow: 0 0 6px #ff3b30;
-        }
-
-        /* Ақпараттық панель */
+        /* AGEUL интерфейсі */
         .ui-panel {
-            position: absolute; top: 20px; left: 20px; z-index: 1000;
-            background: rgba(15, 23, 42, 0.9); padding: 15px; border-radius: 10px;
-            border: 1px solid #38bdf8; color: white; font-family: sans-serif;
+            position: absolute; top: 15px; left: 15px; z-index: 1000;
+            background: rgba(13, 17, 23, 0.9); padding: 15px; border-radius: 12px;
+            border: 2px solid #38bdf8; color: white; width: 260px; font-family: 'Segoe UI', sans-serif;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.6);
         }
+        .status { color: #22c55e; font-weight: bold; }
     </style>
 </head>
 <body>
 
 <div class="ui-panel">
-    <h3 style="margin:0; color:#38bdf8;">AGEUL: Smart Astana</h3>
-    <p style="font-size:12px; margin:5px 0;">Мониторинг: <span style="color:#22c55e;">Жасыл жолақтар</span></p>
+    <h3 style="margin:0; color: #38bdf8;">SmartCity: Астана</h3>
+    <div style="margin-top: 10px; font-size: 13px;">
+        <p>Жүйе: <span class="status">ONLINE</span></p>
+        <p>Объектілер: <b>400+ Сергектің нүктелері</b></p>
+        <p>Көлік: <b>Bus 56 & 15A (2GIS стилі)</b></p>
+        <p style="font-size: 11px; color: #94a3b8;">Интеграция: Яндекс.Карты + AGEUL AI</p>
+    </div>
 </div>
 
 <div id="map"></div>
 
-<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
-<script>
-    // Картаны логотипсіз жүктеу
-    const map = L.map('map', { 
-        zoomControl: false, 
-        attributionControl: false 
-    }).setView([51.135, 71.435], 13);
+<script type="text/javascript">
+    ymaps.ready(init);
 
-    // Қараңғы стиль (Артық жазуы жоқ)
-    L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png').addTo(map);
-
-    // Сергекті қала бойынша шашырату (Сен жіберген скриншоттағыдай)
-    for (let i = 0; i < 150; i++) {
-        let lat = 51.1 + (Math.random() * 0.08);
-        let lng = 71.38 + (Math.random() * 0.12);
-        L.marker([lat, lng], {
-            icon: L.divIcon({ className: 'sergek-dot', iconSize: [7, 7] })
-        }).addTo(map);
-    }
-
-    // Маршруттарды салу функциясы (Жасыл полосамен жүру)
-    function createRoute(coords, busNum, color = '#22c55e') {
-        // Жасыл жол сызығы
-        L.polyline(coords, { color: color, weight: 4, opacity: 0.8 }).addTo(map);
-
-        // Автобус маркері
-        const busIcon = L.divIcon({ 
-            className: 'bus-label', 
-            html: '🚌 ' + busNum,
-            iconSize: [50, 25]
+    function init() {
+        // Картаны инициализациялау (барлық батырмалар мен значоктармен)
+        var myMap = new ymaps.Map("map", {
+            center: [51.128, 71.430], // Астана сол жағалау орталығы
+            zoom: 13,
+            controls: ['trafficControl', 'typeSelector', 'fullscreenControl', 'zoomControl']
         });
-        const marker = L.marker(coords[0], { icon: busIcon }).addTo(map);
 
-        let step = 0;
-        setInterval(() => {
-            step = (step + 1) % coords.length;
-            marker.setLatLng(coords[step]);
-        }, 3000); // Баяу қозғалыс
+        // 1. СЕРГЕКТЕРДІҢ ҚЫЗЫЛ НҮКТЕЛЕРІ (Сенің скриншотыңдағыдай)
+        for (var i = 0; i < 300; i++) {
+            var lat = 51.08 + (Math.random() * 0.12);
+            var lng = 71.35 + (Math.random() * 0.18);
+            var sergek = new ymaps.Placemark([lat, lng], {
+                hintContent: 'Сергек камерасы'
+            }, {
+                preset: 'islands#redCircleDotIcon',
+                iconColor: '#ff0000',
+                iconScale: 0.8
+            });
+            myMap.geoObjects.add(sergek);
+        }
+
+        // 2. ҰЗЫН ЖӘНЕ НАҚТЫ МАРШРУТТАР (Жолдың қисықтарымен)
+
+        // МАРШРУТ 56 (Скриншот бойынша: Тұран - Сығанақ - Мәңгілік Ел)
+        var path56 = [
+            [51.147, 71.405], [51.143, 71.418], [51.139, 71.428], // Тұран бойы
+            [51.135, 71.432], [51.125, 71.434], [51.120, 71.438], // Сығанаққа бұрылыс
+            [51.118, 71.445], [51.115, 71.460], [51.110, 71.475]  // Мәңгілік Ел
+        ];
+
+        var line56 = new ymaps.Polyline(path56, {}, {
+            strokeColor: "#007aff", strokeWidth: 6, strokeOpacity: 0.8
+        });
+        myMap.geoObjects.add(line56);
+
+        var bus56 = new ymaps.Placemark(path56[0], { iconContent: '56' }, {
+            preset: 'islands#blueStretchyIcon'
+        });
+        myMap.geoObjects.add(bus56);
+
+        // МАРШРУТ 15A (Оң жағалау - Сол жағалау байланысы)
+        var path15A = [
+            [51.165, 71.425], [51.155, 71.430], [51.145, 71.435], // Сарыарқа көпірі
+            [51.135, 71.440], [51.125, 71.445], [51.115, 71.455]
+        ];
+
+        var line15A = new ymaps.Polyline(path15A, {}, {
+            strokeColor: "#ff9500", strokeWidth: 6, strokeOpacity: 0.7
+        });
+        myMap.geoObjects.add(line15A);
+
+        var bus15A = new ymaps.Placemark(path15A[0], { iconContent: '15A' }, {
+            preset: 'islands#orangeStretchyIcon'
+        });
+        myMap.geoObjects.add(bus15A);
+
+        // АВТОБУСТАРДЫ БАЯУ ЖӘНЕ НАҚТЫ ЖЫЛЖЫТУ
+        function moveBus(marker, coords, speed) {
+            var step = 0;
+            setInterval(function() {
+                step = (step + 1) % coords.length;
+                marker.geometry.setCoordinates(coords[step]);
+            }, speed);
+        }
+
+        moveBus(bus56, path56, 3500);  // 56-шы автобус
+        moveBus(bus15A, path15A, 4500); // 15A-шы автобус
     }
-
-    // 1. Маршрут 56 (Тұран бойымен жасыл жолмен)
-    createRoute([
-        [51.145, 71.405], [51.142, 71.415], [51.138, 71.425], [51.135, 71.435]
-    ], '56');
-
-    // 2. Маршрут 15A (Қабанбай батыр бойымен)
-    createRoute([
-        [51.125, 71.430], [51.128, 71.440], [51.130, 71.450], [51.132, 71.460]
-    ], '15A');
-
-    // 3. Маршрут 10 (Мәңгілік Ел бойымен)
-    createRoute([
-        [51.115, 71.420], [51.112, 71.435], [51.108, 71.450], [51.105, 71.465]
-    ], '10');
-
 </script>
 </body>
 </html>
