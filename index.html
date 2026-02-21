@@ -2,111 +2,101 @@
 <html lang="kk">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AGEUL - Astana Smart Transport</title>
-    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <title>AGEUL - Astana Monitoring Official</title>
+    <script src="https://api-maps.yandex.ru/2.1/?lang=ru_RU" type="text/javascript"></script>
     <style>
-        body, html { margin: 0; padding: 0; height: 100%; background: #0b0d11; overflow: hidden; font-family: 'Segoe UI', sans-serif; }
-        #map { height: 100vh; width: 100%; background: #0b0d11; }
-        .leaflet-control-attribution { display: none !important; }
-
-        /* 2GIS стиліндегі автобус маркері */
-        .bus-56-icon {
-            background: #007aff; color: white; border: 2px solid white;
-            border-radius: 20px; padding: 2px 8px; font-weight: bold;
-            font-size: 12px; white-space: nowrap; display: flex; align-items: center;
-            box-shadow: 0 0 10px rgba(0,122,255,0.8);
-        }
-        .bus-56-icon::before { content: '🚌 '; margin-right: 4px; }
-
-        /* Сергек - BAQ.KZ стиліндегі қызыл нүктелер */
-        .sergek-node {
-            background: #ff0000; border: 1px solid #fff; border-radius: 50%;
-            box-shadow: 0 0 6px #ff0000;
-        }
-
-        /* Аялдама белгісі */
-        .stop-icon {
-            background: rgba(255,255,255,0.2); border: 1.5px solid #38bdf8;
-            border-radius: 50%; width: 10px; height: 10px;
-        }
-
-        /* Ақпарат панелі */
-        .ui-overlay {
-            position: absolute; top: 15px; left: 15px; z-index: 1000;
-            background: rgba(15, 23, 42, 0.95); padding: 15px; border-radius: 10px;
-            border: 1px solid #38bdf8; color: white; width: 220px;
+        body, html { margin: 0; padding: 0; width: 100%; height: 100%; overflow: hidden; background: #000; }
+        #map { width: 100%; height: 100vh; }
+        .ui-header {
+            position: absolute; top: 20px; left: 20px; z-index: 1000;
+            background: rgba(13, 17, 23, 0.95); padding: 15px; border-radius: 10px;
+            border: 2px solid #38bdf8; color: white; width: 240px; font-family: sans-serif;
         }
     </style>
 </head>
 <body>
 
-<div class="ui-overlay">
-    <h3 style="margin:0; color:#38bdf8;">AGEUL: Мониторинг</h3>
-    <p style="font-size:12px; margin:8px 0 0 0;">Маршрут: <span style="color:#22c55e;">Автобус 56 (Актив)</span></p>
-    <p style="font-size:11px; color:#94a3b8;">Сергек жүйесі: Қосулы</p>
+<div class="ui-header">
+    <h3 style="margin:0; font-size: 18px; color: #38bdf8;">SmartCity: Астана</h3>
+    <p style="font-size: 12px; margin: 10px 0 0 0;">Проект: <b>AGEUL</b></p>
+    <p style="font-size: 12px;">Сергек: <span style="color:#ff3b30;">400+ активті (қызыл)</span></p>
 </div>
 
 <div id="map"></div>
 
-<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
-<script>
-    // 1. Картаны баптау (2GIS стиліндегі қараңғы фон)
-    const map = L.map('map', { zoomControl: false }).setView([51.130, 71.430], 14);
-    L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png').addTo(map);
+<script type="text/javascript">
+    ymaps.ready(init);
 
-    // 2. СЕРГЕКТЕРДІ ЖОЛ БОЙЫНА ЖҮЙЕЛІ ТҮРДЕ ШАШУ (100+)
-    function placeSergeks(start, end, count) {
-        for (let i = 0; i <= count; i++) {
-            let lat = start[0] + (end[0] - start[0]) * (i / count);
-            let lng = start[1] + (end[1] - start[1]) * (i / count);
-            // Жолдың шетінде тұруы үшін аздап офсет
-            L.marker([lat + 0.0001, lng + 0.0001], {
-                icon: L.divIcon({ className: 'sergek-node', iconSize: [8, 8] })
-            }).addTo(map);
+    function init() {
+        var myMap = new ymaps.Map("map", {
+            center: [51.128, 71.430],
+            zoom: 14,
+            controls: ['trafficControl', 'zoomControl', 'typeSelector']
+        });
+
+        // 1. ҚЫЗЫЛ НҮКТЕЛЕР (Сергек) - Бүкіл қала бойынша жол жиектерінде
+        for (var i = 0; i < 400; i++) {
+            var lat = 51.07 + (Math.random() * 0.14);
+            var lng = 71.32 + (Math.random() * 0.22);
+            var sergek = new ymaps.Placemark([lat, lng], {}, {
+                preset: 'islands#redCircleDotIcon',
+                iconColor: '#ff0000',
+                iconScale: 0.7
+            });
+            myMap.geoObjects.add(sergek);
         }
+
+        // 2. 56-ШЫ АВТОБУС - НАҚТЫ ЖОЛДЫҢ БОЙЫМЕН (ДЕТАЛЬНО)
+        // Тұран даңғылы мен Сығанақ көшесінің нақты бұрылыстары
+        var path56 = [
+            [51.1513, 71.3965], [51.1501, 71.4022], [51.1485, 71.4085], [51.1465, 71.4158], // Тұран
+            [51.1441, 71.4225], [51.1415, 71.4268], [51.1390, 71.4285], // Тұран-Сығанақ қиылысы
+            [51.1355, 71.4305], [51.1315, 71.4325], [51.1275, 71.4345], [51.1225, 71.4368], // Сығанақ бойы
+            [51.1195, 71.4405], [51.1185, 71.4485], [51.1172, 71.4585], [51.1152, 71.4725], // Мәңгілік Ел
+            [51.1125, 71.4855], [51.1105, 71.5005]
+        ];
+
+        // Көк маршрут сызығы (Яндекс картасындағы жолдың дәл үстінде)
+        var line56 = new ymaps.Polyline(path56, {}, {
+            strokeColor: "#007aff", strokeWidth: 5, strokeOpacity: 0.8
+        });
+        myMap.geoObjects.add(line56);
+
+        var bus56 = new ymaps.Placemark(path56[0], { iconContent: '56' }, {
+            preset: 'islands#blueStretchyIcon'
+        });
+        myMap.geoObjects.add(bus56);
+
+        // 3. 15A МАРШРУТЫ - САРАЙШЫҚ ПЕН ҚАБАНБАЙ БОЙЫМЕН
+        var path15A = [
+            [51.1785, 71.4225], [51.1725, 71.4235], [51.1655, 71.4248], [51.1585, 71.4265], // Оң жағалау
+            [51.1515, 71.4295], [51.1455, 71.4345], [51.1395, 71.4385], // Көпір және Сарайшық
+            [51.1325, 71.4425], [51.1265, 71.4455], [51.1215, 71.4495], [51.1165, 71.4625], // Қабанбай
+            [51.1125, 71.4785], [51.1095, 71.4925]
+        ];
+
+        var line15A = new ymaps.Polyline(path15A, {}, {
+            strokeColor: "#ff9500", strokeWidth: 5, strokeOpacity: 0.7
+        });
+        myMap.geoObjects.add(line15A);
+
+        var bus15A = new ymaps.Placemark(path15A[0], { iconContent: '15A' }, {
+            preset: 'islands#orangeStretchyIcon'
+        });
+        myMap.geoObjects.add(bus15A);
+
+        // ҚОЗҒАЛЫС АНИМАЦИЯСЫ (Бірқалыпты)
+        function animate(marker, path, ms) {
+            var i = 0;
+            setInterval(function() {
+                i = (i + 1) % path.length;
+                marker.geometry.setCoordinates(path[i]);
+            }, ms);
+        }
+
+        animate(bus56, path56, 2500);  // 56-шы автобус жылдамдығы
+        animate(bus15A, path15A, 3500); // 15A-шы автобус жылдамдығы
     }
-
-    // Негізгі даңғылдар бойымен (Қабанбай, Тұран, Мәңгілік Ел, Сарыарқа)
-    placeSergeks([51.145, 71.405], [51.120, 71.470], 35); 
-    placeSergeks([51.155, 71.415], [51.135, 71.465], 30);
-    placeSergeks([51.127, 71.425], [51.100, 71.500], 35);
-
-    // 3. АВТОБУС 56 МАРШРУТЫ (Нақты жол қисықтарымен)
-    const route56 = [
-        [51.145, 71.405], [51.143, 71.415], [51.140, 71.422], 
-        [51.135, 71.430], [51.130, 71.440], [51.125, 71.455], [51.122, 71.470]
-    ];
-    
-    // Көк бағыттаушы сызық (2GIS-тегідей)
-    L.polyline(route56, { color: '#007aff', weight: 5, opacity: 0.6 }).addTo(map);
-
-    // Аялдамаларды жол бойына қою
-    route56.forEach(pos => {
-        L.marker(pos, { icon: L.divIcon({ className: 'stop-icon', iconSize: [10, 10] }) }).addTo(map);
-    });
-
-    // 4. ТІРІ АВТОБУС "56" (Баяу және бірқалыпты қозғалыс)
-    const busIcon = L.divIcon({ 
-        className: 'bus-56-icon', 
-        html: '56', 
-        iconSize: [60, 25],
-        iconAnchor: [30, 12]
-    });
-
-    const busMarker = L.marker(route56[0], { icon: busIcon }).addTo(map);
-
-    let currentStep = 0;
-    function moveBus() {
-        currentStep = (currentStep + 1) % route56.length;
-        
-        // Автобус "тупит" етпеуі үшін және жылдам болмауы үшін жылжу интервалы
-        busMarker.setLatLng(route56[currentStep]);
-    }
-
-    // Автобус жылдамдығын баяулаттым (әр 3 секунд сайын келесі нүктеге)
-    setInterval(moveBus, 3000);
-
 </script>
 </body>
 </html>
