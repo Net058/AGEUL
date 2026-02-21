@@ -2,50 +2,54 @@
 <html lang="kk">
 <head>
     <meta charset="UTF-8">
-    <title>AGEUL | Astana Intelligence</title>
+    <title>AGEUL | Intelligent Astana Monitoring</title>
     <script src="https://api-maps.yandex.ru/2.1/?lang=ru_RU" type="text/javascript"></script>
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700;900&display=swap" rel="stylesheet">
     <style>
-        body, html { margin: 0; padding: 0; scroll-behavior: smooth; font-family: 'Montserrat', sans-serif; background: #ffffff; overflow: hidden; }
+        body, html { margin: 0; padding: 0; scroll-behavior: smooth; font-family: 'Montserrat', sans-serif; background: #ffffff; overflow-x: hidden; }
         
         /* КАРТА БЕТІ */
         #map-page { height: 100vh; width: 100%; position: relative; }
         #map { width: 100%; height: 100%; filter: brightness(1.1); }
 
-        /* ОРАЗА ТІЛЕГІ */
         .ramadan-badge {
             position: absolute; top: 15px; left: 50%; transform: translateX(-50%); z-index: 1000;
             background: #f59e0b; color: #fff; padding: 8px 25px; border-radius: 50px; 
             font-weight: 900; box-shadow: 0 4px 15px rgba(0,0,0,0.1); border: 2px solid #fff;
         }
 
-        /* СОЛ ЖАҚ ПАНЕЛЬ */
+        /* СОЛ ЖАҚ СТАТУС */
         .status-mini {
             position: absolute; top: 15px; left: 15px; z-index: 1000;
-            background: white; padding: 15px; border-radius: 15px;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.08); border: 1px solid #e2e8f0;
+            background: rgba(255, 255, 255, 0.95); padding: 15px; border-radius: 15px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05); border: 1px solid #e2e8f0;
         }
 
-        /* ОРТАША ЖЫЛДАМДЫҚ ДЕКОРАЦИЯСЫ (ЖАҢА) */
-        .speed-panel {
-            position: absolute; top: 100px; left: 15px; z-index: 1000;
-            background: rgba(15, 23, 42, 0.9); color: white; padding: 12px 20px;
-            border-radius: 12px; border-left: 4px solid #22c55e;
-            box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+        /* ОҢ ЖАҚ ЖОҒАРҒЫ ОРТАША ЖЫЛДАМДЫҚ (ӘДЕМІЛЕНГЕН) */
+        .speed-overlay {
+            position: absolute; top: 15px; right: 15px; z-index: 1000;
+            background: #0f172a; color: white; padding: 15px 25px; border-radius: 20px;
+            border-bottom: 4px solid #22c55e; box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+            text-align: right;
         }
+
+        .speed-label { font-size: 10px; text-transform: uppercase; color: #94a3b8; font-weight: 700; letter-spacing: 1px; }
+        .speed-value { font-size: 28px; font-weight: 900; color: #22c55e; }
 
         .footer-ui { position: absolute; bottom: 25px; right: 25px; z-index: 1000; display: flex; flex-direction: column; align-items: center; }
         .yurt-icon { width: 70px; height: 70px; background: url('https://img.icons8.com/color/96/yurt.png') no-repeat center/contain; margin-bottom: 10px; }
-        .main-btn { background: #0f172a; color: #fff; padding: 15px 30px; border-radius: 15px; text-decoration: none; font-weight: bold; }
+        .main-btn { background: #0f172a; color: #fff; padding: 15px 30px; border-radius: 15px; text-decoration: none; font-weight: bold; transition: 0.3s; }
+        .main-btn:hover { background: #2563eb; transform: scale(1.05); }
 
         /* ПРЕЗЕНТАЦИЯ БЕТІ */
         #about-page { min-height: 100vh; background: #f8fafc; padding: 60px 20px; }
         .pres-card { max-width: 900px; margin: 0 auto; background: white; padding: 50px; border-radius: 40px; box-shadow: 0 20px 60px rgba(0,0,0,0.05); }
-        .section-box { margin: 30px 0; padding: 25px; border-radius: 20px; }
+        .section-box { margin: 35px 0; padding: 25px; border-radius: 20px; }
         .problem-box { background: #fff1f2; border-left: 6px solid #ef4444; }
         .solution-box { background: #f0fdf4; border-left: 6px solid #22c55e; }
-        h2 { color: #0f172a; margin-top: 0; }
-        p { line-height: 1.6; color: #475569; }
+        
+        h2 { color: #0f172a; font-size: 26px; margin-top: 0; margin-bottom: 15px; }
+        p { line-height: 1.7; color: #475569; font-size: 16px; margin-bottom: 15px; }
     </style>
 </head>
 <body>
@@ -53,17 +57,17 @@
     <section id="map-page">
         <div class="ramadan-badge">🌙 Ораза қабыл болсын!</div>
         
+        <div class="speed-overlay">
+            <div class="speed-label">Орташа жылдамдық</div>
+            <div class="speed-value"><span id="avg-speed">54</span> <small style="font-size: 14px;">км/сағ</small></div>
+        </div>
+
         <div class="status-mini">
             <b style="font-size: 14px;">AGEUL Мониторинг</b>
             <div style="font-size: 12px; margin-top: 5px; color: #64748b;">
-                📍 Автобустар: <span id="bus-live">70</span><br>
-                📹 Сергектер: <span id="cam-live">300</span>
+                📍 Автобус: <span id="bus-live">70</span><br>
+                📹 Сергек: <span id="cam-live">300</span>
             </div>
-        </div>
-
-        <div class="speed-panel">
-            <div style="font-size: 10px; text-transform: uppercase; color: #94a3b8; font-weight: bold;">Қала бойынша орташа жылдамдық</div>
-            <div style="font-size: 24px; font-weight: 900; color: #22c55e;"><span id="avg-speed">54</span> км/сағ</div>
         </div>
 
         <div id="map"></div>
@@ -76,30 +80,42 @@
 
     <section id="about-page">
         <div class="pres-card">
-            <h1 style="font-size: 40px; text-align: center; color: #0f172a;">AGEUL: Нақты Навигация</h1>
-            
+            <h1 style="font-size: 40px; text-align: center; color: #0f172a; margin-bottom: 10px;">AGEUL: Нақты Уақыттағы Навигация</h1>
+            <p style="text-align: center; font-weight: bold; color: #2563eb; margin-bottom: 40px;">Болашақ технологиясы — бүгінгі Астанада</p>
+
             <div class="section-box problem-box">
-                <h2>Неге Яндекс пен 2GIS қателеседі?</h2>
+                <h2>Неге Яндекс пен 2GIS емес?</h2>
                 <p>
-                    Яндекс пен 2GIS жол жағдайын <b>спутник арқылы</b> бақылайды. Егер бір жерде адамдар мен телефондар көп жиналса, спутник оны "кептеліс" деп қате ойлайды. Оны <b>"Фантомдық кептеліс"</b> деп атаймыз.
+                    Астана — еліміздің бас қаласы болғандықтан, мұнда өзге өңірлерден келетін көлік ағыны өте көп. Қазіргі қолданыстағы карталар жол жағдайын <b>спутник арқылы</b> бақылайды. Бұл үлкен қателіктерге әкеледі:
                 </p>
                 <p>
-                    Сонымен қатар, модераторлардың қателігінен курьерлер мен жүргізушілер жазықсыз айыппұл алып, материалдық шығынға ұшырауда.
+                    1. <b>Фантомдық кептелістер:</b> Егер бір жерде адамдар мен телефондар көп жиналса, спутник оны "кептеліс" деп қате көрсетеді. 
+                </p>
+                <p>
+                    2. <b>Курьерлердің зардап шегуі:</b> Жылдамдық режимін модераторлар қолмен енгізеді. Олардың қателігінен курьерлер жазықсыз айыппұл арқалап, шығынға ұшырап жатыр.
                 </p>
             </div>
 
             <div class="section-box solution-box">
-                <h2>Біздің шешім:</h2>
+                <h2>AGEUL қандай мәселені шешеді?</h2>
                 <p>
-                    AGEUL деректерді спутниктен емес, тікелей <b>Сергек жүйесінен және Полиция базасынан</b> алады. Бұл 100% нақтылықты қамтамасыз етеді.
+                    Біздің жоба деректерді тікелей <b>Сергек жүйесінен және Полиция базасынан</b> алады. Бұл нағыз революциялық шешім:
                 </p>
                 <p>
-                    Біздің мақсатымыз — Қазақстанды әлемдік технологиялық (AI) орталыққа айналдыру және халықтың өмірін жеңілдету.
+                    • <b>100% Нақтылық:</b> Жолдағы жылдамдық режимі ресми базамен сәт сайын жаңартылып отырады. <br>
+                    • <b>Тікелей трансляция:</b> Біз жол жағдайын телефондарға қарап емес, камералар арқылы нақты уақытта көреміз.<br>
+                    • <b>Халыққа көмек:</b> Жүргізушілер мен курьерлер қате ақпараттан құтылып, уақыты мен ақшасын үнемдейді.
                 </p>
             </div>
 
-            <div style="text-align: center; margin-top: 30px;">
-                <a href="#map-page" style="color: #2563eb; font-weight: bold; text-decoration: none;">← Картаға қайту</a>
+            <div style="background: #0f172a; padding: 40px; border-radius: 30px; text-align: center; color: white;">
+                <h3 style="margin-top: 0; color: #38bdf8;">Біздің Ортақ Мақсатымыз</h3>
+                <p style="color: #cbd5e1;">
+                    Адамдардың өмір сүру сапасын жақсарту және біздің сүйікті <b>Қазақстанымызды</b> әлемдегі ең озық жасанды интеллект (AI) орталығына айналдыру!
+                </p>
+                <a href="#map-page" style="display: inline-block; margin-top: 20px; color: #38bdf8; text-decoration: none; font-weight: bold; border-bottom: 2px solid #38bdf8; padding-bottom: 5px;">
+                    ← Картаға қайту
+                </a>
             </div>
         </div>
     </section>
@@ -109,7 +125,6 @@
         function init() {
             var myMap = new ymaps.Map("map", { center: [51.128, 71.430], zoom: 14, controls: [] });
 
-            // 700 СЕРГЕК НҮКТЕЛЕРІ
             for (var i = 0; i < 700; i++) {
                 var lat = 51.04 + (Math.random() * 0.18);
                 var lng = 71.28 + (Math.random() * 0.30);
