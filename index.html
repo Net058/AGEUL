@@ -2,23 +2,35 @@
 <html lang="kk">
 <head>
     <meta charset="UTF-8">
-    <title>AGEUL | AI Monitoring Astana</title>
+    <title>AGEUL | AI Weather & Traffic Astana</title>
     <script src="https://api-maps.yandex.ru/2.1/?lang=ru_RU" type="text/javascript"></script>
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700;900&display=swap" rel="stylesheet">
     <style>
         body, html { margin: 0; padding: 0; scroll-behavior: smooth; font-family: 'Montserrat', sans-serif; background: #ffffff; overflow-x: hidden; }
         
-        /* КАРТА БЕТІ */
-        #map-page { height: 100vh; width: 100%; position: relative; }
-        #map { width: 100%; height: 100%; filter: brightness(1.1); }
+        #map-page { height: 100vh; width: 100%; position: relative; overflow: hidden; }
+        #map { width: 100%; height: 100%; transition: filter 2s ease; }
 
+        /* ЭФФЕКТЫ ПОГОДЫ */
+        #weather-overlay {
+            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+            pointer-events: none; z-index: 500; transition: background 3s ease;
+        }
+
+        /* Туман и Загрязнение */
+        .fog-effect { backdrop-filter: blur(0px); background: rgba(255,255,255,0); transition: 3s; }
+        .pollution-effect { background: rgba(100, 80, 60, 0.2) !important; filter: saturate(0.5); }
+
+        /* Дождь и Снег (простая анимация через CSS) */
+        .particles { position: absolute; width: 100%; height: 100%; top: 0; left: 0; display: none; }
+        
+        /* Виджеты */
         .ramadan-badge {
             position: absolute; top: 20px; left: 50%; transform: translateX(-50%); z-index: 1000;
             background: #f59e0b; color: #fff; padding: 12px 40px; border-radius: 50px; 
             font-weight: 900; font-size: 18px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); border: 2px solid #fff;
         }
 
-        /* AI ТЕРМИНАЛ (ЛОГИ) */
         .ai-console {
             position: absolute; bottom: 130px; left: 20px; z-index: 1000;
             background: rgba(15, 23, 42, 0.95); color: #22c55e; padding: 15px;
@@ -26,138 +38,110 @@
             width: 320px; border-left: 4px solid #22c55e; box-shadow: 0 10px 30px rgba(0,0,0,0.4);
         }
 
-        .status-mini {
-            position: absolute; top: 20px; left: 20px; z-index: 1000;
-            background: white; padding: 20px; border-radius: 20px;
-            box-shadow: 0 10px 25px rgba(0,0,0,0.08); border: 1px solid #e2e8f0;
+        .weather-status {
+            position: absolute; top: 110px; right: 20px; z-index: 1000;
+            background: white; padding: 10px 20px; border-radius: 15px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1); text-align: right;
         }
 
         .speed-overlay {
             position: absolute; top: 20px; right: 20px; z-index: 1000;
             background: #0f172a; color: white; padding: 15px 30px; border-radius: 25px;
             border-bottom: 5px solid #22c55e; box-shadow: 0 10px 30px rgba(0,0,0,0.2);
-            text-align: right;
         }
         .speed-value { font-size: 32px; font-weight: 900; color: #22c55e; }
 
-        /* БАТЫРМА */
         .footer-ui { position: absolute; bottom: 40px; width: 100%; display: flex; justify-content: center; z-index: 1000; }
         .main-btn { 
             background: #0f172a; color: #fff; padding: 20px 60px; border-radius: 25px; 
             text-decoration: none; font-weight: 900; font-size: 22px; transition: 0.3s;
-            box-shadow: 0 15px 40px rgba(0,0,0,0.4); border: 1px solid rgba(255,255,255,0.1);
         }
-        .main-btn:hover { background: #2563eb; transform: scale(1.05); }
-
-        /* ПРЕЗЕНТАЦИЯ БЕТІ */
-        #about-page { min-height: 100vh; background: #f8fafc; padding: 80px 20px; }
-        .pres-card { max-width: 950px; margin: 0 auto; background: white; padding: 60px; border-radius: 50px; box-shadow: 0 30px 80px rgba(0,0,0,0.05); }
-        .section-box { margin: 35px 0; padding: 35px; border-radius: 25px; }
-        .problem-box { background: #fff1f2; border-left: 10px solid #ef4444; }
-        .solution-box { background: #f0fdf4; border-left: 10px solid #22c55e; }
-        h1 { text-align: center; font-weight: 900; color: #0f172a; font-size: 42px; }
-        h2 { font-size: 28px; color: #0f172a; }
-        p { font-size: 18px; line-height: 1.7; color: #475569; }
     </style>
 </head>
 <body>
 
     <section id="map-page">
+        <div id="weather-overlay" class="fog-effect">
+            <canvas id="weather-canvas"></canvas>
+        </div>
+
         <div class="ramadan-badge">🌙 Ораза қабыл болсын!</div>
         
+        <div class="weather-status">
+            <div style="font-size: 10px; color: #94a3b8; font-weight: 700;">WEATHER AI</div>
+            <div id="weather-label" style="font-weight: 900; color: #0f172a;">SUNNY</div>
+        </div>
+
         <div class="ai-console">
-            <div style="color: #94a3b8; margin-bottom: 5px;">[AGEUL CORE v2.1 ACTIVE]</div>
+            <div style="color: #94a3b8; margin-bottom: 5px;">[AGEUL WEATHER CORE v2.1]</div>
             <div id="ai-log-content"></div>
         </div>
 
         <div class="speed-overlay">
-            <div style="font-size: 10px; text-transform: uppercase; color: #94a3b8; font-weight: 700;">AI Орташа жылдамдық</div>
+            <div style="font-size: 10px; text-transform: uppercase; color: #94a3b8; font-weight: 700;">Орташа жылдамдық</div>
             <div class="speed-value"><span id="avg-speed">57</span> <small style="font-size: 14px;">км/сағ</small></div>
-        </div>
-
-        <div class="status-mini">
-            <b style="font-size: 18px; color: #0f172a;">AGEUL AI Core</b>
-            <div style="font-size: 16px; margin-top: 10px; color: #64748b;">
-                📍 Тірі ағын: <span id="bus-live" style="color: #2563eb; font-weight: 800;">74</span><br>
-                📹 Сергектер: <span style="color: #ef4444; font-weight: 800;">700+</span>
-            </div>
         </div>
 
         <div id="map"></div>
 
         <div class="footer-ui">
-            <a href="#about-page" class="main-btn">БІЗ ТУРАЛЫ КӨБІРЕК БІЛУ →</a>
+            <a href="#about-page" class="main-btn">МОНИТОРИНГ ДЕРЕКТЕРІ →</a>
         </div>
     </section>
 
-    <section id="about-page">
-        <div class="pres-card">
-            <h1>AGEUL: Болашақ Навигациясы</h1>
-            
-            <div class="section-box problem-box">
-                <h2>Неге Яндекс пен 2GIS емес?</h2>
-                <p>
-                    Яндекс пен 2GIS жол жағдайын <b>спутник</b> арқылы бақылайды. Егер бір жерде телефондар көп жиналса, жүйе оны қате "кептеліс" деп көрсетеді (фантомдық кептелістер).
-                </p>
-                <p>
-                    Сонымен қатар, модераторлар жылдамдық шектеуін қолмен енгізеді, бұл курьерлер мен жүргізушілердің жазықсыз айыппұл арқалауына әкеледі.
-                </p>
-            </div>
-
-            <div class="section-box solution-box">
-                <h2>Біздің AI қалай жұмыс істейді?</h2>
-                <p>
-                    AGEUL деректерді спутниктен емес, тікелей <b>Сергек камераларынан</b> және полиция базасынан алады. Біздің жасанды интеллект:
-                </p>
-                <ul>
-                    <li><p>Нақты уақытта көліктерді танып, шынайы кептелісті есептейді.</p></li>
-                    <li><p>Жылдамдық режимдерін ресми базамен сәт сайын синхрондайды.</p></li>
-                    <li><p>Жолдағы ақаулар мен шұңқырларды бірден анықтайды.</p></li>
-                </ul>
-            </div>
-
-            <div style="text-align: center; margin-top: 40px;">
-                <a href="#map-page" style="color: #0f172a; font-weight: 800; text-decoration: none; font-size: 18px;">← КАРТАҒА ОРАЛУ</a>
-            </div>
-        </div>
-    </section>
-
-    <script type="text/javascript">
+    <script>
         ymaps.ready(init);
         function init() {
-            var myMap = new ymaps.Map("map", { center: [51.128, 71.430], zoom: 14, controls: [] });
+            var myMap = new ymaps.Map("map", { center: [51.128, 71.430], zoom: 13, controls: [] });
 
-            // 700 ҚЫЗЫЛ НҮКТЕ ҚОСУ (СЕРГЕКТЕР)
-            for (var i = 0; i < 700; i++) {
-                var lat = 51.04 + (Math.random() * 0.18);
-                var lng = 71.28 + (Math.random() * 0.30);
-                myMap.geoObjects.add(new ymaps.Placemark([lat, lng], {}, {
-                    preset: 'islands#redCircleDotIcon', iconColor: '#ff0000', iconScale: 0.7
-                }));
-            }
-
-            // AI ИМИТАЦИЯСЫ
+            // WEATHER ENGINE
+            const weatherOverlay = document.getElementById('weather-overlay');
+            const weatherLabel = document.getElementById('weather-label');
             const logBox = document.getElementById('ai-log-content');
-            const aiLines = [
-                "Сергек нүктесі тексерілді: OK",
-                "Мәліметтер базасы синхронды",
-                "Жылдамдық режимі жаңартылды",
-                "Фантомдық кептеліс өшірілді",
-                "Астана: Орталық көшелер талдануда",
-                "AI: Кептеліс деңгейі 24% төмендеді"
+            const mapEl = document.getElementById('map');
+
+            const states = [
+                { name: 'КҮН АШЫҚ', class: '', log: 'Аспан ашық, көріну деңгейі жоғары', filter: 'brightness(1.1)' },
+                { name: 'ЖАҢБЫР', class: 'rain', log: 'Жаңбыр: Жол тайғақ, сақ болыңыз!', filter: 'brightness(0.8) contrast(1.2)' },
+                { name: 'ТҰМАН', class: 'fog', log: 'Тұман: Көріну 200 метрге дейін шектелді', filter: 'blur(2px) grayscale(0.3)' },
+                { name: 'ҚАР', class: 'snow', log: 'Қар: Тазалау техникасы жолға шықты', filter: 'sepia(0.2) brightness(1.1)' },
+                { name: 'ЛАСТАНУ (SMOG)', class: 'pollution-effect', log: 'AI: Ауа сапасы төмен. Шығынды азайту ұсынылады', filter: 'hue-rotate(10deg) saturate(0.4)' }
             ];
 
-            setInterval(() => {
-                // Сандарды жаңарту
-                document.getElementById('avg-speed').innerText = 52 + Math.floor(Math.random() * 9);
-                document.getElementById('bus-live').innerText = 70 + Math.floor(Math.random() * 12);
+            let currentState = 0;
+
+            function updateWeather() {
+                const s = states[currentState];
                 
-                // Логтарды қосу
+                // Смена стилей
+                weatherLabel.innerText = s.name;
+                weatherOverlay.className = 'fog-effect ' + s.class;
+                mapEl.style.filter = s.filter;
+
+                // Лог в консоль
                 const newLine = document.createElement('div');
-                newLine.innerText = "> " + aiLines[Math.floor(Math.random() * aiLines.length)];
+                newLine.innerHTML = `<span style="color: #fbbf24">> ${s.log}</span>`;
                 logBox.prepend(newLine);
                 if (logBox.children.length > 5) logBox.lastChild.remove();
-            }, 2500);
+
+                currentState = (currentState + 1) % states.length;
+            }
+
+            // Имитация датчиков
+            setInterval(() => {
+                document.getElementById('avg-speed').innerText = 45 + Math.floor(Math.random() * 20);
+            }, 3000);
+
+            // Переключать погоду каждые 8 секунд
+            updateWeather();
+            setInterval(updateWeather, 8000);
+
+            // Добавим 200 точек сергек
+            for (var i = 0; i < 200; i++) {
+                myMap.geoObjects.add(new ymaps.Placemark([51.05 + Math.random()*0.15, 71.3 + Math.random()*0.2], {}, {
+                    preset: 'islands#redCircleDotIcon', iconScale: 0.6
+                }));
+            }
         }
     </script>
 </body>
