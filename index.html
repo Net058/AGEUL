@@ -1,197 +1,400 @@
-<!DOCTYPE html>
-<html lang="kk">
-<head>
-    <meta charset="UTF-8">
-    <title>AGEUL | AI Monitoring Astana</title>
-    <script src="https://api-maps.yandex.ru/2.1/?lang=ru_RU" type="text/javascript"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700;900&display=swap" rel="stylesheet">
-    <style>
-        body, html { margin: 0; padding: 0; scroll-behavior: smooth; font-family: 'Montserrat', sans-serif; background: #ffffff; overflow-x: hidden; }
-        
-        /* КАРТА БЕТІ */
-        #map-page { height: 100vh; width: 100%; position: relative; }
-        #map { width: 100%; height: 100%; filter: brightness(1.1); transition: filter 2s ease; }
+// =========================
+// package.json
+// =========================
 
-        /* AI ROAD ANALYSIS (СОЛ ЖАҚ БҰРЫШ) */
-        .road-analysis {
-            position: absolute; top: 110px; left: 20px; z-index: 1000;
-            background: rgba(15, 23, 42, 0.9); color: white; padding: 18px;
-            border-radius: 20px; border: 1px solid #3b82f6; width: 240px;
-            box-shadow: 0 0 20px rgba(59, 130, 246, 0.3);
-        }
-        .road-analysis h4 { margin: 0 0 12px 0; color: #3b82f6; font-size: 13px; text-transform: uppercase; }
-        .analysis-item { font-size: 11px; margin-bottom: 10px; }
-        .bar { height: 5px; background: #1e293b; width: 100%; margin-top: 5px; border-radius: 3px; overflow: hidden; }
-        .bar-fill { height: 100%; background: #3b82f6; width: 0%; transition: width 1s; }
+{
+  "name": "ferrari-luce-clone",
+  "version": "1.0.0",
+  "private": true,
 
-        /* ОҢ ЖАҚ ИНДИКАТОРЛАР */
-        .indicators { position: absolute; top: 20px; right: 20px; z-index: 1000; display: flex; flex-direction: column; gap: 12px; }
-        .indicator-item {
-            background: #0f172a; color: white; padding: 15px; border-radius: 20px;
-            border-right: 5px solid #22c55e; width: 180px; font-size: 13px; transition: 0.5s;
-        }
-        .ind-val { float: right; font-weight: 900; color: #22c55e; }
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start"
+  },
 
-        /* AI ТЕРМИНАЛ (ЛОГИ) */
-        .ai-console {
-            position: absolute; bottom: 130px; left: 20px; z-index: 1000;
-            background: rgba(15, 23, 42, 0.95); color: #22c55e; padding: 15px;
-            border-radius: 15px; font-family: 'Courier New', monospace; font-size: 11px;
-            width: 320px; border-left: 4px solid #22c55e; box-shadow: 0 10px 30px rgba(0,0,0,0.4);
-        }
+  "dependencies": {
+    "next": "15.0.0",
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0",
+    "tailwindcss": "^3.4.0",
+    "gsap": "^3.12.5"
+  }
+}
 
-        .status-mini {
-            position: absolute; top: 20px; left: 20px; z-index: 1000;
-            background: white; padding: 20px; border-radius: 20px;
-            box-shadow: 0 10px 25px rgba(0,0,0,0.08); border: 1px solid #e2e8f0;
-        }
 
-        .speed-overlay {
-            position: absolute; bottom: 130px; right: 20px; z-index: 1000;
-            background: #0f172a; color: white; padding: 15px 30px; border-radius: 25px;
-            border-bottom: 5px solid #22c55e; box-shadow: 0 10px 30px rgba(0,0,0,0.2);
-            text-align: right;
-        }
-        .speed-value { font-size: 32px; font-weight: 900; color: #22c55e; }
 
-        /* БАТЫРМА */
-        .footer-ui { position: absolute; bottom: 40px; width: 100%; display: flex; justify-content: center; z-index: 1000; }
-        .main-btn { 
-            background: #0f172a; color: #fff; padding: 20px 60px; border-radius: 25px; 
-            text-decoration: none; font-weight: 900; font-size: 22px; transition: 0.3s;
-            box-shadow: 0 15px 40px rgba(0,0,0,0.4); border: 1px solid rgba(255,255,255,0.1);
-        }
+// =========================
+// tailwind.config.js
+// =========================
 
-        /* ПРЕЗЕНТАЦИЯ БЕТІ (2-БЕТ) */
-        #about-page { min-height: 100vh; background: #f8fafc; padding: 80px 20px; }
-        .pres-card { max-width: 950px; margin: 0 auto; background: white; padding: 60px; border-radius: 50px; box-shadow: 0 30px 80px rgba(0,0,0,0.05); }
-        .section-box { margin: 35px 0; padding: 35px; border-radius: 25px; }
-        .problem-box { background: #fff1f2; border-left: 10px solid #ef4444; }
-        .solution-box { background: #f0fdf4; border-left: 10px solid #22c55e; }
-        h1 { text-align: center; font-weight: 900; color: #0f172a; font-size: 42px; }
-        h2 { font-size: 28px; color: #0f172a; }
-        p { font-size: 18px; line-height: 1.7; color: #475569; }
-    </style>
-</head>
-<body>
+module.exports = {
 
-    <section id="map-page">
-        <div class="road-analysis">
-            <h4>📡 AI Road Analysis</h4>
-            <div class="analysis-item">Жол сапасы: <span id="road-q">94%</span><div class="bar"><div id="road-q-bar" class="bar-fill" style="width: 94%"></div></div></div>
-            <div class="analysis-item">Таңбалардың көрінуі: <span id="mark-q">88%</span><div class="bar"><div id="mark-q-bar" class="bar-fill" style="width: 88%; background: #22c55e;"></div></div></div>
-            <div class="analysis-item">Шұңқырлар қаупі: <span id="pothole-q">2%</span><div class="bar"><div id="pothole-q-bar" class="bar-fill" style="width: 2%; background: #ef4444;"></div></div></div>
-        </div>
+  content: [
+    "./src/**/*.{js,jsx}"
+  ],
 
-        <div class="indicators">
-            <div class="indicator-item" style="border-right-color: #22c55e;">Ауа ластануы <span class="ind-val" id="pollution-pct">0%</span></div>
-            <div class="indicator-item" id="weather-card" style="border-right-color: #f59e0b; background: #451a03;">
-                АУА РАЙЫ: <span class="ind-val" id="weather-text" style="color:#f59e0b">АШЫҚ</span>
-            </div>
-        </div>
-        
-        <div class="ai-console">
-            <div style="color: #94a3b8; margin-bottom: 5px;">[AGEUL CORE v2.1 ACTIVE]</div>
-            <div id="ai-log-content"></div>
-        </div>
+  theme: {
+    extend: {},
+  },
 
-        <div class="speed-overlay">
-            <div style="font-size: 10px; text-transform: uppercase; color: #94a3b8; font-weight: 700;">AI Орташа жылдамдық</div>
-            <div class="speed-value"><span id="avg-speed">57</span> <small style="font-size: 14px;">км/сағ</small></div>
-        </div>
+  plugins: [],
+};
 
-        <div class="status-mini">
-            <b style="font-size: 18px; color: #0f172a;">AGEUL AI Core</b>
-            <div style="font-size: 16px; margin-top: 10px; color: #64748b;">
-                📍 Тірі ағын: <span id="bus-live" style="color: #2563eb; font-weight: 800;">74</span><br>
-                📹 Сергектер: <span style="color: #ef4444; font-weight: 800;">700+</span>
-            </div>
-        </div>
 
-        <div id="map"></div>
 
-        <div class="footer-ui">
-            <a href="#about-page" class="main-btn">БІЗ ТУРАЛЫ КӨБІРЕК БІЛУ →</a>
-        </div>
+// =========================
+// src/app/globals.css
+// =========================
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+html,
+body {
+  margin: 0;
+  padding: 0;
+  background: black;
+  color: white;
+  overflow-x: hidden;
+  font-family: Arial, sans-serif;
+}
+
+.section {
+  min-height: 100vh;
+  position: relative;
+}
+
+video {
+  pointer-events: none;
+}
+
+
+
+// =========================
+// src/app/layout.jsx
+// =========================
+
+import "./globals.css";
+
+export const metadata = {
+  title: "LUCE",
+  description: "Luxury Ferrari Style Website"
+};
+
+export default function RootLayout(props) {
+
+  return (
+    <html lang="en">
+
+      <body>
+        {props.children}
+      </body>
+
+    </html>
+  );
+}
+
+
+
+// =========================
+// src/app/page.jsx
+// =========================
+
+"use client";
+
+import Navbar from "@/components/Navbar";
+import Hero from "@/components/Hero";
+import About from "@/components/About";
+import Showcase from "@/components/Showcase";
+import Performance from "@/components/Performance";
+import Gallery from "@/components/Gallery";
+import Footer from "@/components/Footer";
+
+export default function Home() {
+
+  return (
+    <main className="bg-black text-white">
+
+      <Navbar />
+
+      <Hero />
+
+      <About />
+
+      <Showcase />
+
+      <Performance />
+
+      <Gallery />
+
+      <Footer />
+
+    </main>
+  );
+}
+
+
+
+// =========================
+// src/components/Navbar.jsx
+// =========================
+
+export default function Navbar() {
+
+  return (
+    <nav className="fixed top-0 left-0 w-full z-50 flex justify-between items-center p-6 backdrop-blur-md">
+
+      <h1 className="text-2xl font-bold tracking-[5px]">
+        LUCE
+      </h1>
+
+      <div className="flex gap-8 text-sm uppercase">
+
+        <a href="#">Home</a>
+
+        <a href="#">Performance</a>
+
+        <a href="#">Gallery</a>
+
+        <a href="#">Contact</a>
+
+      </div>
+
+    </nav>
+  );
+}
+
+
+
+// =========================
+// src/components/Hero.jsx
+// =========================
+
+"use client";
+
+import { useEffect } from "react";
+import gsap from "gsap";
+
+export default function Hero() {
+
+  useEffect(function () {
+
+    gsap.from(".hero-title", {
+      y: 100,
+      opacity: 0,
+      duration: 1.5
+    });
+
+  }, []);
+
+  return (
+    <section className="section relative h-screen overflow-hidden">
+
+      <video
+        autoPlay
+        muted
+        loop
+        playsInline
+        className="absolute w-full h-full object-cover"
+      >
+
+        <source
+          src="/videos/hero.mp4"
+          type="video/mp4"
+        />
+
+      </video>
+
+      <div className="absolute inset-0 bg-black/50"></div>
+
+      <div className="relative z-10 h-full flex flex-col items-center justify-center text-center">
+
+        <h1 className="hero-title text-8xl font-black uppercase tracking-[15px]">
+          LUCE
+        </h1>
+
+        <p className="mt-6 text-xl opacity-80 max-w-2xl">
+          Power. Luxury. Italian Perfection.
+        </p>
+
+      </div>
+
     </section>
+  );
+}
 
-    <section id="about-page">
-        <div class="pres-card">
-            <h1>AGEUL: Болашақ Навигациясы</h1>
-            
-            <div class="section-box problem-box">
-                <h2>Неге Яндекс пен 2GIS емес?</h2>
-                <p>
-                    Яндекс пен 2GIS жол жағдайын <b>спутник</b> арқылы бақылайды. Егер бір жерде телефондар көп жиналса, жүйе оны қате "кептеліс" деп көрсетеді (фантомдық кептелістер).
-                </p>
-                <p>
-                    Сонымен қатар, модераторлар жылдамдық шектеуін қолмен енгізеді, бұл курьерлер мен жүргізушілердің жазықсыз айыппұл арқалауына әкеледі.
-                </p>
-            </div>
 
-            <div class="section-box solution-box">
-                <h2>Біздің AI қалай жұмыс істейді?</h2>
-                <p>
-                    AGEUL деректерді спутниктен емес, тікелей <b>Сергек камераларынан</b> және полиция базасынан алады. Біздің жасанды интеллект:
-                </p>
-                <ul>
-                    <li><p>Нақты уақытта көліктерді танып, шынайы кептелісті есептейді.</p></li>
-                    <li><p>Жылдамдық режимдерін ресми базамен сәт сайын синхрондайды.</p></li>
-                    <li><p>Жолдағы ақаулар мен шұңқырларды бірден анықтайды.</p></li>
-                </ul>
-            </div>
 
-            <div style="text-align: center; margin-top: 40px;">
-                <a href="#map-page" style="color: #0f172a; font-weight: 800; text-decoration: none; font-size: 18px;">← КАРТАҒА ОРАЛУ</a>
-            </div>
-        </div>
+// =========================
+// src/components/About.jsx
+// =========================
+
+export default function About() {
+
+  return (
+    <section className="section flex items-center px-20">
+
+      <div className="max-w-4xl">
+
+        <h2 className="text-6xl font-bold mb-10">
+          Designed for Emotion
+        </h2>
+
+        <p className="text-xl text-gray-300 leading-[2]">
+
+          Inspired by Ferrari cinematic experiences.
+          Ultra luxury interface with smooth animations,
+          premium typography and immersive storytelling.
+
+        </p>
+
+      </div>
+
     </section>
+  );
+}
 
-    <script type="text/javascript">
-        ymaps.ready(init);
-        function init() {
-            var myMap = new ymaps.Map("map", { center: [51.128, 71.430], zoom: 14, controls: [] });
 
-            for (var i = 0; i < 150; i++) {
-                var lat = 51.04 + (Math.random() * 0.18);
-                var lng = 71.28 + (Math.random() * 0.30);
-                myMap.geoObjects.add(new ymaps.Placemark([lat, lng], {}, {
-                    preset: 'islands#redCircleDotIcon', iconColor: '#ff0000', iconScale: 0.7
-                }));
-            }
 
-            const weatherTypes = [
-                {t: "АШЫҚ", c: "#451a03", b: "#f59e0b", f: "brightness(1.1)"},
-                {t: "ЖАҢБЫР", c: "#1e3a8a", b: "#3b82f6", f: "brightness(0.8) contrast(1.2)"},
-                {t: "ТҰМАН", c: "#374151", b: "#94a3b8", f: "blur(1px) grayscale(0.5)"}
-            ];
+// =========================
+// src/components/Showcase.jsx
+// =========================
 
-            setInterval(() => {
-                // 1. Ауа райын ауыстыру
-                let w = weatherTypes[Math.floor(Math.random() * weatherTypes.length)];
-                document.getElementById('weather-text').innerText = w.t;
-                document.getElementById('weather-text').style.color = w.b;
-                document.getElementById('weather-card').style.background = w.c;
-                document.getElementById('weather-card').style.borderRightColor = w.b;
-                document.getElementById('map').style.filter = w.f;
+export default function Showcase() {
 
-                // 2. Деректерді жаңарту
-                document.getElementById('avg-speed').innerText = 52 + Math.floor(Math.random() * 9);
-                document.getElementById('bus-live').innerText = 70 + Math.floor(Math.random() * 12);
-                document.getElementById('pollution-pct').innerText = Math.floor(Math.random() * 21) + "%";
-                
-                let roadQ = 90 + Math.floor(Math.random() * 10);
-                document.getElementById('road-q').innerText = roadQ + "%";
-                document.getElementById('road-q-bar').style.width = roadQ + "%";
+  return (
+    <section className="section relative">
 
-                // 3. Логтар
-                const logBox = document.getElementById('ai-log-content');
-                const newLine = document.createElement('div');
-                newLine.innerText = "> AI: Анализ - " + w.t + " жағдайындағы трафик";
-                logBox.prepend(newLine);
-                if (logBox.children.length > 5) logBox.lastChild.remove();
-            }, 5000);
-        }
-    </script>
-</body>
-</html>
+      <img
+        src="/images/car.png"
+        alt="car"
+        className="w-full h-screen object-cover"
+      />
+
+      <div className="absolute bottom-20 left-20">
+
+        <h2 className="text-7xl font-bold">
+          V12 Power
+        </h2>
+
+      </div>
+
+    </section>
+  );
+}
+
+
+
+// =========================
+// src/components/Performance.jsx
+// =========================
+
+export default function Performance() {
+
+  return (
+    <section className="section flex flex-col items-center justify-center text-center">
+
+      <h2 className="text-7xl font-black mb-10">
+        0-100 KM/H
+      </h2>
+
+      <div className="text-[200px] font-black text-red-600">
+        2.8s
+      </div>
+
+    </section>
+  );
+}
+
+
+
+// =========================
+// src/components/Gallery.jsx
+// =========================
+
+export default function Gallery() {
+
+  return (
+    <section className="section grid grid-cols-3 gap-4 p-10">
+
+      <img
+        src="/images/car.png"
+        className="rounded-2xl"
+      />
+
+      <img
+        src="/images/car.png"
+        className="rounded-2xl"
+      />
+
+      <img
+        src="/images/car.png"
+        className="rounded-2xl"
+      />
+
+    </section>
+  );
+}
+
+
+
+// =========================
+// src/components/Footer.jsx
+// =========================
+
+export default function Footer() {
+
+  return (
+    <footer className="p-10 border-t border-white/10">
+
+      <div className="flex justify-between">
+
+        <h2 className="text-3xl font-bold">
+          LUCE
+        </h2>
+
+        <p className="text-gray-400">
+          © 2026 Luxury Motion Experience
+        </p>
+
+      </div>
+
+    </footer>
+  );
+}
+
+
+
+// =========================
+// INSTALL
+// =========================
+
+// npm install
+
+
+
+// =========================
+// RUN
+// =========================
+
+// npm run dev
+
+
+
+// =========================
+// GITHUB PUSH
+// =========================
+
+// git init
+
+// git add .
+
+// git commit -m "Ferrari Luce Clone"
+
+// git branch -M main
+
+// git remote add origin https://github.com/USERNAME/ferrari-luce-clone.git
+
+// git push -u origin main>
