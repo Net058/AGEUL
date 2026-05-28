@@ -1,400 +1,276 @@
-// =========================
-// package.json
-// =========================
+```bash
+npx create-next-app@latest ferrari-style
+```
 
-{
-  "name": "ferrari-luce-clone",
-  "version": "1.0.0",
-  "private": true,
+```bash
+cd ferrari-style
+```
 
-  "scripts": {
-    "dev": "next dev",
-    "build": "next build",
-    "start": "next start"
-  },
+```bash
+npm install gsap
+```
 
-  "dependencies": {
-    "next": "15.0.0",
-    "react": "^19.0.0",
-    "react-dom": "^19.0.0",
-    "tailwindcss": "^3.4.0",
-    "gsap": "^3.12.5"
-  }
-}
+---
 
+# app/page.js
 
-
-// =========================
-// tailwind.config.js
-// =========================
-
-module.exports = {
-
-  content: [
-    "./src/**/*.{js,jsx}"
-  ],
-
-  theme: {
-    extend: {},
-  },
-
-  plugins: [],
-};
-
-
-
-// =========================
-// src/app/globals.css
-// =========================
-
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
-
-html,
-body {
-  margin: 0;
-  padding: 0;
-  background: black;
-  color: white;
-  overflow-x: hidden;
-  font-family: Arial, sans-serif;
-}
-
-.section {
-  min-height: 100vh;
-  position: relative;
-}
-
-video {
-  pointer-events: none;
-}
-
-
-
-// =========================
-// src/app/layout.jsx
-// =========================
-
-import "./globals.css";
-
-export const metadata = {
-  title: "LUCE",
-  description: "Luxury Ferrari Style Website"
-};
-
-export default function RootLayout(props) {
-
-  return (
-    <html lang="en">
-
-      <body>
-        {props.children}
-      </body>
-
-    </html>
-  );
-}
-
-
-
-// =========================
-// src/app/page.jsx
-// =========================
-
-"use client";
-
-import Navbar from "@/components/Navbar";
-import Hero from "@/components/Hero";
-import About from "@/components/About";
-import Showcase from "@/components/Showcase";
-import Performance from "@/components/Performance";
-import Gallery from "@/components/Gallery";
-import Footer from "@/components/Footer";
-
-export default function Home() {
-
-  return (
-    <main className="bg-black text-white">
-
-      <Navbar />
-
-      <Hero />
-
-      <About />
-
-      <Showcase />
-
-      <Performance />
-
-      <Gallery />
-
-      <Footer />
-
-    </main>
-  );
-}
-
-
-
-// =========================
-// src/components/Navbar.jsx
-// =========================
-
-export default function Navbar() {
-
-  return (
-    <nav className="fixed top-0 left-0 w-full z-50 flex justify-between items-center p-6 backdrop-blur-md">
-
-      <h1 className="text-2xl font-bold tracking-[5px]">
-        LUCE
-      </h1>
-
-      <div className="flex gap-8 text-sm uppercase">
-
-        <a href="#">Home</a>
-
-        <a href="#">Performance</a>
-
-        <a href="#">Gallery</a>
-
-        <a href="#">Contact</a>
-
-      </div>
-
-    </nav>
-  );
-}
-
-
-
-// =========================
-// src/components/Hero.jsx
-// =========================
-
+```jsx
 "use client";
 
 import { useEffect } from "react";
 import gsap from "gsap";
 
-export default function Hero() {
+export default function Home() {
 
   useEffect(function () {
 
-    gsap.from(".hero-title", {
-      y: 100,
+    gsap.from(".title", {
       opacity: 0,
+      y: 100,
       duration: 1.5
+    });
+
+    gsap.from(".subtitle", {
+      opacity: 0,
+      y: 50,
+      duration: 2,
+      delay: 0.5
     });
 
   }, []);
 
   return (
-    <section className="section relative h-screen overflow-hidden">
+
+    <main className="main">
 
       <video
         autoPlay
         muted
         loop
         playsInline
-        className="absolute w-full h-full object-cover"
+        className="video"
       >
-
-        <source
-          src="/videos/hero.mp4"
-          type="video/mp4"
-        />
-
+        <source src="/hero.mp4" type="video/mp4" />
       </video>
 
-      <div className="absolute inset-0 bg-black/50"></div>
+      <div className="overlay"></div>
 
-      <div className="relative z-10 h-full flex flex-col items-center justify-center text-center">
+      <nav className="navbar">
 
-        <h1 className="hero-title text-8xl font-black uppercase tracking-[15px]">
+        <div className="logo">
           LUCE
+        </div>
+
+        <div className="menu">
+
+          <a href="#">
+            Home
+          </a>
+
+          <a href="#">
+            Cars
+          </a>
+
+          <a href="#">
+            Performance
+          </a>
+
+          <a href="#">
+            Contact
+          </a>
+
+        </div>
+
+      </nav>
+
+      <section className="hero">
+
+        <h1 className="title">
+          FERRARI LUCE
         </h1>
 
-        <p className="mt-6 text-xl opacity-80 max-w-2xl">
-          Power. Luxury. Italian Perfection.
+        <p className="subtitle">
+          Luxury Motion Experience
         </p>
 
-      </div>
+        <button className="button">
+          Explore
+        </button>
 
-    </section>
+      </section>
+
+    </main>
+
   );
 }
+```
 
+---
 
+# app/globals.css
 
-// =========================
-// src/components/About.jsx
-// =========================
-
-export default function About() {
-
-  return (
-    <section className="section flex items-center px-20">
-
-      <div className="max-w-4xl">
-
-        <h2 className="text-6xl font-bold mb-10">
-          Designed for Emotion
-        </h2>
-
-        <p className="text-xl text-gray-300 leading-[2]">
-
-          Inspired by Ferrari cinematic experiences.
-          Ultra luxury interface with smooth animations,
-          premium typography and immersive storytelling.
-
-        </p>
-
-      </div>
-
-    </section>
-  );
+```css
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
 }
 
-
-
-// =========================
-// src/components/Showcase.jsx
-// =========================
-
-export default function Showcase() {
-
-  return (
-    <section className="section relative">
-
-      <img
-        src="/images/car.png"
-        alt="car"
-        className="w-full h-screen object-cover"
-      />
-
-      <div className="absolute bottom-20 left-20">
-
-        <h2 className="text-7xl font-bold">
-          V12 Power
-        </h2>
-
-      </div>
-
-    </section>
-  );
+html,
+body {
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  font-family: Arial, sans-serif;
+  background: black;
 }
 
-
-
-// =========================
-// src/components/Performance.jsx
-// =========================
-
-export default function Performance() {
-
-  return (
-    <section className="section flex flex-col items-center justify-center text-center">
-
-      <h2 className="text-7xl font-black mb-10">
-        0-100 KM/H
-      </h2>
-
-      <div className="text-[200px] font-black text-red-600">
-        2.8s
-      </div>
-
-    </section>
-  );
+.main {
+  width: 100%;
+  height: 100vh;
+  position: relative;
+  overflow: hidden;
 }
 
-
-
-// =========================
-// src/components/Gallery.jsx
-// =========================
-
-export default function Gallery() {
-
-  return (
-    <section className="section grid grid-cols-3 gap-4 p-10">
-
-      <img
-        src="/images/car.png"
-        className="rounded-2xl"
-      />
-
-      <img
-        src="/images/car.png"
-        className="rounded-2xl"
-      />
-
-      <img
-        src="/images/car.png"
-        className="rounded-2xl"
-      />
-
-    </section>
-  );
+.video {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  position: absolute;
 }
 
-
-
-// =========================
-// src/components/Footer.jsx
-// =========================
-
-export default function Footer() {
-
-  return (
-    <footer className="p-10 border-t border-white/10">
-
-      <div className="flex justify-between">
-
-        <h2 className="text-3xl font-bold">
-          LUCE
-        </h2>
-
-        <p className="text-gray-400">
-          © 2026 Luxury Motion Experience
-        </p>
-
-      </div>
-
-    </footer>
-  );
+.overlay {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  background: rgba(0,0,0,0.5);
 }
 
+.navbar {
+  position: absolute;
+  top: 0;
+  width: 100%;
+  padding: 30px 60px;
+  display: flex;
+  justify-content: space-between;
+  z-index: 10;
+}
 
+.logo {
+  color: white;
+  font-size: 30px;
+  font-weight: bold;
+  letter-spacing: 10px;
+}
 
-// =========================
-// INSTALL
-// =========================
+.menu {
+  display: flex;
+  gap: 40px;
+}
 
-// npm install
+.menu a {
+  color: white;
+  text-decoration: none;
+  text-transform: uppercase;
+  font-size: 14px;
+}
 
+.hero {
+  position: relative;
+  z-index: 5;
+  width: 100%;
+  height: 100vh;
 
+  display: flex;
+  flex-direction: column;
 
-// =========================
-// RUN
-// =========================
+  justify-content: center;
+  align-items: center;
 
-// npm run dev
+  text-align: center;
+}
 
+.title {
+  color: white;
+  font-size: 120px;
+  font-weight: 900;
+  letter-spacing: 15px;
+}
 
+.subtitle {
+  color: white;
+  font-size: 24px;
+  margin-top: 20px;
+}
 
-// =========================
-// GITHUB PUSH
-// =========================
+.button {
+  margin-top: 40px;
+  padding: 18px 50px;
 
-// git init
+  border: 1px solid white;
 
-// git add .
+  background: transparent;
+  color: white;
 
-// git commit -m "Ferrari Luce Clone"
+  cursor: pointer;
 
-// git branch -M main
+  transition: 0.3s;
+}
 
-// git remote add origin https://github.com/USERNAME/ferrari-luce-clone.git
+.button:hover {
+  background: white;
+  color: black;
+}
+```
 
-// git push -u origin main>
+---
+
+# public
+
+Создай папку:
+
+```bash
+public
+```
+
+И закинь туда видео:
+
+```bash
+hero.mp4
+```
+
+---
+
+# RUN
+
+```bash
+npm run dev
+```
+
+---
+
+# GITHUB
+
+```bash
+git init
+```
+
+```bash
+git add .
+```
+
+```bash
+git commit -m "Ferrari Style"
+```
+
+```bash
+git branch -M main
+```
+
+```bash
+git remote add origin https://github.com/USERNAME/ferrari-style.git
+```
+
+```bash
+git push -u origin main
+```
