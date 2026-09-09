@@ -1,17 +1,17 @@
 <!DOCTYPE html>
-<html lang="en" class="scroll-smooth">
+<html lang="ru" class="scroll-smooth h-full">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Daryn | IITU Student & Cyber/AI Explorer</title>
+    <title>Daryn | AI & Cybersecurity Personal Brand</title>
     <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
-    <!-- FontAwesome Icons CDN -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;600&family=Plus+Jakarta+Sans:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     
     <script>
         tailwind.config = {
@@ -19,519 +19,357 @@
                 extend: {
                     fontFamily: {
                         sans: ['Plus Jakarta Sans', 'sans-serif'],
-                        mono: ['Fira Code', 'monospace'],
-                    },
-                    colors: {
-                        brand: {
-                            dark: '#0a0f1d',
-                            card: '#111827',
-                            border: '#1f293d',
-                            emerald: '#10b981',
-                            cyan: '#06b6d4',
-                            purple: '#8b5cf6',
-                        }
+                        mono: ['JetBrains Mono', 'monospace'],
                     }
                 }
             }
         }
     </script>
     <style>
-        body {
-            background-color: #070b14;
-            color: #e2e8f0;
+        /* Полноэкранный прокручиваемый контейнер */
+        html, body {
+            height: 100%;
+            overflow-y: mandatory;
+            scroll-snap-type: y mandatory;
+            background-color: #0b0f17;
+            color: #f1f5f9;
         }
-        .glow-emerald {
-            box-shadow: 0 0 25px rgba(16, 185, 129, 0.25);
+
+        .full-page-section {
+            height: 100vh;
+            width: 100vw;
+            scroll-snap-align: start;
+            scroll-snap-stop: always;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+            box-sizing: border-box;
         }
-        .glow-cyan {
-            box-shadow: 0 0 25px rgba(6, 182, 212, 0.25);
+
+        .glow-effect {
+            box-shadow: 0 0 45px -5px rgba(56, 189, 248, 0.3);
         }
-        .text-gradient {
-            background: linear-gradient(135deg, #10b981 0%, #06b6d4 50%, #3b82f6 100%);
+
+        .card-blur {
+            background: rgba(15, 23, 42, 0.8);
+            backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .gradient-text {
+            background: linear-gradient(135deg, #38bdf8 0%, #818cf8 50%, #c084fc 100%);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
         }
-        .bg-grid {
-            background-size: 30px 30px;
-            background-image: 
-                linear-gradient(to right, rgba(255, 255, 255, 0.03) 1px, transparent 1px),
-                linear-gradient(to bottom, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
-        }
-        .glass-card {
-            background: rgba(17, 24, 39, 0.7);
-            backdrop-filter: blur(12px);
-            border: 1px solid rgba(255, 255, 255, 0.08);
-        }
-        .glass-card:hover {
-            border-color: rgba(16, 185, 129, 0.4);
-            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.4);
-        }
     </style>
 </head>
-<body class="bg-grid antialiased selection:bg-emerald-500 selection:text-slate-900">
+<body class="font-sans antialiased selection:bg-sky-500 selection:text-white">
 
-    <!-- Navbar -->
-    <nav class="fixed top-0 left-0 w-full z-50 glass-card border-b border-slate-800/80 px-6 py-4">
-        <div class="max-w-7xl mx-auto flex justify-between items-center">
-            <a href="#hero" class="flex items-center gap-2 font-mono font-bold text-xl tracking-wider text-white">
-                <span class="text-emerald-400">&lt;</span>DARYN<span class="text-cyan-400">.AI/&gt;</span>
+    <!-- Header Navigation -->
+    <header class="fixed top-0 left-0 right-0 z-50 card-blur border-b border-slate-800/80 px-8 py-4">
+        <div class="max-w-7xl mx-auto flex items-center justify-between">
+            <a href="#hero" class="flex items-center gap-2 font-mono font-bold text-2xl text-white tracking-wider">
+                <span class="text-sky-400">&lt;</span>DARYN<span class="text-sky-400">/&gt;</span>
             </a>
+            <nav class="hidden md:flex items-center gap-8 text-sm font-semibold text-slate-300">
+                <a href="#hero" class="hover:text-sky-400 transition-colors">Главная</a>
+                <a href="#about" class="hover:text-sky-400 transition-colors">01 • Обо мне</a>
+                <a href="#mindset" class="hover:text-sky-400 transition-colors">02 • Дзюдо</a>
+                <a href="#travel" class="hover:text-sky-400 transition-colors">03 • Путешествия</a>
+                <a href="#future" class="hover:text-sky-400 transition-colors">04 • Планы</a>
+                <a href="#ai-role" class="hover:text-sky-400 transition-colors">05 • AI Интеграция</a>
+            </nav>
+            <a href="#contact" class="px-6 py-2.5 rounded-full bg-gradient-to-r from-sky-500 to-indigo-600 text-white font-bold text-sm hover:shadow-lg hover:shadow-sky-500/30 transition-all">
+                Связаться
+            </a>
+        </div>
+    </header>
+
+    <!-- SECTION 0: HERO -->
+    <section id="hero" class="full-page-section px-8 pt-16">
+        <div class="absolute inset-0 bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-sky-900/20 via-slate-950 to-slate-950 -z-10"></div>
+        <div class="max-w-6xl w-full grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
             
-            <div class="hidden md:flex items-center gap-8 font-medium text-sm text-slate-300">
-                <a href="#about" class="hover:text-emerald-400 transition-colors">01. About</a>
-                <a href="#mindset" class="hover:text-emerald-400 transition-colors">02. Mindset</a>
-                <a href="#travel" class="hover:text-emerald-400 transition-colors">03. Travel</a>
-                <a href="#interests" class="hover:text-emerald-400 transition-colors">04. Gallery</a>
-                <a href="#future" class="hover:text-emerald-400 transition-colors">05. Future</a>
-                <a href="#ai-story" class="hover:text-emerald-400 transition-colors">06. AI Stack</a>
-            </div>
-
-            <div class="hidden md:flex items-center gap-4">
-                <a href="#contact" class="px-4 py-2 text-xs font-mono font-semibold text-emerald-400 border border-emerald-500/40 hover:bg-emerald-500/10 rounded-lg transition-all">
-                    GET IN TOUCH
-                </a>
-            </div>
-
-            <button id="mobile-menu-btn" class="md:hidden text-slate-300 text-2xl focus:outline-none">
-                <i class="fa-solid fa-bars"></i>
-            </button>
-        </div>
-
-        <!-- Mobile Menu -->
-        <div id="mobile-menu" class="hidden md:hidden flex-col gap-4 mt-4 pt-4 border-t border-slate-800 text-sm font-medium">
-            <a href="#about" class="mobile-link hover:text-emerald-400">01. About</a>
-            <a href="#mindset" class="mobile-link hover:text-emerald-400">02. Mindset</a>
-            <a href="#travel" class="mobile-link hover:text-emerald-400">03. Travel</a>
-            <a href="#interests" class="mobile-link hover:text-emerald-400">04. Gallery</a>
-            <a href="#future" class="mobile-link hover:text-emerald-400">05. Future</a>
-            <a href="#ai-story" class="mobile-link hover:text-emerald-400">06. AI Stack</a>
-            <a href="#contact" class="mobile-link text-emerald-400">Contact Me</a>
-        </div>
-    </nav>
-
-    <!-- Hero Section -->
-    <section id="hero" class="min-h-screen pt-32 pb-20 flex items-center px-6 relative overflow-hidden">
-        <div class="absolute -top-24 -left-24 w-96 h-96 bg-emerald-500/10 rounded-full blur-3xl pointer-events-none"></div>
-        <div class="absolute -bottom-24 -right-24 w-96 h-96 bg-cyan-500/10 rounded-full blur-3xl pointer-events-none"></div>
-
-        <div class="max-w-7xl mx-auto w-full grid md:grid-cols-12 gap-12 items-center">
-            <div class="md:col-span-7 space-y-6">
-                <div class="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 text-xs font-mono">
-                    <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
-                    1st-year IITU Student • Almaty, Kazakhstan
+            <div class="lg:col-span-7 space-y-6">
+                <div class="inline-flex items-center gap-2 px-4 py-2 rounded-full border border-sky-500/30 bg-sky-500/10 text-sky-400 text-xs font-mono font-medium tracking-wide">
+                    <span class="w-2.5 h-2.5 rounded-full bg-sky-400 animate-pulse"></span>
+                    1st-year IITU Student • Almaty
                 </div>
-
-                <h1 class="text-4xl sm:text-6xl font-extrabold tracking-tight text-white">
-                    Hi, I'm <span class="text-gradient">Daryn</span>
+                <h1 class="text-5xl sm:text-7xl font-extrabold tracking-tight leading-none">
+                    My AI-Powered<br>
+                    <span class="gradient-text">Personal Website</span>
                 </h1>
-
-                <p class="text-slate-300 text-lg leading-relaxed max-w-2xl">
-                    An 18-year-old IT student building my digital identity at the intersection of 
-                    <span class="text-emerald-400 font-semibold">Artificial Intelligence</span>, 
-                    <span class="text-cyan-400 font-semibold">Cybersecurity</span>, and 
-                    <span class="text-blue-400 font-semibold">Disciplined Athletics</span>.
+                <p class="text-xl text-slate-300 max-w-2xl font-normal leading-relaxed">
+                    Персональный бренд, объединяющий искусственный интеллект, кибербезопасность, спортивную дисциплину и личные амбиции.
                 </p>
-
-                <!-- Terminal Block -->
-                <div class="rounded-xl bg-slate-900/90 border border-slate-800 p-4 font-mono text-xs sm:text-sm text-slate-300 shadow-2xl">
-                    <div class="flex items-center gap-2 mb-3 border-b border-slate-800 pb-2">
-                        <div class="w-3 h-3 rounded-full bg-red-500/80"></div>
-                        <div class="w-3 h-3 rounded-full bg-yellow-500/80"></div>
-                        <div class="w-3 h-3 rounded-full bg-green-500/80"></div>
-                        <span class="text-slate-500 text-xs ml-2">daryn@iitu-cyber-sec:~</span>
-                    </div>
-                    <div class="space-y-1">
-                        <p><span class="text-emerald-400">$</span> <span class="text-cyan-300">cat profile.json</span></p>
-                        <p class="text-slate-400">{</p>
-                        <p class="pl-4"><span class="text-purple-400">"university"</span>: <span class="text-amber-300">"International IT University (IITU)"</span>,</p>
-                        <p class="pl-4"><span class="text-purple-400">"age"</span>: <span class="text-amber-300">18</span>,</p>
-                        <p class="pl-4"><span class="text-purple-400">"judo_rank"</span>: <span class="text-amber-300">"Green Belt (5 Years)"</span>,</p>
-                        <p class="pl-4"><span class="text-purple-400">"focus"</span>: [<span class="text-emerald-300">"AI"</span>, <span class="text-emerald-300">"Cybersecurity"</span>, <span class="text-emerald-300">"Cloud"</span>]</p>
-                        <p class="text-slate-400">}</p>
-                    </div>
-                </div>
-
-                <div class="flex flex-wrap gap-4 pt-2">
-                    <a href="#about" class="px-6 py-3 rounded-lg bg-emerald-500 hover:bg-emerald-600 text-slate-950 font-bold text-sm transition-all shadow-lg shadow-emerald-500/20">
-                        Explore Profile <i class="fa-solid fa-arrow-right ml-2"></i>
-                    </a>
-                    <a href="https://github.com" target="_blank" class="px-6 py-3 rounded-lg glass-card hover:bg-slate-800 text-white font-semibold text-sm transition-all flex items-center gap-2">
-                        <i class="fa-brands fa-github text-lg"></i> GitHub
-                    </a>
-                </div>
-            </div>
-
-            <!-- Profile Badge Box -->
-            <div class="md:col-span-5 flex justify-center">
-                <div class="relative w-full max-w-sm">
-                    <div class="absolute -inset-1 bg-gradient-to-r from-emerald-500 to-cyan-500 rounded-2xl blur opacity-30 group-hover:opacity-100 transition duration-1000"></div>
-                    <div class="relative glass-card rounded-2xl p-6 space-y-6 text-center border border-slate-700">
-                        <div class="w-28 h-28 mx-auto rounded-full bg-gradient-to-tr from-emerald-400 to-cyan-500 p-1 flex items-center justify-center shadow-xl">
-                            <div class="w-full h-full rounded-full bg-slate-900 flex items-center justify-center text-4xl text-emerald-400">
-                                <i class="fa-solid fa-user-shield"></i>
-                            </div>
-                        </div>
-
+                
+                <div class="flex flex-wrap gap-4 pt-4">
+                    <div class="flex items-center gap-4 px-6 py-4 rounded-2xl bg-slate-900/80 border border-slate-800">
+                        <i class="fa-solid fa-graduation-cap text-sky-400 text-2xl"></i>
                         <div>
-                            <h2 class="text-2xl font-bold text-white">DARYN</h2>
-                            <p class="text-slate-400 text-sm font-mono mt-1">1st Year Student @ IITU</p>
-                        </div>
-
-                        <div class="grid grid-cols-2 gap-3 pt-2 text-left">
-                            <div class="bg-slate-900/80 p-3 rounded-xl border border-slate-800">
-                                <span class="block text-slate-400 text-xs font-mono">Location</span>
-                                <span class="text-white text-sm font-semibold">Almaty, KZ</span>
-                            </div>
-                            <div class="bg-slate-900/80 p-3 rounded-xl border border-slate-800">
-                                <span class="block text-slate-400 text-xs font-mono">Judo Belt</span>
-                                <span class="text-emerald-400 text-sm font-semibold">Green Belt 🥋</span>
-                            </div>
-                        </div>
-
-                        <div class="p-3 rounded-xl bg-emerald-500/10 border border-emerald-500/20 text-emerald-300 text-xs text-center font-mono">
-                            "Learn. Practice. Improve."
+                            <div class="text-xs text-slate-400">Учеба</div>
+                            <div class="text-base font-bold text-slate-200">1st-year IITU student[cite: 1]</div>
                         </div>
                     </div>
+                    <div class="flex items-center gap-4 px-6 py-4 rounded-2xl bg-slate-900/80 border border-slate-800">
+                        <i class="fa-solid fa-shield-halved text-indigo-400 text-2xl"></i>
+                        <div>
+                            <div class="text-xs text-slate-400">Направление</div>
+                            <div class="text-base font-bold text-slate-200">AI & Cybersecurity[cite: 1]</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="lg:col-span-5 flex justify-center">
+                <div class="w-full max-w-md rounded-3xl p-8 card-blur glow-effect text-center space-y-6 border border-sky-500/30">
+                    <div class="w-20 h-20 mx-auto rounded-2xl bg-sky-500/10 flex items-center justify-center text-sky-400 text-4xl">
+                        <i class="fa-solid fa-user-gear"></i>
+                    </div>
+                    <div>
+                        <span class="text-xs font-mono text-sky-400 tracking-widest uppercase">Digital Identity</span>
+                        <h3 class="text-3xl font-extrabold text-white mt-1">Дарын[cite: 1]</h3>
+                        <p class="text-sm text-slate-400 mt-2">18 лет • Алматы • IITU[cite: 1]</p>
+                    </div>
+                    <div class="pt-4 border-t border-slate-800 text-xs font-mono text-slate-400 flex justify-around">
+                        <span>#AI</span>
+                        <span>#CYBERSECURITY</span>
+                        <span>#JUDO</span>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </section>
+
+    <!-- SECTION 1: ABOUT ME -->
+    <section id="about" class="full-page-section px-8 bg-slate-950/60 border-t border-slate-900">
+        <div class="max-w-6xl w-full">
+            <div class="text-center max-w-2xl mx-auto mb-12">
+                <span class="text-sky-400 font-mono text-sm uppercase tracking-widest">01 • ABOUT ME[cite: 1]</span>
+                <h2 class="text-4xl sm:text-5xl font-extrabold mt-2 text-white">Who I am[cite: 1]</h2>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <div class="p-10 rounded-3xl card-blur hover:border-sky-500/50 transition-all text-center space-y-4">
+                    <div class="w-16 h-16 mx-auto rounded-2xl bg-sky-500/10 text-sky-400 flex items-center justify-center text-2xl">
+                        <i class="fa-solid fa-id-card"></i>
+                    </div>
+                    <div class="text-4xl font-extrabold text-white">18 лет[cite: 1]</div>
+                    <h3 class="text-xl font-bold text-slate-200">AGE[cite: 1]</h3>
+                    <p class="text-sm text-slate-400">
+                        Молодой специалист, стремящийся к развитию в сфере высоких технологий[cite: 1].
+                    </p>
+                </div>
+
+                <div class="p-10 rounded-3xl card-blur hover:border-indigo-500/50 transition-all text-center space-y-4">
+                    <div class="w-16 h-16 mx-auto rounded-2xl bg-indigo-500/10 text-indigo-400 flex items-center justify-center text-2xl">
+                        <i class="fa-solid fa-university"></i>
+                    </div>
+                    <div class="text-4xl font-extrabold text-white">1st year[cite: 1]</div>
+                    <h3 class="text-xl font-bold text-slate-200">STUDY[cite: 1]</h3>
+                    <p class="text-sm text-slate-400">
+                        IITU • International IT University, Almaty[cite: 1].
+                    </p>
+                </div>
+
+                <div class="p-10 rounded-3xl card-blur hover:border-purple-500/50 transition-all text-center space-y-4">
+                    <div class="w-16 h-16 mx-auto rounded-2xl bg-purple-500/10 text-purple-400 flex items-center justify-center text-2xl">
+                        <i class="fa-solid fa-heart"></i>
+                    </div>
+                    <div class="text-4xl font-extrabold text-white">Интересы[cite: 1]</div>
+                    <h3 class="text-xl font-bold text-slate-200">INTERESTS[cite: 1]</h3>
+                    <p class="text-sm text-slate-400">
+                        Artificial intelligence • Cybersecurity • Judo[cite: 1].
+                    </p>
                 </div>
             </div>
         </div>
     </section>
 
-    <!-- 01. About Me -->
-    <section id="about" class="py-20 px-6 max-w-7xl mx-auto">
-        <div class="flex items-center gap-4 mb-12">
-            <span class="font-mono text-emerald-400 text-lg font-bold">01.</span>
-            <h2 class="text-3xl font-bold text-white tracking-wide">ABOUT ME</h2>
-            <div class="h-[1px] bg-slate-800 flex-grow max-w-xs"></div>
-        </div>
-
-        <div class="grid md:grid-cols-3 gap-6">
-            <div class="glass-card p-6 rounded-2xl transition-all">
-                <div class="w-12 h-12 rounded-xl bg-emerald-500/10 flex items-center justify-center text-emerald-400 text-2xl mb-4">
-                    <i class="fa-solid fa-id-card"></i>
+    <!-- SECTION 2: PERSONALITY & JUDO -->
+    <section id="mindset" class="full-page-section px-8 border-t border-slate-900">
+        <div class="max-w-6xl w-full grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
+            
+            <div class="lg:col-span-6 space-y-6">
+                <span class="text-sky-400 font-mono text-sm uppercase tracking-widest">02 • PERSONALITY[cite: 1]</span>
+                <h2 class="text-4xl sm:text-5xl font-extrabold text-white">What defines me[cite: 1]</h2>
+                
+                <div class="p-8 rounded-3xl card-blur border-l-8 border-l-emerald-500 space-y-3">
+                    <h3 class="text-2xl font-bold text-white">Strong-willed & disciplined[cite: 1]</h3>
+                    <p class="text-base text-slate-300 leading-relaxed">
+                        Five years of judo have shaped my discipline, endurance and ability to stay calm under pressure[cite: 1].
+                    </p>
                 </div>
-                <h3 class="text-xl font-bold text-white mb-2">Identity</h3>
-                <p class="text-slate-400 text-sm leading-relaxed">
-                    My name is Daryn, an 18-year-old passionate technology student focused on cyber defense, AI tools, and personal development.
+
+                <div class="grid grid-cols-2 gap-4 pt-2">
+                    <div class="p-6 rounded-2xl bg-slate-900/80 border border-slate-800">
+                        <i class="fa-solid fa-bolt text-amber-400 text-2xl mb-2"></i>
+                        <h4 class="font-bold text-white">Curious & goal-driven[cite: 1]</h4>
+                        <p class="text-xs text-slate-400 mt-1">Всегда нацелен на результат[cite: 1].</p>
+                    </div>
+                    <div class="p-6 rounded-2xl bg-slate-900/80 border border-slate-800">
+                        <i class="fa-solid fa-shield text-sky-400 text-2xl mb-2"></i>
+                        <h4 class="font-bold text-white">Calm under pressure[cite: 1]</h4>
+                        <p class="text-xs text-slate-400 mt-1">Хладнокровие в любой ситуации[cite: 1].</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="lg:col-span-6 flex justify-center">
+                <div class="w-full max-w-lg p-10 rounded-3xl card-blur border border-emerald-500/30 text-center space-y-6">
+                    <div class="w-24 h-24 mx-auto rounded-full bg-emerald-500/10 text-emerald-400 flex items-center justify-center text-5xl">
+                        <i class="fa-solid fa-award"></i>
+                    </div>
+                    <div>
+                        <span class="px-3 py-1 rounded-full bg-emerald-500/20 text-emerald-300 font-mono text-xs">JUDO • 5 YEARS[cite: 1]</span>
+                        <h3 class="text-3xl font-extrabold text-white mt-3">Green Belt Holder[cite: 1]</h3>
+                    </div>
+                    <div class="p-6 rounded-2xl bg-slate-950/60 border border-slate-800">
+                        <div class="text-xs font-mono text-sky-400 uppercase tracking-widest mb-1">MY MINDSET[cite: 1]</div>
+                        <div class="text-2xl font-black text-white tracking-wide">Learn. Practice. Improve.[cite: 1]</div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </section>
+
+    <!-- SECTION 3: TRAVEL -->
+    <section id="travel" class="full-page-section px-8 bg-slate-950/60 border-t border-slate-900">
+        <div class="max-w-6xl w-full">
+            <div class="text-center max-w-2xl mx-auto mb-12">
+                <span class="text-sky-400 font-mono text-sm uppercase tracking-widest">03 • TRAVEL[cite: 1]</span>
+                <h2 class="text-4xl sm:text-5xl font-extrabold mt-2 text-white">Favourite travel experiences[cite: 1]</h2>
+            </div>
+
+            <div class="grid grid-cols-2 md:grid-cols-5 gap-6 mb-12">
+                <div class="p-8 rounded-3xl card-blur text-center space-y-3">
+                    <div class="text-3xl text-sky-400"><i class="fa-solid fa-building"></i></div>
+                    <div class="text-2xl font-extrabold text-white">01</div>
+                    <div class="font-bold text-slate-200">Dubai, UAE[cite: 1]</div>
+                </div>
+
+                <div class="p-8 rounded-3xl card-blur text-center space-y-3">
+                    <div class="text-3xl text-emerald-400"><i class="fa-solid fa-umbrella-beach"></i></div>
+                    <div class="text-2xl font-extrabold text-white">02</div>
+                    <div class="font-bold text-slate-200">Thailand[cite: 1]</div>
+                </div>
+
+                <div class="p-8 rounded-3xl card-blur text-center space-y-3">
+                    <div class="text-3xl text-amber-400"><i class="fa-solid fa-monument"></i></div>
+                    <div class="text-2xl font-extrabold text-white">03</div>
+                    <div class="font-bold text-slate-200">Egypt[cite: 1]</div>
+                </div>
+
+                <div class="p-8 rounded-3xl card-blur text-center space-y-3">
+                    <div class="text-3xl text-teal-400"><i class="fa-solid fa-mountain-sun"></i></div>
+                    <div class="text-2xl font-extrabold text-white">04</div>
+                    <div class="font-bold text-slate-200">Laos[cite: 1]</div>
+                </div>
+
+                <div class="p-8 rounded-3xl card-blur text-center space-y-3 col-span-2 md:col-span-1">
+                    <div class="text-3xl text-rose-400"><i class="fa-solid fa-landmark"></i></div>
+                    <div class="text-2xl font-extrabold text-white">05</div>
+                    <div class="font-bold text-slate-200">Turkey[cite: 1]</div>
+                </div>
+            </div>
+
+            <div class="p-8 rounded-3xl card-blur border border-sky-500/30 text-center max-w-3xl mx-auto">
+                <span class="text-xs font-mono text-sky-400 uppercase tracking-widest">KEY IDEA[cite: 1]</span>
+                <p class="text-2xl font-semibold text-white mt-2">
+                    "Travel gives me new experiences, perspectives and memories."[cite: 1]
                 </p>
             </div>
-
-            <div class="glass-card p-6 rounded-2xl transition-all">
-                <div class="w-12 h-12 rounded-xl bg-cyan-500/10 flex items-center justify-center text-cyan-400 text-2xl mb-4">
-                    <i class="fa-solid fa-graduation-cap"></i>
-                </div>
-                <h3 class="text-xl font-bold text-white mb-2">Education</h3>
-                <p class="text-slate-400 text-sm leading-relaxed">
-                    1st-year student at <span class="text-slate-200 font-semibold">IITU (International IT University)</span> in Almaty, building strong fundamentals in software and computer systems.
-                </p>
-            </div>
-
-            <div class="glass-card p-6 rounded-2xl transition-all">
-                <div class="w-12 h-12 rounded-xl bg-purple-500/10 flex items-center justify-center text-purple-400 text-2xl mb-4">
-                    <i class="fa-solid fa-compass"></i>
-                </div>
-                <h3 class="text-xl font-bold text-white mb-2">Interests</h3>
-                <p class="text-slate-400 text-sm leading-relaxed">
-                    Deep interest in Artificial Intelligence, Cybersecurity defense strategies, Cloud infrastructure, and Judo martial arts.
-                </p>
-            </div>
         </div>
     </section>
 
-    <!-- 02. Personality & Mindset -->
-    <section id="mindset" class="py-20 px-6 bg-slate-900/40 border-y border-slate-800/80">
-        <div class="max-w-7xl mx-auto">
-            <div class="flex items-center gap-4 mb-12">
-                <span class="font-mono text-emerald-400 text-lg font-bold">02.</span>
-                <h2 class="text-3xl font-bold text-white tracking-wide">PERSONALITY & MINDSET</h2>
-                <div class="h-[1px] bg-slate-800 flex-grow max-w-xs"></div>
+    <!-- SECTION 4: FUTURE PLANS -->
+    <section id="future" class="full-page-section px-8 border-t border-slate-900">
+        <div class="max-w-6xl w-full">
+            <div class="text-center max-w-2xl mx-auto mb-12">
+                <span class="text-sky-400 font-mono text-sm uppercase tracking-widest">05 • FUTURE PLANS[cite: 1]</span>
+                <h2 class="text-4xl sm:text-5xl font-extrabold mt-2 text-white">Where I’m going[cite: 1]</h2>
             </div>
 
-            <div class="grid lg:grid-cols-2 gap-8 items-center">
-                <div class="space-y-6">
-                    <div class="glass-card p-6 rounded-2xl border-l-4 border-l-emerald-500">
-                        <h3 class="text-2xl font-bold text-white mb-3">Strong-Willed & Disciplined</h3>
-                        <p class="text-slate-300 text-base leading-relaxed">
-                            Five years of judo practice have shaped my discipline, physical endurance, and mental toughness—teaching me to stay calm and focused under pressure.
-                        </p>
-                    </div>
-
-                    <div class="grid grid-cols-3 gap-4">
-                        <div class="glass-card p-4 rounded-xl text-center">
-                            <span class="block text-2xl mb-1">🧠</span>
-                            <span class="text-white font-bold text-sm">Curious</span>
-                        </div>
-                        <div class="glass-card p-4 rounded-xl text-center">
-                            <span class="block text-2xl mb-1">🎯</span>
-                            <span class="text-white font-bold text-sm">Goal-Driven</span>
-                        </div>
-                        <div class="glass-card p-4 rounded-xl text-center">
-                            <span class="block text-2xl mb-1">📈</span>
-                            <span class="text-white font-bold text-sm">Always Improving</span>
-                        </div>
-                    </div>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <div class="p-8 rounded-3xl card-blur border-t-4 border-t-sky-500 space-y-4">
+                    <div class="text-sky-400 font-mono text-lg font-bold">01</div>
+                    <h3 class="text-2xl font-bold text-white">Cybersecurity expertise[cite: 1]</h3>
+                    <p class="text-sm text-slate-400 leading-relaxed">
+                        Become a strong cybersecurity specialist who understands and defends against cyberattacks[cite: 1].
+                    </p>
                 </div>
 
-                <div class="glass-card p-8 rounded-2xl text-center relative overflow-hidden bg-gradient-to-br from-slate-900 via-slate-900 to-emerald-950/40">
-                    <div class="text-xs font-mono text-emerald-400 uppercase tracking-widest mb-4">Core Philosophy</div>
-                    <div class="text-3xl sm:text-4xl font-extrabold text-white tracking-tight mb-4">
-                        "LEARN. PRACTICE. IMPROVE."
-                    </div>
-                    <p class="text-slate-400 text-sm max-w-md mx-auto">
-                        Calm under pressure, structured in problem-solving, and relentless in pursuit of personal mastery.
+                <div class="p-8 rounded-3xl card-blur border-t-4 border-t-indigo-500 space-y-4">
+                    <div class="text-indigo-400 font-mono text-lg font-bold">02</div>
+                    <h3 class="text-2xl font-bold text-white">Cloud & technology[cite: 1]</h3>
+                    <p class="text-sm text-slate-400 leading-relaxed">
+                        Build a career in cloud technologies while combining AI and security skills[cite: 1].
+                    </p>
+                </div>
+
+                <div class="p-8 rounded-3xl card-blur border-t-4 border-t-purple-500 space-y-4">
+                    <div class="text-purple-400 font-mono text-lg font-bold">03</div>
+                    <h3 class="text-2xl font-bold text-white">Big ambition[cite: 1]</h3>
+                    <p class="text-sm text-slate-400 leading-relaxed">
+                        Create something impactful in technology and build a successful future[cite: 1].
                     </p>
                 </div>
             </div>
         </div>
     </section>
 
-    <!-- 03. Travel Experiences -->
-    <section id="travel" class="py-20 px-6 max-w-7xl mx-auto">
-        <div class="flex items-center gap-4 mb-4">
-            <span class="font-mono text-emerald-400 text-lg font-bold">03.</span>
-            <h2 class="text-3xl font-bold text-white tracking-wide">TRAVEL EXPERIENCES</h2>
-            <div class="h-[1px] bg-slate-800 flex-grow max-w-xs"></div>
-        </div>
-        <p class="text-slate-400 mb-10 text-sm max-w-xl">
-            "Travel gives me new experiences, broadens my perspectives, and builds lasting memories."
-        </p>
+    <!-- SECTION 5: AI ROLE & CONTACT -->
+    <section id="ai-role" class="full-page-section px-8 bg-slate-950/60 border-t border-slate-900">
+        <div class="max-w-6xl w-full grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
+            
+            <div class="lg:col-span-6 space-y-6">
+                <span class="text-sky-400 font-mono text-sm uppercase tracking-widest">06 • AI[cite: 1]</span>
+                <h2 class="text-4xl sm:text-5xl font-extrabold text-white">How AI helped me[cite: 1]</h2>
+                
+                <div class="p-6 rounded-2xl bg-slate-900/80 border border-slate-800 space-y-3">
+                    <div class="text-xs font-mono text-sky-400">AI TOOL: ChatGPT[cite: 1]</div>
+                    <p class="text-sm text-slate-300">Used for ideas, wording and structure[cite: 1].</p>
+                </div>
 
-        <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-4">
-            <!-- Dubai -->
-            <div class="glass-card p-5 rounded-xl text-center hover:-translate-y-2 transition-all">
-                <div class="text-4xl mb-3">🇦🇪</div>
-                <h3 class="font-bold text-white text-base">Dubai</h3>
-                <p class="text-xs text-slate-400 mt-1 font-mono">UAE</p>
-            </div>
-            <!-- Thailand -->
-            <div class="glass-card p-5 rounded-xl text-center hover:-translate-y-2 transition-all">
-                <div class="text-4xl mb-3">🇹🇭</div>
-                <h3 class="font-bold text-white text-base">Thailand</h3>
-                <p class="text-xs text-slate-400 mt-1 font-mono">Southeast Asia</p>
-            </div>
-            <!-- Egypt -->
-            <div class="glass-card p-5 rounded-xl text-center hover:-translate-y-2 transition-all">
-                <div class="text-4xl mb-3">🇪🇬</div>
-                <h3 class="font-bold text-white text-base">Egypt</h3>
-                <p class="text-xs text-slate-400 mt-1 font-mono">North Africa</p>
-            </div>
-            <!-- Laos -->
-            <div class="glass-card p-5 rounded-xl text-center hover:-translate-y-2 transition-all">
-                <div class="text-4xl mb-3">🇱🇦</div>
-                <h3 class="font-bold text-white text-base">Laos</h3>
-                <p class="text-xs text-slate-400 mt-1 font-mono">Southeast Asia</p>
-            </div>
-            <!-- Turkey -->
-            <div class="glass-card p-5 rounded-xl text-center hover:-translate-y-2 transition-all">
-                <div class="text-4xl mb-3">🇹🇷</div>
-                <h3 class="font-bold text-white text-base">Turkey</h3>
-                <p class="text-xs text-slate-400 mt-1 font-mono">Eurasia</p>
-            </div>
-        </div>
-    </section>
-
-    <!-- 04. Gallery / Things I Care About -->
-    <section id="interests" class="py-20 px-6 bg-slate-900/40 border-y border-slate-800/80">
-        <div class="max-w-7xl mx-auto">
-            <div class="flex items-center gap-4 mb-12">
-                <span class="font-mono text-emerald-400 text-lg font-bold">04.</span>
-                <h2 class="text-3xl font-bold text-white tracking-wide">WHAT I CARE ABOUT</h2>
-                <div class="h-[1px] bg-slate-800 flex-grow max-w-xs"></div>
-            </div>
-
-            <div class="grid md:grid-cols-3 gap-8">
-                <!-- Judo -->
-                <div class="glass-card rounded-2xl overflow-hidden group">
-                    <div class="h-48 bg-gradient-to-tr from-emerald-900 to-slate-900 flex items-center justify-center text-6xl group-hover:scale-110 transition-transform duration-500">
-                        🥋
+                <div class="space-y-2 font-mono text-xs">
+                    <div class="p-3 rounded-xl card-blur flex items-center justify-between">
+                        <span>Website structure[cite: 1]</span>
+                        <span class="text-sky-400"><i class="fa-solid fa-check"></i></span>
                     </div>
-                    <div class="p-6">
-                        <div class="inline-block px-3 py-1 rounded-full bg-emerald-500/10 text-emerald-400 text-xs font-mono mb-2">5 Years Experience</div>
-                        <h3 class="text-xl font-bold text-white mb-2">Judo & Martial Arts</h3>
-                        <p class="text-slate-400 text-sm">
-                            Achieved Green Belt status. Martial arts taught me balance, respect, quick reaction, and resilience.
-                        </p>
+                    <div class="p-3 rounded-xl card-blur flex items-center justify-between">
+                        <span>Wording ideas & Translation[cite: 1]</span>
+                        <span class="text-sky-400"><i class="fa-solid fa-check"></i></span>
+                    </div>
+                    <div class="p-3 rounded-xl card-blur flex items-center justify-between">
+                        <span>Design direction[cite: 1]</span>
+                        <span class="text-sky-400"><i class="fa-solid fa-check"></i></span>
                     </div>
                 </div>
 
-                <!-- AI & Security -->
-                <div class="glass-card rounded-2xl overflow-hidden group">
-                    <div class="h-48 bg-gradient-to-tr from-cyan-900 to-slate-900 flex items-center justify-center text-6xl group-hover:scale-110 transition-transform duration-500">
-                        🔐
-                    </div>
-                    <div class="p-6">
-                        <div class="inline-block px-3 py-1 rounded-full bg-cyan-500/10 text-cyan-400 text-xs font-mono mb-2">Academic & Self-Study</div>
-                        <h3 class="text-xl font-bold text-white mb-2">AI & Cybersecurity</h3>
-                        <p class="text-slate-400 text-sm">
-                            Constantly exploring generative AI models, threat mitigation, network security, and secure coding practices.
-                        </p>
-                    </div>
+                <div class="p-6 rounded-2xl bg-sky-500/10 border border-sky-500/30 text-sky-200">
+                    <div class="font-bold text-base mb-1">MY ROLE[cite: 1]</div>
+                    <p class="text-sm">I reviewed, edited and improved the result[cite: 1].</p>
                 </div>
+            </div>
 
-                <!-- Travel & Culture -->
-                <div class="glass-card rounded-2xl overflow-hidden group">
-                    <div class="h-48 bg-gradient-to-tr from-purple-900 to-slate-900 flex items-center justify-center text-6xl group-hover:scale-110 transition-transform duration-500">
-                        🌍
-                    </div>
-                    <div class="p-6">
-                        <div class="inline-block px-3 py-1 rounded-full bg-purple-500/10 text-purple-400 text-xs font-mono mb-2">Global Vision</div>
-                        <h3 class="text-xl font-bold text-white mb-2">Travel & Exploration</h3>
-                        <p class="text-slate-400 text-sm">
-                            Experiencing diverse cultures builds open-mindedness, adaptability, and fresh problem-solving angles.
-                        </p>
+            <div id="contact" class="lg:col-span-6 flex justify-center">
+                <div class="w-full max-w-md p-10 rounded-3xl card-blur border border-sky-500/40 text-center space-y-6 glow-effect">
+                    <h3 class="text-4xl font-black text-white">THANK YOU![cite: 1]</h3>
+                    <p class="text-lg text-sky-400 font-medium">Questions?[cite: 1]</p>
+                    <div class="pt-4 border-t border-slate-800 space-y-2">
+                        <div class="text-xl font-extrabold text-white">Daryn[cite: 1]</div>
+                        <div class="text-xs font-mono text-slate-400">My AI-Powered Personal Website[cite: 1]</div>
+                        <div class="text-xs font-mono text-slate-500 pt-2">AI • CYBERSECURITY • TECHNOLOGY[cite: 1]</div>
                     </div>
                 </div>
             </div>
+
         </div>
     </section>
 
-    <!-- 05. Future Goals -->
-    <section id="future" class="py-20 px-6 max-w-7xl mx-auto">
-        <div class="flex items-center gap-4 mb-12">
-            <span class="font-mono text-emerald-400 text-lg font-bold">05.</span>
-            <h2 class="text-3xl font-bold text-white tracking-wide">FUTURE PLANS</h2>
-            <div class="h-[1px] bg-slate-800 flex-grow max-w-xs"></div>
-        </div>
-
-        <div class="space-y-6">
-            <div class="glass-card p-6 rounded-2xl flex flex-col md:flex-row items-start md:items-center gap-6">
-                <div class="w-14 h-14 rounded-2xl bg-emerald-500/10 text-emerald-400 text-2xl flex items-center justify-center flex-shrink-0 font-bold font-mono">
-                    01
-                </div>
-                <div>
-                    <h3 class="text-xl font-bold text-white mb-1">Cybersecurity Expertise</h3>
-                    <p class="text-slate-400 text-sm">
-                        Become a strong cybersecurity specialist who thoroughly understands modern attack vectors and builds robust defense systems.
-                    </p>
-                </div>
-            </div>
-
-            <div class="glass-card p-6 rounded-2xl flex flex-col md:flex-row items-start md:items-center gap-6">
-                <div class="w-14 h-14 rounded-2xl bg-cyan-500/10 text-cyan-400 text-2xl flex items-center justify-center flex-shrink-0 font-bold font-mono">
-                    02
-                </div>
-                <div>
-                    <h3 class="text-xl font-bold text-white mb-1">Cloud & Advanced Technology</h3>
-                    <p class="text-slate-400 text-sm">
-                        Build a career in cloud technologies while combining artificial intelligence and automated security capabilities.
-                    </p>
-                </div>
-            </div>
-
-            <div class="glass-card p-6 rounded-2xl flex flex-col md:flex-row items-start md:items-center gap-6">
-                <div class="w-14 h-14 rounded-2xl bg-purple-500/10 text-purple-400 text-2xl flex items-center justify-center flex-shrink-0 font-bold font-mono">
-                    03
-                </div>
-                <div>
-                    <h3 class="text-xl font-bold text-white mb-1">Big Ambition & Tech Impact</h3>
-                    <p class="text-slate-400 text-sm">
-                        Create something truly impactful in the tech ecosystem and establish a successful, long-term engineering career.
-                    </p>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- 06. AI Stack & Workflow -->
-    <section id="ai-story" class="py-20 px-6 bg-slate-900/40 border-y border-slate-800/80">
-        <div class="max-w-7xl mx-auto">
-            <div class="flex items-center gap-4 mb-12">
-                <span class="font-mono text-emerald-400 text-lg font-bold">06.</span>
-                <h2 class="text-3xl font-bold text-white tracking-wide">HOW AI HELPED ME</h2>
-                <div class="h-[1px] bg-slate-800 flex-grow max-w-xs"></div>
-            </div>
-
-            <div class="grid md:grid-cols-2 gap-8">
-                <div class="glass-card p-8 rounded-2xl">
-                    <div class="flex items-center gap-3 mb-6">
-                        <i class="fa-solid fa-robot text-emerald-400 text-2xl"></i>
-                        <h3 class="text-xl font-bold text-white">AI Tools Used</h3>
-                    </div>
-                    <ul class="space-y-4 text-slate-300 text-sm">
-                        <li class="flex items-start gap-3">
-                            <i class="fa-solid fa-check text-emerald-400 mt-1"></i>
-                            <span><strong class="text-white">ChatGPT:</strong> Used for generating site structure, brainstorming wording ideas, and translating content.</span>
-                        </li>
-                        <li class="flex items-start gap-3">
-                            <i class="fa-solid fa-check text-emerald-400 mt-1"></i>
-                            <span><strong class="text-white">Design Assistance:</strong> AI helped establish the UI layout grid and modern aesthetic direction.</span>
-                        </li>
-                    </ul>
-                </div>
-
-                <div class="glass-card p-8 rounded-2xl border-l-4 border-l-cyan-500">
-                    <div class="flex items-center gap-3 mb-6">
-                        <i class="fa-solid fa-user-check text-cyan-400 text-2xl"></i>
-                        <h3 class="text-xl font-bold text-white">My Role as Developer</h3>
-                    </div>
-                    <p class="text-slate-300 text-sm leading-relaxed">
-                        I directed the prompt engineering, rigorously reviewed all generated outputs, edited the copy, validated code logic, and refined the design to fit my real personal identity and goals.
-                    </p>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- Contact & Footer -->
-    <section id="contact" class="py-20 px-6 max-w-7xl mx-auto text-center">
-        <h2 class="text-4xl font-extrabold text-white mb-4">Let's Connect</h2>
-        <p class="text-slate-400 max-w-md mx-auto text-sm mb-8">
-            Open to student collaborations, cybersecurity discussions, and technology networking.
-        </p>
-
-        <div class="inline-flex flex-wrap justify-center gap-4 mb-12">
-            <a href="mailto:daryn@example.com" class="px-6 py-3 rounded-xl bg-emerald-500 hover:bg-emerald-600 text-slate-950 font-bold text-sm transition-all shadow-lg shadow-emerald-500/20">
-                <i class="fa-solid fa-envelope mr-2"></i> Email Me
-            </a>
-            <a href="https://github.com" target="_blank" class="px-6 py-3 rounded-xl glass-card hover:bg-slate-800 text-white font-semibold text-sm transition-all">
-                <i class="fa-brands fa-github mr-2"></i> GitHub Profile
-            </a>
-        </div>
-
-        <div class="border-t border-slate-800 pt-8 text-slate-500 text-xs font-mono flex flex-col sm:flex-row justify-between items-center gap-4 max-w-7xl mx-auto">
-            <p>© 2026 Daryn • IITU Student Personal Website</p>
-            <p>Designed for GitHub Pages</p>
-        </div>
-    </section>
-
-    <!-- JavaScript for Mobile Menu & Interactivity -->
-    <script>
-        const menuBtn = document.getElementById('mobile-menu-btn');
-        const mobileMenu = document.getElementById('mobile-menu');
-        const mobileLinks = document.querySelectorAll('.mobile-link');
-
-        menuBtn.addEventListener('click', () => {
-            mobileMenu.classList.toggle('hidden');
-            mobileMenu.classList.toggle('flex');
-        });
-
-        mobileLinks.forEach(link => {
-            link.addEventListener('click', () => {
-                mobileMenu.classList.add('hidden');
-                mobileMenu.classList.remove('flex');
-            });
-        });
-    </script>
 </body>
 </html>
-```eof
-
-I have generated the complete HTML code for Daryn's personal website based on the presentation slides. 
-
-### What's included:
-- **`index.html`**: A fully responsive single-page website tailored for GitHub Pages.
-- **Design & Theme**: High-tech cybersecurity/AI dark theme (`slate-900`, `emerald`, `cyan`) reflecting IITU, Judo discipline, and future cybersecurity ambitions.
-- **Sections**:
-  1. **Hero**: Interactive terminal code snippet with profile overview.
-  2. **About Me**: IITU 1st-year student background and interests.
-  3. **Personality & Mindset**: 5 years of Judo, green belt, discipline & "Learn. Practice. Improve." philosophy.
-  4. **Travel Experiences**: Interactive flag cards for Dubai, Thailand, Egypt, Laos, and Turkey.
-  5. **Gallery**: Judo, AI & Cybersecurity, and Travel.
-  6. **Future Plans**: Cybersecurity expertise, cloud technology, and big tech ambition.
-  7. **AI Collaboration**: Explanation of how ChatGPT assisted with structure and copy under human editorial control.
-
-### How to upload to GitHub Pages:
-1. Create a repository on GitHub named `daryn-website` (or `daryn.github.io`).
-2. Add this generated file as `index.html` in the root folder.
-3. Push your code to GitHub.
-4. Enable **GitHub Pages** in repository settings (`Settings -> Pages -> Deploy from branch: main`).
