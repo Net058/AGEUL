@@ -1,276 +1,537 @@
-```bash
-npx create-next-app@latest ferrari-style
-```
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Daryn | IITU Student & Cyber/AI Explorer</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- FontAwesome Icons CDN -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;600&family=Plus+Jakarta+Sans:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+    
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Plus Jakarta Sans', 'sans-serif'],
+                        mono: ['Fira Code', 'monospace'],
+                    },
+                    colors: {
+                        brand: {
+                            dark: '#0a0f1d',
+                            card: '#111827',
+                            border: '#1f293d',
+                            emerald: '#10b981',
+                            cyan: '#06b6d4',
+                            purple: '#8b5cf6',
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body {
+            background-color: #070b14;
+            color: #e2e8f0;
+        }
+        .glow-emerald {
+            box-shadow: 0 0 25px rgba(16, 185, 129, 0.25);
+        }
+        .glow-cyan {
+            box-shadow: 0 0 25px rgba(6, 182, 212, 0.25);
+        }
+        .text-gradient {
+            background: linear-gradient(135deg, #10b981 0%, #06b6d4 50%, #3b82f6 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .bg-grid {
+            background-size: 30px 30px;
+            background-image: 
+                linear-gradient(to right, rgba(255, 255, 255, 0.03) 1px, transparent 1px),
+                linear-gradient(to bottom, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
+        }
+        .glass-card {
+            background: rgba(17, 24, 39, 0.7);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+        }
+        .glass-card:hover {
+            border-color: rgba(16, 185, 129, 0.4);
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.4);
+        }
+    </style>
+</head>
+<body class="bg-grid antialiased selection:bg-emerald-500 selection:text-slate-900">
 
-```bash
-cd ferrari-style
-```
+    <!-- Navbar -->
+    <nav class="fixed top-0 left-0 w-full z-50 glass-card border-b border-slate-800/80 px-6 py-4">
+        <div class="max-w-7xl mx-auto flex justify-between items-center">
+            <a href="#hero" class="flex items-center gap-2 font-mono font-bold text-xl tracking-wider text-white">
+                <span class="text-emerald-400">&lt;</span>DARYN<span class="text-cyan-400">.AI/&gt;</span>
+            </a>
+            
+            <div class="hidden md:flex items-center gap-8 font-medium text-sm text-slate-300">
+                <a href="#about" class="hover:text-emerald-400 transition-colors">01. About</a>
+                <a href="#mindset" class="hover:text-emerald-400 transition-colors">02. Mindset</a>
+                <a href="#travel" class="hover:text-emerald-400 transition-colors">03. Travel</a>
+                <a href="#interests" class="hover:text-emerald-400 transition-colors">04. Gallery</a>
+                <a href="#future" class="hover:text-emerald-400 transition-colors">05. Future</a>
+                <a href="#ai-story" class="hover:text-emerald-400 transition-colors">06. AI Stack</a>
+            </div>
 
-```bash
-npm install gsap
-```
+            <div class="hidden md:flex items-center gap-4">
+                <a href="#contact" class="px-4 py-2 text-xs font-mono font-semibold text-emerald-400 border border-emerald-500/40 hover:bg-emerald-500/10 rounded-lg transition-all">
+                    GET IN TOUCH
+                </a>
+            </div>
 
----
-
-# app/page.js
-
-```jsx
-"use client";
-
-import { useEffect } from "react";
-import gsap from "gsap";
-
-export default function Home() {
-
-  useEffect(function () {
-
-    gsap.from(".title", {
-      opacity: 0,
-      y: 100,
-      duration: 1.5
-    });
-
-    gsap.from(".subtitle", {
-      opacity: 0,
-      y: 50,
-      duration: 2,
-      delay: 0.5
-    });
-
-  }, []);
-
-  return (
-
-    <main className="main">
-
-      <video
-        autoPlay
-        muted
-        loop
-        playsInline
-        className="video"
-      >
-        <source src="/hero.mp4" type="video/mp4" />
-      </video>
-
-      <div className="overlay"></div>
-
-      <nav className="navbar">
-
-        <div className="logo">
-          LUCE
+            <button id="mobile-menu-btn" class="md:hidden text-slate-300 text-2xl focus:outline-none">
+                <i class="fa-solid fa-bars"></i>
+            </button>
         </div>
 
-        <div className="menu">
+        <!-- Mobile Menu -->
+        <div id="mobile-menu" class="hidden md:hidden flex-col gap-4 mt-4 pt-4 border-t border-slate-800 text-sm font-medium">
+            <a href="#about" class="mobile-link hover:text-emerald-400">01. About</a>
+            <a href="#mindset" class="mobile-link hover:text-emerald-400">02. Mindset</a>
+            <a href="#travel" class="mobile-link hover:text-emerald-400">03. Travel</a>
+            <a href="#interests" class="mobile-link hover:text-emerald-400">04. Gallery</a>
+            <a href="#future" class="mobile-link hover:text-emerald-400">05. Future</a>
+            <a href="#ai-story" class="mobile-link hover:text-emerald-400">06. AI Stack</a>
+            <a href="#contact" class="mobile-link text-emerald-400">Contact Me</a>
+        </div>
+    </nav>
 
-          <a href="#">
-            Home
-          </a>
+    <!-- Hero Section -->
+    <section id="hero" class="min-h-screen pt-32 pb-20 flex items-center px-6 relative overflow-hidden">
+        <div class="absolute -top-24 -left-24 w-96 h-96 bg-emerald-500/10 rounded-full blur-3xl pointer-events-none"></div>
+        <div class="absolute -bottom-24 -right-24 w-96 h-96 bg-cyan-500/10 rounded-full blur-3xl pointer-events-none"></div>
 
-          <a href="#">
-            Cars
-          </a>
+        <div class="max-w-7xl mx-auto w-full grid md:grid-cols-12 gap-12 items-center">
+            <div class="md:col-span-7 space-y-6">
+                <div class="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 text-xs font-mono">
+                    <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+                    1st-year IITU Student • Almaty, Kazakhstan
+                </div>
 
-          <a href="#">
-            Performance
-          </a>
+                <h1 class="text-4xl sm:text-6xl font-extrabold tracking-tight text-white">
+                    Hi, I'm <span class="text-gradient">Daryn</span>
+                </h1>
 
-          <a href="#">
-            Contact
-          </a>
+                <p class="text-slate-300 text-lg leading-relaxed max-w-2xl">
+                    An 18-year-old IT student building my digital identity at the intersection of 
+                    <span class="text-emerald-400 font-semibold">Artificial Intelligence</span>, 
+                    <span class="text-cyan-400 font-semibold">Cybersecurity</span>, and 
+                    <span class="text-blue-400 font-semibold">Disciplined Athletics</span>.
+                </p>
 
+                <!-- Terminal Block -->
+                <div class="rounded-xl bg-slate-900/90 border border-slate-800 p-4 font-mono text-xs sm:text-sm text-slate-300 shadow-2xl">
+                    <div class="flex items-center gap-2 mb-3 border-b border-slate-800 pb-2">
+                        <div class="w-3 h-3 rounded-full bg-red-500/80"></div>
+                        <div class="w-3 h-3 rounded-full bg-yellow-500/80"></div>
+                        <div class="w-3 h-3 rounded-full bg-green-500/80"></div>
+                        <span class="text-slate-500 text-xs ml-2">daryn@iitu-cyber-sec:~</span>
+                    </div>
+                    <div class="space-y-1">
+                        <p><span class="text-emerald-400">$</span> <span class="text-cyan-300">cat profile.json</span></p>
+                        <p class="text-slate-400">{</p>
+                        <p class="pl-4"><span class="text-purple-400">"university"</span>: <span class="text-amber-300">"International IT University (IITU)"</span>,</p>
+                        <p class="pl-4"><span class="text-purple-400">"age"</span>: <span class="text-amber-300">18</span>,</p>
+                        <p class="pl-4"><span class="text-purple-400">"judo_rank"</span>: <span class="text-amber-300">"Green Belt (5 Years)"</span>,</p>
+                        <p class="pl-4"><span class="text-purple-400">"focus"</span>: [<span class="text-emerald-300">"AI"</span>, <span class="text-emerald-300">"Cybersecurity"</span>, <span class="text-emerald-300">"Cloud"</span>]</p>
+                        <p class="text-slate-400">}</p>
+                    </div>
+                </div>
+
+                <div class="flex flex-wrap gap-4 pt-2">
+                    <a href="#about" class="px-6 py-3 rounded-lg bg-emerald-500 hover:bg-emerald-600 text-slate-950 font-bold text-sm transition-all shadow-lg shadow-emerald-500/20">
+                        Explore Profile <i class="fa-solid fa-arrow-right ml-2"></i>
+                    </a>
+                    <a href="https://github.com" target="_blank" class="px-6 py-3 rounded-lg glass-card hover:bg-slate-800 text-white font-semibold text-sm transition-all flex items-center gap-2">
+                        <i class="fa-brands fa-github text-lg"></i> GitHub
+                    </a>
+                </div>
+            </div>
+
+            <!-- Profile Badge Box -->
+            <div class="md:col-span-5 flex justify-center">
+                <div class="relative w-full max-w-sm">
+                    <div class="absolute -inset-1 bg-gradient-to-r from-emerald-500 to-cyan-500 rounded-2xl blur opacity-30 group-hover:opacity-100 transition duration-1000"></div>
+                    <div class="relative glass-card rounded-2xl p-6 space-y-6 text-center border border-slate-700">
+                        <div class="w-28 h-28 mx-auto rounded-full bg-gradient-to-tr from-emerald-400 to-cyan-500 p-1 flex items-center justify-center shadow-xl">
+                            <div class="w-full h-full rounded-full bg-slate-900 flex items-center justify-center text-4xl text-emerald-400">
+                                <i class="fa-solid fa-user-shield"></i>
+                            </div>
+                        </div>
+
+                        <div>
+                            <h2 class="text-2xl font-bold text-white">DARYN</h2>
+                            <p class="text-slate-400 text-sm font-mono mt-1">1st Year Student @ IITU</p>
+                        </div>
+
+                        <div class="grid grid-cols-2 gap-3 pt-2 text-left">
+                            <div class="bg-slate-900/80 p-3 rounded-xl border border-slate-800">
+                                <span class="block text-slate-400 text-xs font-mono">Location</span>
+                                <span class="text-white text-sm font-semibold">Almaty, KZ</span>
+                            </div>
+                            <div class="bg-slate-900/80 p-3 rounded-xl border border-slate-800">
+                                <span class="block text-slate-400 text-xs font-mono">Judo Belt</span>
+                                <span class="text-emerald-400 text-sm font-semibold">Green Belt 🥋</span>
+                            </div>
+                        </div>
+
+                        <div class="p-3 rounded-xl bg-emerald-500/10 border border-emerald-500/20 text-emerald-300 text-xs text-center font-mono">
+                            "Learn. Practice. Improve."
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 01. About Me -->
+    <section id="about" class="py-20 px-6 max-w-7xl mx-auto">
+        <div class="flex items-center gap-4 mb-12">
+            <span class="font-mono text-emerald-400 text-lg font-bold">01.</span>
+            <h2 class="text-3xl font-bold text-white tracking-wide">ABOUT ME</h2>
+            <div class="h-[1px] bg-slate-800 flex-grow max-w-xs"></div>
         </div>
 
-      </nav>
+        <div class="grid md:grid-cols-3 gap-6">
+            <div class="glass-card p-6 rounded-2xl transition-all">
+                <div class="w-12 h-12 rounded-xl bg-emerald-500/10 flex items-center justify-center text-emerald-400 text-2xl mb-4">
+                    <i class="fa-solid fa-id-card"></i>
+                </div>
+                <h3 class="text-xl font-bold text-white mb-2">Identity</h3>
+                <p class="text-slate-400 text-sm leading-relaxed">
+                    My name is Daryn, an 18-year-old passionate technology student focused on cyber defense, AI tools, and personal development.
+                </p>
+            </div>
 
-      <section className="hero">
+            <div class="glass-card p-6 rounded-2xl transition-all">
+                <div class="w-12 h-12 rounded-xl bg-cyan-500/10 flex items-center justify-center text-cyan-400 text-2xl mb-4">
+                    <i class="fa-solid fa-graduation-cap"></i>
+                </div>
+                <h3 class="text-xl font-bold text-white mb-2">Education</h3>
+                <p class="text-slate-400 text-sm leading-relaxed">
+                    1st-year student at <span class="text-slate-200 font-semibold">IITU (International IT University)</span> in Almaty, building strong fundamentals in software and computer systems.
+                </p>
+            </div>
 
-        <h1 className="title">
-          FERRARI LUCE
-        </h1>
+            <div class="glass-card p-6 rounded-2xl transition-all">
+                <div class="w-12 h-12 rounded-xl bg-purple-500/10 flex items-center justify-center text-purple-400 text-2xl mb-4">
+                    <i class="fa-solid fa-compass"></i>
+                </div>
+                <h3 class="text-xl font-bold text-white mb-2">Interests</h3>
+                <p class="text-slate-400 text-sm leading-relaxed">
+                    Deep interest in Artificial Intelligence, Cybersecurity defense strategies, Cloud infrastructure, and Judo martial arts.
+                </p>
+            </div>
+        </div>
+    </section>
 
-        <p className="subtitle">
-          Luxury Motion Experience
+    <!-- 02. Personality & Mindset -->
+    <section id="mindset" class="py-20 px-6 bg-slate-900/40 border-y border-slate-800/80">
+        <div class="max-w-7xl mx-auto">
+            <div class="flex items-center gap-4 mb-12">
+                <span class="font-mono text-emerald-400 text-lg font-bold">02.</span>
+                <h2 class="text-3xl font-bold text-white tracking-wide">PERSONALITY & MINDSET</h2>
+                <div class="h-[1px] bg-slate-800 flex-grow max-w-xs"></div>
+            </div>
+
+            <div class="grid lg:grid-cols-2 gap-8 items-center">
+                <div class="space-y-6">
+                    <div class="glass-card p-6 rounded-2xl border-l-4 border-l-emerald-500">
+                        <h3 class="text-2xl font-bold text-white mb-3">Strong-Willed & Disciplined</h3>
+                        <p class="text-slate-300 text-base leading-relaxed">
+                            Five years of judo practice have shaped my discipline, physical endurance, and mental toughness—teaching me to stay calm and focused under pressure.
+                        </p>
+                    </div>
+
+                    <div class="grid grid-cols-3 gap-4">
+                        <div class="glass-card p-4 rounded-xl text-center">
+                            <span class="block text-2xl mb-1">🧠</span>
+                            <span class="text-white font-bold text-sm">Curious</span>
+                        </div>
+                        <div class="glass-card p-4 rounded-xl text-center">
+                            <span class="block text-2xl mb-1">🎯</span>
+                            <span class="text-white font-bold text-sm">Goal-Driven</span>
+                        </div>
+                        <div class="glass-card p-4 rounded-xl text-center">
+                            <span class="block text-2xl mb-1">📈</span>
+                            <span class="text-white font-bold text-sm">Always Improving</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="glass-card p-8 rounded-2xl text-center relative overflow-hidden bg-gradient-to-br from-slate-900 via-slate-900 to-emerald-950/40">
+                    <div class="text-xs font-mono text-emerald-400 uppercase tracking-widest mb-4">Core Philosophy</div>
+                    <div class="text-3xl sm:text-4xl font-extrabold text-white tracking-tight mb-4">
+                        "LEARN. PRACTICE. IMPROVE."
+                    </div>
+                    <p class="text-slate-400 text-sm max-w-md mx-auto">
+                        Calm under pressure, structured in problem-solving, and relentless in pursuit of personal mastery.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 03. Travel Experiences -->
+    <section id="travel" class="py-20 px-6 max-w-7xl mx-auto">
+        <div class="flex items-center gap-4 mb-4">
+            <span class="font-mono text-emerald-400 text-lg font-bold">03.</span>
+            <h2 class="text-3xl font-bold text-white tracking-wide">TRAVEL EXPERIENCES</h2>
+            <div class="h-[1px] bg-slate-800 flex-grow max-w-xs"></div>
+        </div>
+        <p class="text-slate-400 mb-10 text-sm max-w-xl">
+            "Travel gives me new experiences, broadens my perspectives, and builds lasting memories."
         </p>
 
-        <button className="button">
-          Explore
-        </button>
+        <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-4">
+            <!-- Dubai -->
+            <div class="glass-card p-5 rounded-xl text-center hover:-translate-y-2 transition-all">
+                <div class="text-4xl mb-3">🇦🇪</div>
+                <h3 class="font-bold text-white text-base">Dubai</h3>
+                <p class="text-xs text-slate-400 mt-1 font-mono">UAE</p>
+            </div>
+            <!-- Thailand -->
+            <div class="glass-card p-5 rounded-xl text-center hover:-translate-y-2 transition-all">
+                <div class="text-4xl mb-3">🇹🇭</div>
+                <h3 class="font-bold text-white text-base">Thailand</h3>
+                <p class="text-xs text-slate-400 mt-1 font-mono">Southeast Asia</p>
+            </div>
+            <!-- Egypt -->
+            <div class="glass-card p-5 rounded-xl text-center hover:-translate-y-2 transition-all">
+                <div class="text-4xl mb-3">🇪🇬</div>
+                <h3 class="font-bold text-white text-base">Egypt</h3>
+                <p class="text-xs text-slate-400 mt-1 font-mono">North Africa</p>
+            </div>
+            <!-- Laos -->
+            <div class="glass-card p-5 rounded-xl text-center hover:-translate-y-2 transition-all">
+                <div class="text-4xl mb-3">🇱🇦</div>
+                <h3 class="font-bold text-white text-base">Laos</h3>
+                <p class="text-xs text-slate-400 mt-1 font-mono">Southeast Asia</p>
+            </div>
+            <!-- Turkey -->
+            <div class="glass-card p-5 rounded-xl text-center hover:-translate-y-2 transition-all">
+                <div class="text-4xl mb-3">🇹🇷</div>
+                <h3 class="font-bold text-white text-base">Turkey</h3>
+                <p class="text-xs text-slate-400 mt-1 font-mono">Eurasia</p>
+            </div>
+        </div>
+    </section>
 
-      </section>
+    <!-- 04. Gallery / Things I Care About -->
+    <section id="interests" class="py-20 px-6 bg-slate-900/40 border-y border-slate-800/80">
+        <div class="max-w-7xl mx-auto">
+            <div class="flex items-center gap-4 mb-12">
+                <span class="font-mono text-emerald-400 text-lg font-bold">04.</span>
+                <h2 class="text-3xl font-bold text-white tracking-wide">WHAT I CARE ABOUT</h2>
+                <div class="h-[1px] bg-slate-800 flex-grow max-w-xs"></div>
+            </div>
 
-    </main>
+            <div class="grid md:grid-cols-3 gap-8">
+                <!-- Judo -->
+                <div class="glass-card rounded-2xl overflow-hidden group">
+                    <div class="h-48 bg-gradient-to-tr from-emerald-900 to-slate-900 flex items-center justify-center text-6xl group-hover:scale-110 transition-transform duration-500">
+                        🥋
+                    </div>
+                    <div class="p-6">
+                        <div class="inline-block px-3 py-1 rounded-full bg-emerald-500/10 text-emerald-400 text-xs font-mono mb-2">5 Years Experience</div>
+                        <h3 class="text-xl font-bold text-white mb-2">Judo & Martial Arts</h3>
+                        <p class="text-slate-400 text-sm">
+                            Achieved Green Belt status. Martial arts taught me balance, respect, quick reaction, and resilience.
+                        </p>
+                    </div>
+                </div>
 
-  );
-}
-```
+                <!-- AI & Security -->
+                <div class="glass-card rounded-2xl overflow-hidden group">
+                    <div class="h-48 bg-gradient-to-tr from-cyan-900 to-slate-900 flex items-center justify-center text-6xl group-hover:scale-110 transition-transform duration-500">
+                        🔐
+                    </div>
+                    <div class="p-6">
+                        <div class="inline-block px-3 py-1 rounded-full bg-cyan-500/10 text-cyan-400 text-xs font-mono mb-2">Academic & Self-Study</div>
+                        <h3 class="text-xl font-bold text-white mb-2">AI & Cybersecurity</h3>
+                        <p class="text-slate-400 text-sm">
+                            Constantly exploring generative AI models, threat mitigation, network security, and secure coding practices.
+                        </p>
+                    </div>
+                </div>
 
----
+                <!-- Travel & Culture -->
+                <div class="glass-card rounded-2xl overflow-hidden group">
+                    <div class="h-48 bg-gradient-to-tr from-purple-900 to-slate-900 flex items-center justify-center text-6xl group-hover:scale-110 transition-transform duration-500">
+                        🌍
+                    </div>
+                    <div class="p-6">
+                        <div class="inline-block px-3 py-1 rounded-full bg-purple-500/10 text-purple-400 text-xs font-mono mb-2">Global Vision</div>
+                        <h3 class="text-xl font-bold text-white mb-2">Travel & Exploration</h3>
+                        <p class="text-slate-400 text-sm">
+                            Experiencing diverse cultures builds open-mindedness, adaptability, and fresh problem-solving angles.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
 
-# app/globals.css
+    <!-- 05. Future Goals -->
+    <section id="future" class="py-20 px-6 max-w-7xl mx-auto">
+        <div class="flex items-center gap-4 mb-12">
+            <span class="font-mono text-emerald-400 text-lg font-bold">05.</span>
+            <h2 class="text-3xl font-bold text-white tracking-wide">FUTURE PLANS</h2>
+            <div class="h-[1px] bg-slate-800 flex-grow max-w-xs"></div>
+        </div>
 
-```css
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-}
+        <div class="space-y-6">
+            <div class="glass-card p-6 rounded-2xl flex flex-col md:flex-row items-start md:items-center gap-6">
+                <div class="w-14 h-14 rounded-2xl bg-emerald-500/10 text-emerald-400 text-2xl flex items-center justify-center flex-shrink-0 font-bold font-mono">
+                    01
+                </div>
+                <div>
+                    <h3 class="text-xl font-bold text-white mb-1">Cybersecurity Expertise</h3>
+                    <p class="text-slate-400 text-sm">
+                        Become a strong cybersecurity specialist who thoroughly understands modern attack vectors and builds robust defense systems.
+                    </p>
+                </div>
+            </div>
 
-html,
-body {
-  width: 100%;
-  height: 100%;
-  overflow: hidden;
-  font-family: Arial, sans-serif;
-  background: black;
-}
+            <div class="glass-card p-6 rounded-2xl flex flex-col md:flex-row items-start md:items-center gap-6">
+                <div class="w-14 h-14 rounded-2xl bg-cyan-500/10 text-cyan-400 text-2xl flex items-center justify-center flex-shrink-0 font-bold font-mono">
+                    02
+                </div>
+                <div>
+                    <h3 class="text-xl font-bold text-white mb-1">Cloud & Advanced Technology</h3>
+                    <p class="text-slate-400 text-sm">
+                        Build a career in cloud technologies while combining artificial intelligence and automated security capabilities.
+                    </p>
+                </div>
+            </div>
 
-.main {
-  width: 100%;
-  height: 100vh;
-  position: relative;
-  overflow: hidden;
-}
+            <div class="glass-card p-6 rounded-2xl flex flex-col md:flex-row items-start md:items-center gap-6">
+                <div class="w-14 h-14 rounded-2xl bg-purple-500/10 text-purple-400 text-2xl flex items-center justify-center flex-shrink-0 font-bold font-mono">
+                    03
+                </div>
+                <div>
+                    <h3 class="text-xl font-bold text-white mb-1">Big Ambition & Tech Impact</h3>
+                    <p class="text-slate-400 text-sm">
+                        Create something truly impactful in the tech ecosystem and establish a successful, long-term engineering career.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
 
-.video {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  position: absolute;
-}
+    <!-- 06. AI Stack & Workflow -->
+    <section id="ai-story" class="py-20 px-6 bg-slate-900/40 border-y border-slate-800/80">
+        <div class="max-w-7xl mx-auto">
+            <div class="flex items-center gap-4 mb-12">
+                <span class="font-mono text-emerald-400 text-lg font-bold">06.</span>
+                <h2 class="text-3xl font-bold text-white tracking-wide">HOW AI HELPED ME</h2>
+                <div class="h-[1px] bg-slate-800 flex-grow max-w-xs"></div>
+            </div>
 
-.overlay {
-  position: absolute;
-  width: 100%;
-  height: 100%;
-  background: rgba(0,0,0,0.5);
-}
+            <div class="grid md:grid-cols-2 gap-8">
+                <div class="glass-card p-8 rounded-2xl">
+                    <div class="flex items-center gap-3 mb-6">
+                        <i class="fa-solid fa-robot text-emerald-400 text-2xl"></i>
+                        <h3 class="text-xl font-bold text-white">AI Tools Used</h3>
+                    </div>
+                    <ul class="space-y-4 text-slate-300 text-sm">
+                        <li class="flex items-start gap-3">
+                            <i class="fa-solid fa-check text-emerald-400 mt-1"></i>
+                            <span><strong class="text-white">ChatGPT:</strong> Used for generating site structure, brainstorming wording ideas, and translating content.</span>
+                        </li>
+                        <li class="flex items-start gap-3">
+                            <i class="fa-solid fa-check text-emerald-400 mt-1"></i>
+                            <span><strong class="text-white">Design Assistance:</strong> AI helped establish the UI layout grid and modern aesthetic direction.</span>
+                        </li>
+                    </ul>
+                </div>
 
-.navbar {
-  position: absolute;
-  top: 0;
-  width: 100%;
-  padding: 30px 60px;
-  display: flex;
-  justify-content: space-between;
-  z-index: 10;
-}
+                <div class="glass-card p-8 rounded-2xl border-l-4 border-l-cyan-500">
+                    <div class="flex items-center gap-3 mb-6">
+                        <i class="fa-solid fa-user-check text-cyan-400 text-2xl"></i>
+                        <h3 class="text-xl font-bold text-white">My Role as Developer</h3>
+                    </div>
+                    <p class="text-slate-300 text-sm leading-relaxed">
+                        I directed the prompt engineering, rigorously reviewed all generated outputs, edited the copy, validated code logic, and refined the design to fit my real personal identity and goals.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
 
-.logo {
-  color: white;
-  font-size: 30px;
-  font-weight: bold;
-  letter-spacing: 10px;
-}
+    <!-- Contact & Footer -->
+    <section id="contact" class="py-20 px-6 max-w-7xl mx-auto text-center">
+        <h2 class="text-4xl font-extrabold text-white mb-4">Let's Connect</h2>
+        <p class="text-slate-400 max-w-md mx-auto text-sm mb-8">
+            Open to student collaborations, cybersecurity discussions, and technology networking.
+        </p>
 
-.menu {
-  display: flex;
-  gap: 40px;
-}
+        <div class="inline-flex flex-wrap justify-center gap-4 mb-12">
+            <a href="mailto:daryn@example.com" class="px-6 py-3 rounded-xl bg-emerald-500 hover:bg-emerald-600 text-slate-950 font-bold text-sm transition-all shadow-lg shadow-emerald-500/20">
+                <i class="fa-solid fa-envelope mr-2"></i> Email Me
+            </a>
+            <a href="https://github.com" target="_blank" class="px-6 py-3 rounded-xl glass-card hover:bg-slate-800 text-white font-semibold text-sm transition-all">
+                <i class="fa-brands fa-github mr-2"></i> GitHub Profile
+            </a>
+        </div>
 
-.menu a {
-  color: white;
-  text-decoration: none;
-  text-transform: uppercase;
-  font-size: 14px;
-}
+        <div class="border-t border-slate-800 pt-8 text-slate-500 text-xs font-mono flex flex-col sm:flex-row justify-between items-center gap-4 max-w-7xl mx-auto">
+            <p>© 2026 Daryn • IITU Student Personal Website</p>
+            <p>Designed for GitHub Pages</p>
+        </div>
+    </section>
 
-.hero {
-  position: relative;
-  z-index: 5;
-  width: 100%;
-  height: 100vh;
+    <!-- JavaScript for Mobile Menu & Interactivity -->
+    <script>
+        const menuBtn = document.getElementById('mobile-menu-btn');
+        const mobileMenu = document.getElementById('mobile-menu');
+        const mobileLinks = document.querySelectorAll('.mobile-link');
 
-  display: flex;
-  flex-direction: column;
+        menuBtn.addEventListener('click', () => {
+            mobileMenu.classList.toggle('hidden');
+            mobileMenu.classList.toggle('flex');
+        });
 
-  justify-content: center;
-  align-items: center;
+        mobileLinks.forEach(link => {
+            link.addEventListener('click', () => {
+                mobileMenu.classList.add('hidden');
+                mobileMenu.classList.remove('flex');
+            });
+        });
+    </script>
+</body>
+</html>
+```eof
 
-  text-align: center;
-}
+I have generated the complete HTML code for Daryn's personal website based on the presentation slides. 
 
-.title {
-  color: white;
-  font-size: 120px;
-  font-weight: 900;
-  letter-spacing: 15px;
-}
+### What's included:
+- **`index.html`**: A fully responsive single-page website tailored for GitHub Pages.
+- **Design & Theme**: High-tech cybersecurity/AI dark theme (`slate-900`, `emerald`, `cyan`) reflecting IITU, Judo discipline, and future cybersecurity ambitions.
+- **Sections**:
+  1. **Hero**: Interactive terminal code snippet with profile overview.
+  2. **About Me**: IITU 1st-year student background and interests.
+  3. **Personality & Mindset**: 5 years of Judo, green belt, discipline & "Learn. Practice. Improve." philosophy.
+  4. **Travel Experiences**: Interactive flag cards for Dubai, Thailand, Egypt, Laos, and Turkey.
+  5. **Gallery**: Judo, AI & Cybersecurity, and Travel.
+  6. **Future Plans**: Cybersecurity expertise, cloud technology, and big tech ambition.
+  7. **AI Collaboration**: Explanation of how ChatGPT assisted with structure and copy under human editorial control.
 
-.subtitle {
-  color: white;
-  font-size: 24px;
-  margin-top: 20px;
-}
-
-.button {
-  margin-top: 40px;
-  padding: 18px 50px;
-
-  border: 1px solid white;
-
-  background: transparent;
-  color: white;
-
-  cursor: pointer;
-
-  transition: 0.3s;
-}
-
-.button:hover {
-  background: white;
-  color: black;
-}
-```
-
----
-
-# public
-
-Создай папку:
-
-```bash
-public
-```
-
-И закинь туда видео:
-
-```bash
-hero.mp4
-```
-
----
-
-# RUN
-
-```bash
-npm run dev
-```
-
----
-
-# GITHUB
-
-```bash
-git init
-```
-
-```bash
-git add .
-```
-
-```bash
-git commit -m "Ferrari Style"
-```
-
-```bash
-git branch -M main
-```
-
-```bash
-git remote add origin https://github.com/USERNAME/ferrari-style.git
-```
-
-```bash
-git push -u origin main
-```
+### How to upload to GitHub Pages:
+1. Create a repository on GitHub named `daryn-website` (or `daryn.github.io`).
+2. Add this generated file as `index.html` in the root folder.
+3. Push your code to GitHub.
+4. Enable **GitHub Pages** in repository settings (`Settings -> Pages -> Deploy from branch: main`).
